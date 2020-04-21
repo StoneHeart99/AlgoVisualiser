@@ -91,11 +91,9 @@ TM.addCity(city15);
 //     // console.log(String.fromCharCode(i));
 // }
 
- var AlgoName = "";
-
-$( document ).ready(function() {
-    $("#nav-placeholder").load("nav.html");
-});
+// $( document ).ready(function() {
+//     $("#nav-placeholder").load("nav.html");
+// });
 
 
 

@@ -127,3 +127,6 @@ function toast(msg, time=1000)
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, time);
 }
 
+$( document ).ready(function() {
+    $("#nav-placeholder").load("nav.html");
+});
