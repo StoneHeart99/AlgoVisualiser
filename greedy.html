@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="logo.png">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="default-data.js"></script>
+
+    <title>Greedy</title>
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div id="nav-placeholder" style="height: 60px;"></div>
+
+    <!-- Right Panel -->
+    <div class="content-container">
+        <br>
+        <div class="panel-item" style=""><h3>Setting</h3></div>
+
+        <div class="row">
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle">Number of Cities: </div>
+                <input type="range" min="5" max="100" value="15" class="slider" id="nodeNum">
+                <div id="nodeNumVal" class="sliderValue">15</div>
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle">Speed:</div>
+                <input type="range" min="1" max="5" value="3" class="slider" id="speed">
+                <div id="speedVal" class="sliderValue">3</div>
+            </div>
+        </div>
+
+        <div class="row panel-item">
+            <div class="col">
+                <div class="switchTitleOffset">Final</div>
+                <label class="switch">
+                    <input id="final" type="checkbox" onclick="toggleFinal()">
+                    <span class="toggle round"></span>
+                </label>
+            </div>
+            <div class="col-6">
+                <div class="switchTitleOffset">Auto</div>
+                <label class="switch">
+                    <input id="auto" type="checkbox" onclick="toggleAuto()" checked>
+                    <span class="toggle round"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
+            <button class="button" onclick="randomiseCities()" >Randomise Cities</button>
+            <button class="button" onclick="resetDefault()">Reset Default</button>
+            <button class="button" onclick="run()">Run</button>
+        </div>
+
+        <div class="row d-flex justify-content-start panel-item" style="padding-left: 15px;">
+            <button id="nextBtn" class="button" onclick="printPrevious()" disabled style="margin-right: 25px;">Previous</button>
+            <button id="previousBtn" class="button " onclick="printNext()" disabled>Next</button>
+        </div>
+
+        <br><br>
+        <div><h3>Result</h3></div>
+        <div class="solutionHeader">
+            <b>Visited:</b> <span class="panel-item" id="visited"></span>
+        </div>
+        <div class="solutionHeader">
+            <b>Total Distance:</b> <span class="panel-item" id="distance"></span>
+        </div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div class="panel-item" id="tour"></div>
+
+    </div>
+
+    <div id='sigma-container'></div>
+
+    <div id="toast"></div>
+</body>
+</html>
+<script>
+
+    // HTML Related
+    let speedSlider = document.getElementById("speed");
+    let speedVal = document.getElementById("speedVal");
+    speedVal.innerHTML = speedSlider.value;
+
+    speedSlider.oninput = function() {
+        speedVal.innerHTML = this.value;
+        algoSpeedIndex = this.value - 1;
+    }
+
+    let nodeSlider = document.getElementById("nodeNum");
+    let nodeVal = document.getElementById("nodeNumVal");
+    nodeVal.innerHTML = nodeSlider.value;
+
+    nodeSlider.oninput = function() {
+        nodeVal.innerHTML = this.value;
+        randomiseCities();
+    }
+
+
+    // Greedy program
+    let greedyTM = new TourManager();
+    greedyTM.clone(TM);
+    let tour = new Tour(greedyTM.getTour());
+    let algoSpeed = [1800, 1400, 1000, 600, 100];
+    let algoSpeedIndex = 2;
+    let isAuto = false;
+    let isfinal = false;
+    let isRunning = false;
+    let index = 0;  // use to find state of graph
+    let visited = new Tour(tour);
+    let unvisited = new Tour(greedyTM.getTour());
+    visited.clear();
+
+    // Initialise nodes and load it
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 3,
+                maxEdgeSize: 3,
+                minNodeSize: 10,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 30,
+                edgeHoverColor: 'blue',
+            }
+        }
+    );
+    var graph = {
+        nodes: [],
+        edges: []
+    };
+
+    simpleGreedy(tour, greedyTM);
+    convertCityToNodes(greedyTM, graph);
+    updateSigma(s, graph);
+
+
+    let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+    dragListener.bind('dragend', function(event) {
+        // replace city with new coordinates
+        let node = event.data.node;
+        let cityIndex = greedyTM.findIndexByName(node.label);
+        let newCity = new City(node.label, node.x, node.y);
+        greedyTM.destinationCities.splice(cityIndex,1, newCity);
+        tour = new Tour(greedyTM.getTour());
+
+        // recalculate route and update graph
+        simpleGreedy(tour,greedyTM);
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+        // index = 0;  //  reset index
+
+        // Instant get end result
+        if(isfinal)
+        {
+            convertTourToEdges(tour,graph);
+            index = greedyTM.size() * 2;
+            // visited = new Tour(tour.getTour());
+            visited.cloneVisited(tour);
+            unvisited.clear();
+            $("#visited").text(visited.printVisited());
+            $("#tour").text(tour.printTour());
+            $("#distance").text(tour.getDistance().toFixed(2));
+        }
+        else
+        {
+            index = 0   ;
+            visited.clear();
+            unvisited = new Tour(greedyTM.getTour());
+            resetInfo();
+        }
+        updateSigma(s,graph);
+    });
+
+
+    // Section for functions
+
+    function run()
+    {
+        isRunning = true;
+        simpleGreedy(tour, greedyTM);
+        if(isfinal)
+            final();
+        else
+        {
+            reset()
+            document.getElementById("auto").checked = true;
+            auto();
+        }
+    }
+
+    function final()
+    {
+        convertTourToEdges(tour,graph);
+        index = greedyTM.size() * 2;
+        visited.cloneVisited(tour);
+        unvisited.clear();
+        updateSigma(s,graph);
+        $("#visited").text(visited.printVisited());
+        $("#tour").text(tour.printTour());
+        $("#distance").text(tour.getDistance().toFixed(2));
+        isRunning = false;
+    }
+
+    function printNext()
+    {
+        isRunning = true;
+
+        // skip if only left start node
+        if(visited.size()==greedyTM.size()-1)
+        {
+            index++;
+        }
+
+        if(index >= greedyTM.size() * 2)
+        {
+            toast("The algorithm has completed!");
+            return;
+        }
+        else
+        {
+            if(isfinal)
+            {
+                final();
+                return;
+            }
+
+            if((index % 2) == 0)    // finding possible solution case
+            {
+                for(let i=0; i< greedyTM.size(); i++)
+                {
+                    let cityIndex = visited.size();
+
+                    if(tour.getCity(cityIndex).getName() == tour.getCity(i).getName())  // skip itself
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        let canPrint = true;
+                        if(visited.cities.includes(tour.getCity(i)) ||
+                            tour.getCity(i).getName()==tour.getCity(0).getName()) // skip visited cities
+                            canPrint = false;
+
+                        if(canPrint)    // print all possible next solution
+                        {
+                            graph.edges.push(
+                                {
+                                    id: "e" + cityIndex.toString() + "-" + i.toString(),
+                                    source: tour.getCity(cityIndex).getName(),
+                                    target: tour.getCity(i).getName(),
+                                    color: 'gray',
+                                    type: 'arrow',
+                                    size: 0.5,
+                                    label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(i))).toString(),
+                                }
+                            );
+                        }
+                    }
+
+                }
+            }
+            else    // confirm next destination case
+            {
+                let cityIndex = visited.size();
+                for(let i=0;i<greedyTM.size()-cityIndex-1;i++)  // remove possible solution
+                {
+                    graph.edges.pop();
+                }
+
+                // add next destination
+                if (cityIndex + 1 < tour.size())
+                {
+                    graph.edges.push(
+                        {
+                            id: "E" + cityIndex.toString(),
+                            source: tour.getCity(cityIndex).getName(),
+                            target: tour.getCity(cityIndex+1).getName(),
+                            color: '#282c34',
+                            type:'arrow',
+                            size: 3,
+                            label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(cityIndex+1))).toString(),
+                        }
+                    )
+                    visited.addCity(tour.getCity(cityIndex+1));
+                    unvisited.removeCity(tour.getCity(cityIndex+1));
+                }
+                else    // travel back to start city
+                {
+                    graph.edges.push(
+                        {
+                            id: "E" + cityIndex.toString(),
+                            source: tour.getCity(cityIndex).getName(),
+                            target: tour.getCity(0).getName(),
+                            color: '#282c34',
+                            type:'arrow',
+                            size: 3,
+                            label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(0))).toString(),
+                        }
+                    )
+                    visited.addCity(tour.getCity(0));
+                    unvisited.removeCity(tour.getCity(0));
+                }
+                $("#visited").text(visited.printVisited());
+
+                if(index == (greedyTM.size()*2)-1)
+                {
+                    $("#tour").text(tour.printTour());
+                    $("#distance").text(tour.getDistance().toFixed(2));
+                    isRunning = false;
+                    toast("The algorithm has completed!");
+                }
+            }
+        }
+        console.log(visited);
+
+        index++;
+        if(index==greedyTM.size()*2)
+            simpleGreedy(tour, greedyTM);
+        updateSigma(s, graph);
+    }
+
+    function printPrevious()
+    {
+        if(isfinal)
+        {
+            isfinal = false;
+            document.getElementById("final").checked = false;
+        }
+
+        if(index==0)
+        {
+            toast("TThe algorithm is at initial state!");
+            return;
+        }
+        else if((index % 2) == 0)   // backtrack one city and show all possible solutions
+        {
+            let tempCity = visited.pop();
+            unvisited.addCity(tempCity);
+            graph.edges.pop();
+            for(let i=0; i< greedyTM.size(); i++)
+            {
+                let cityIndex = visited.size();
+
+                if(tour.getCity(cityIndex).getName() == tour.getCity(i).getName())  // skip itself
+                {
+                    continue;
+                }
+                else
+                {
+                    let canPrint = true;
+
+                    if(visited.cities.includes(tour.getCity(i)) ||
+                        tour.getCity(i).getName()==tour.getCity(0).getName()) // skip visited cities
+                        canPrint = false;
+
+                    if(canPrint)    // print all possible next solution
+                    {
+                        graph.edges.push(
+                            {
+                                id: "e" + cityIndex.toString() + "-" + i.toString(),
+                                source: tour.getCity(cityIndex).getName(),
+                                target: tour.getCity(i).getName(),
+                                color: 'gray',
+                                type: 'arrow',
+                                size: 0.5,
+                                label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(i))).toString(),
+                            }
+                        );
+                    }
+                }
+
+            }
+
+            if(index == greedyTM.size() * 2)
+                index--;
+        }
+        else    // remove all possible solutions
+        {
+            for(let i=0;i<greedyTM.size()-visited.size()-1;i++)
+            {
+                graph.edges.pop();
+            }
+        }
+        $("#visited").text(visited.printVisited());
+        $("#tour").text("");
+        $("#distance").text("");
+        index--;
+        console.log(index);
+        updateSigma(s, graph);
+    }
+
+    function resetDefault()
+    {
+        greedyTM.clone(TM);
+        tour = new Tour(greedyTM.getTour());
+        isAuto = false;
+        simpleGreedy(tour, greedyTM);
+        reset();
+    }
+
+    function reset()
+    {
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+        index = 0   ;
+        visited.clear();
+        unvisited = new Tour(greedyTM.getTour());
+        nodeSlider.value = 15;
+        nodeVal.innerHTML = nodeSlider.value;
+        resetInfo();
+        isRunning = false;
+    }
+
+
+    function randomiseCities()
+    {
+        isAuto = false;
+        let num = $("#nodeNum").val();
+        num = parseInt(num);
+        greedyTM.clear();
+
+        // let alp = 65;
+        // console.log((alp + num));
+        // for(let i =65; i < (alp + num);i++)
+        // {
+        //     greedyTM.addCity(new City(String.fromCharCode(i)));
+        // }
+        // tour = new Tour(greedyTM.getTour());
+
+        for(let i=1;i<=num;i++)
+        {
+            greedyTM.addCity(new City( "c" + i));
+        }
+        tour = new Tour(greedyTM.getTour());
+
+
+        // recalculate route and update graph
+        simpleGreedy(tour,greedyTM);
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+
+        // reset
+        index = 0;
+        isRunning = false;
+        visited.clear();
+        unvisited = new Tour(greedyTM.getTour());
+        updateSigma(s,graph);
+        resetInfo();
+    }
+
+    async function auto()
+    {
+        isAuto = true;
+        isRunning = true;
+        while (index < greedyTM.size() * 2) {
+            if(!isAuto)
+                break;
+
+            printNext();
+            await sleep(algoSpeed[algoSpeedIndex]);
+        }
+    }
+
+    function resetInfo()
+    {
+        $("#visited").text("");
+        $("#tour").text("");
+        $("#distance").text("");
+    }
+
+    function toggleFinal() {
+        let toggleFinal = document.getElementById("final").checked;
+        if(toggleFinal) {
+            isfinal = true;
+            if(isRunning)
+                final();
+        }
+        else
+            isfinal = false;
+    }
+
+    function toggleAuto()
+    {
+        let toggleAuto = document.getElementById("auto").checked;
+        if(toggleAuto) {
+            $("#nextBtn").attr("disabled", true);
+            $("#previousBtn").attr("disabled", true);
+            isAuto = true;
+            auto();
+        }
+        else
+        {
+            $("#nextBtn").attr("disabled", false);
+            $("#previousBtn").attr("disabled", false);
+            isAuto = false;
+        }
+    }
+
+    // function toast(msg)
+    // {
+    //     let x = document.getElementById("toast");
+    //     x.innerText = msg;
+    //     x.className = "toast show";
+    //     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    // }
+
+
+</script>

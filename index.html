@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <link rel="icon" href="logo.png">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="default-data.js"></script>
+
+    <style>
+        body {
+            /*background-color: #f1f1f1;*/
+            /*background-color: #E1E1E1;*/
+            background-color: #292e34;
+            color: white;
+            font-size: 1.05em;
+            /*background-image: url('background/bg4.jpg');*/
+        }
+
+        .overview-container {
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+            margin: auto;
+            margin-top: 5%;
+
+        }
+
+        .item {
+            height: 300px;
+            width: 25%;
+            background: white;
+            padding: 20px;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        .right-container {
+            width: 55%;
+            position: absolute;
+            height: 100vh;
+            right: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .left-container {
+            width: 55%;
+            position: absolute;
+            height: 100vh;
+            left: 0;
+            display: flex;
+            align-items: center;
+
+        }
+
+
+        .button {
+            width: auto;
+            padding: 15px 25px;
+            font-size: 1.05em;
+            background-color: #2196F3B3;
+        }
+
+        .button:hover {
+            box-shadow: none;
+            background-color: #2196F3;
+        }
+
+        .center{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #sigma-container {
+            width: 60%;
+            height: 60%;
+            margin: auto;
+            padding-left: 20px;
+            background-color: #292e34;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="right-container">
+        <div class="center">
+            <h1 style="margin-top: 5%; font-size: 3em">Algorithm Visualiser</h1>
+
+            <p style="width: 70%; margin-top: 5px; text-align: center">
+                An interactive and fun way to visualise how algorithms are implemented to solve Travelling Salesman Problems (TSP)
+            </p>
+
+            <a href="greedy.html">
+                <button class="button" style="margin-top: 5%"><b>Learn More</b></button>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="left-container">
+        <div id="sigma-container"></div>
+    </div>
+
+
+
+
+
+
+<!--    <div class="overview-container">-->
+<!--        <div class="item">-->
+<!--            <h3>Optimisation Algorithm</h3>-->
+<!--            <p>Optimisation algorithm is an algorithm that attempts to obtain best possible solution for a certain problem.-->
+<!--                However, the optimal results are often not guaranteed. Optimisation algorithm also often involves maximising-->
+<!--                or minimising a value.</p>-->
+<!--        </div>-->
+<!--        <div class="item">-->
+<!--            <h3>Travelling Salesman Problem</h3>-->
+<!--            <p>The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the-->
+<!--                shortest route between a set of cities that must be visited. </p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+
+
+</body>
+</html>
+<script>
+
+    cityA1 = new City("a1", 80, 180);
+    cityA2 = new City("a2", 140, 120);
+    cityA3 = new City("a3", 60, 110);
+    cityA4 = new City("a4", 20, 40);
+    cityA5 = new City("a5", 180, 200);
+    cityA6 = new City("a6", 180, 60);
+    cityA7 = new City("a7", 20, 160);
+
+    animateTM.addCity(cityA1);
+    animateTM.addCity(cityA2);
+    animateTM.addCity(cityA3);
+    animateTM.addCity(cityA4);
+    animateTM.addCity(cityA5);
+    animateTM.addCity(cityA6);
+    animateTM.addCity(cityA7);
+
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 30,
+                edgeHoverColor: 'blue',
+                drawLabels: false,
+                enableHovering: false,
+                animationTime: 2000,
+
+            }
+        }
+    );
+    var graph = {
+        nodes: [],
+        edges: []
+    };
+
+    let tour = new Tour(animateTM.getTour());
+    convertCityToNodes(animateTM, graph);
+    convertTourToEdges(tour, graph);
+    updateSigma(s, graph);
+
+
+    function convertCityToNodes(TM, graph)
+    {
+        clearArray(graph.nodes);
+        let nodeSize = 10;
+        let nodeColor = "#2196F3";
+        for(let i=0;i<TM.size();i++)
+        {
+            graph.nodes.push(
+                {
+                    id: TM.getTour()[i].name,
+                    label: TM.getTour()[i].name,
+                    x: TM.getTour()[i].x,
+                    y: TM.getTour()[i].y,
+                    size: nodeSize,
+                    color: nodeColor,
+                    borderSize: 1,
+                    borderColor: 'black',
+                }
+            )
+        }
+    }
+
+    function convertTourToEdges(tour, graph)
+    {
+        clearArray(graph.edges);
+        for(let i=0;i<tour.size();i++)
+        {
+            if (i + 1 < tour.size()) {
+                graph.edges.push(
+                    {
+                        id: "E" + i.toString(),
+                        source: tour.getCity(i).getName(),
+                        target: tour.getCity(i+1).getName(),
+                        color: '#2196F3',
+                        type:'line',
+                        size: 5,
+                        label: "",
+                    }
+                )
+            }
+            else
+            {
+                graph.edges.push(
+                    {
+                        id: "E" + i.toString(),
+                        source: tour.getCity(i).getName(),
+                        target: tour.getCity(0).getName(),
+                        color: '#2196F3',
+                        type:'line',
+                        size: 5,
+                        label: "",
+                    }
+                )
+            }
+        }
+    }
+
+    function redraw()
+    {
+        tour.generateIndividual();
+        convertTourToEdges(tour, graph);
+        updateSigma(s, graph);
+        // console.log("gg");
+    }
+
+    setInterval(redraw, 1500);
+
+
+
+    // function animate() {
+    //     sigma.plugins.animate(s,
+    //         {
+    //             x: 'target_x',
+    //             y: 'target_y'
+    //         },
+    //         {
+    //             onComplete: function() {
+    //                 // s.graph.nodes('n0').hidden = !(s.graph.nodes('n0').hidden);
+    //                 animate();
+    //                 // console.log("hi");
+    //             }
+    //         }
+    //     );
+    // }
+    // // animate();
+
+
+    // setInterval(function() {
+    //     // var prefix = ['grid_', 'circular_'][step = +!step];
+    //     sigma.plugins.animate(
+    //         s,
+    //         {
+    //             x:   10,
+    //             y:  20,
+    //             // size: 'size',
+    //             // color: 'color'
+    //         }
+    //     );
+    // }, 2000);
+</script>

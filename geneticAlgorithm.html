@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="population.js"></script>
+    <script src="ga.js"></script>
+    <script src="default-data.js"></script>
+    <title>GA</title>
+    <style>
+
+        .content-container {
+            width: 100%;
+            height: calc(40vh);
+            background-color:#f1f1f1;
+            position: absolute;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .rightContainer {
+            position: absolute;
+            width: 50%;
+            height: calc(60vh - (60px));
+            margin: auto;
+            background-color:#D6D6D6;
+            right: 0;
+            box-sizing: border-box;
+            padding: 15px 45px 15px 45px;
+            overflow: auto;
+        }
+
+        .leftContainer {
+            position: absolute;
+            width: 50%;
+            height: calc(60vh - (60px));
+        }
+
+        .chart-container
+        {
+            width: 100%;
+            height: auto;
+            margin: auto;
+            /*background-color:#f1f1f1;*/
+        }
+
+        .setting-container {
+            width: 40%;
+            padding-right: 50px;
+        }
+
+        .result-container {
+            position: absolute;
+            left: 50%;
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .circle {
+            color: hsla(0,0%,100%,.5);
+            background-color: #2196F3;
+            opacity: 0.8;
+            cursor: pointer;
+            padding: 0;
+            margin: .5em;
+            border-radius: 100%;
+            width: 40px;
+            height: 40px;
+            transition: color .25s,background-color .5s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .circle:hover {
+            opacity: 1;
+        }
+
+        .icon {
+            position: absolute;
+            right: 1px;
+            top: -1px;
+            z-index: 1;
+            font-size: 1.3em;
+            color:white
+        }
+
+        #sigma-container {
+            width: 100%;
+            height: 100%;
+            max-height: inherit;
+        }
+
+        #editIcon.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div id="nav-placeholder" style="height: 60px;"></div>
+
+    <div class="rightContainer">
+        <div id="showDistanceGraph" class="circle icon" >
+            <i class="fas fa-sync-alt"></i>
+        </div>
+
+        <div class="chart-container" id="c1">
+            <canvas id="distanceChart"></canvas>
+        </div>
+        <div class="chart-container" id="c2">
+            <canvas id="fitnessChart"></canvas>
+        </div>
+    </div>
+
+    <div class="leftContainer">
+<!--        <div id="editIcon" class="circle icon">-->
+<!--            <i class="fas fa-edit" style="font-size: 0.9em;"></i>-->
+<!--        </div>-->
+<!--        <div id="viewIcon" class="circle icon">-->
+<!--            <i  class="fas fa-eye" style="font-size: 0.9em;"></i>-->
+<!--        </div>-->
+        <div id='sigma-container'></div>
+    </div>
+
+    <div class="content-container">
+        <div class="result-container">
+            <div class="panel-item" style=""><h3>Result</h3></div>
+            <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
+            <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
+            <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
+            <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
+            <div class="solutionHeader"><b>Tour:</b></div>
+            <div id="tour" style="padding-bottom: 10px;"></div>
+        </div>
+
+        <div class="setting-container">
+            <div class="panel-item" style=""><h3>Setting</h3></div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Number of Cities:</div>
+                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+                <div id="nodeNumVal" class="sliderValue disableAble">15</div>
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Generations:</div>
+                <input type="range" min="30" max="500" value="50" step="5" class=" slider disableAble" id="genNum">
+                <div id="genNumVal" class="sliderValue disableAble">50</div>
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Population Size:</div>
+                <input type="range" min="30" max="1000" value="50" step="10" class=" slider disableAble" id="popSize">
+                <div id="popSizeVal" class="sliderValue disableAble">15</div>
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Mutation Rate:</div>
+                <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
+                <div id="mutationRateVal" class="sliderValue disableAble">15</div>
+            </div>
+            <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
+                <button id="runBtn" class="button" onclick="run()">Run</button>
+                <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+                <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+</body>
+</html>
+<script>
+
+    // HTML sliders
+    let nodeSlider = document.getElementById("nodeNum");
+    let nodeVal = document.getElementById("nodeNumVal");
+    nodeVal.innerHTML = nodeSlider.value;
+
+    nodeSlider.oninput = function() {
+        nodeVal.innerHTML = this.value;
+        randomiseCities();
+    }
+
+    let genNumSlider = document.getElementById("genNum");
+    let genNumVal = document.getElementById("genNumVal");
+    genNumVal.innerHTML = genNumSlider.value;
+
+    genNumSlider.oninput = function() {
+        genNumVal.innerHTML = this.value;
+        genNumber = parseInt(this.value);
+    }
+
+    let popSizeSlider = document.getElementById("popSize");
+    let popSizeVal = document.getElementById("popSizeVal");
+    popSizeVal.innerHTML = popSizeSlider.value;
+
+    popSizeSlider.oninput = function() {
+        popSizeVal.innerHTML = this.value;
+        populationSize = parseInt(this.value);
+    }
+
+    let mutationRateSlider = document.getElementById("mutationRate");
+    let mutationRateVal = document.getElementById("mutationRateVal");
+    mutationRateVal.innerHTML = mutationRateSlider.value;
+
+    mutationRateSlider.oninput = function() {
+        mutationRateVal.innerHTML = this.value;
+        mutationRate = this.value;
+    }
+
+    // HTML icon
+    let showDefaultChart = true;
+    $("#c2").hide();
+    $("#showDistanceGraph").click(function () {
+
+        if(showDefaultChart)
+        {
+            $("#c1").hide();
+            $("#c2").fadeIn();
+            showDefaultChart = false;
+            // $("#editIcon").className = "fas fa-eye";
+        }
+        else
+        {
+            $("#c2").hide();
+            $("#c1").fadeIn();
+            showDefaultChart = true;
+            $("#editIcon").className = "fas fa-edit";
+        }
+    })
+
+    // let editMode = false;
+    // $("#viewIcon").hide();
+    // function edit()
+    // {
+    //     $("#viewIcon").show();
+    //     $("#editIcon").hide();
+    //     editMode = true;
+    //     dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+    //     dragListener.bind('dragend', function(event) {
+    //         allowDrag(event);
+    //     });
+    //
+    //     $("#runBtn").attr("disabled", true);
+    //     $("#runBtn").className += " disabled";
+    //     toast("Edit Mode", 800);
+    // }
+    // $("#editIcon").on("click", edit);
+    //
+    // $("#viewIcon").click(function () {
+    //     toast("View Mode", 800);
+    //
+    //     editMode = false;
+    //     sigma.plugins.killDragNodes(s);
+    //     $("#editIcon").show();
+    //     $("#viewIcon").hide();
+    //
+    //     $("#runBtn").attr("disabled", false);
+    //     $("#runBtn").className = "button"
+    // })
+
+
+
+    //Initialise sigma:
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 15,
+            }
+        }
+    );
+
+    let graph = {
+        nodes: [],
+        edges: []
+    };
+
+    let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+    // sigma.plugins.killDragNodes(s);
+    dragListener.bind('dragend', function(event) {
+        allowDrag(event);
+    });
+
+    // HTML chart
+
+    let ctx = document.getElementById('fitnessChart').getContext('2d');
+    let fitnessChart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Best Fitness',
+                backgroundColor: 'rgba(75, 192, 192)',
+                borderColor: 'rgba(75, 192, 192)',
+                data: [],
+                fill: false,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: 'rgba(75, 192, 192)',
+                pointHoverBorderColor: 'black',
+                spanGaps: true,
+            },
+                {
+                    label: 'Average Fitness',
+                    backgroundColor: 'rgba(255, 159, 64)',
+                    borderColor: 'rgba(255, 159, 64)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgba(255, 159, 64)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                },
+                {
+                    label: 'Worse Fitness',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgb(255, 99, 132)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                }]
+        },
+        // Configuration options go here
+        options: {
+            title: {
+                display: true,
+                text: 'Fitness Value vs. Generation',
+                fontSize: 16,
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        autoSkip: false,
+                        min:0,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Generation',
+                        fontStyle: 'bold',
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        min:0,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fitness Value',
+                        fontStyle: 'bold',
+                    }
+                }]
+            },
+            onClick: function(evt) {
+                let element = fitnessChart.getElementsAtEventForMode(evt, 'point', fitnessChart.options);
+                // if click on a dot
+                if(element.length!=0) {
+                    let firstPoint = element[0];
+
+                    let selectedTours = new Array();
+                    if(firstPoint._datasetIndex == 0)   // best is selected
+                    {
+                        selectedTours = fittestTours;
+                        cat = "Best";
+                    }
+                    else if(firstPoint._datasetIndex == 2)  // worst is selected
+                    {
+                        selectedTours = worstTours;
+                        cat = "Worst";
+                    }
+
+                    if(selectedTours.length != 0) {
+                        let label = distanceChart.data.labels[firstPoint._index];
+                        let value = distanceChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                        graphIndex = parseInt(label);
+
+                        $("#gen").text(label);
+                        $("#category").text(cat);
+                        $("#tour").text(selectedTours[graphIndex].printTour());
+                        $("#distance").text(selectedTours[graphIndex].getDistance().toFixed(2));
+                        $("#fitness").text(selectedTours[graphIndex].getFitness().toFixed(2));
+
+                        convertCityToNodes(tempTM, graph);
+                        convertTourToEdges(selectedTours[graphIndex], graph);
+                        updateSigma(s, graph);
+
+                        console.log(selectedTours[graphIndex].getDistance());
+                        console.log(selectedTours[graphIndex].printTour())
+                    }
+                }
+            },
+        }
+    });
+
+    let ctx2 = document.getElementById('distanceChart').getContext('2d');
+    let distanceChart = new Chart(ctx2, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Minimum Distance',
+                backgroundColor: 'rgba(75, 192, 192)',
+                borderColor: 'rgba(75, 192, 192)',
+                data: [],
+                fill: false,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: 'rgba(75, 192, 192)',
+                pointHoverBorderColor: 'black',
+                spanGaps: true,
+            },
+                {
+                    label: 'Average Distance',
+                    backgroundColor: 'rgba(255, 159, 64)',
+                    borderColor: 'rgba(255, 159, 64)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgba(255, 159, 64)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                },
+                {
+                    label: 'Maximum Distance',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgb(255, 99, 132)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                }]
+        },
+        // Configuration options go here
+        options: {
+            title: {
+                display: true,
+                text: 'Distance vs. Generation',
+                fontSize: 16,
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        autoSkip: false,
+                        min:0,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Generation',
+                        fontStyle: 'bold',
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        min:0,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Distance',
+                        fontStyle: 'bold',
+                    }
+                }]
+            },
+            onClick: function(evt) {
+                let element = distanceChart.getElementsAtEventForMode(evt, 'point', distanceChart.options);
+                // if click on a dot
+                if(element.length!=0) {
+                    let firstPoint = element[0];
+                    let cat = "";
+
+                    let selectedTours = new Array();
+                    if(firstPoint._datasetIndex == 0)   // best is selected
+                    {
+                        selectedTours = fittestTours;
+                        cat = "Best";
+                    }
+                    else if(firstPoint._datasetIndex == 2)  // worst is selected
+                    {
+                        selectedTours = worstTours;
+                        cat = "Worst";
+                    }
+
+                    if(selectedTours.length != 0) {
+                        let label = distanceChart.data.labels[firstPoint._index];
+                        let value = distanceChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                        graphIndex = parseInt(label);
+
+                        $("#gen").text(label);
+                        $("#category").text(cat);
+                        $("#tour").text(selectedTours[graphIndex].printTour());
+                        $("#distance").text(selectedTours[graphIndex].getDistance().toFixed(2));
+                        $("#fitness").text(selectedTours[graphIndex].getFitness().toFixed(2));
+
+                        convertCityToNodes(tempTM, graph);
+                        convertTourToEdges(selectedTours[graphIndex], graph);
+                        updateSigma(s, graph);
+
+                        console.log(selectedTours[graphIndex].getDistance());
+                        console.log(selectedTours[graphIndex].printTour())
+                    }
+                }
+
+            },
+        }
+    });
+
+    // GA Program
+    let geneticTM = new TourManager();
+    let tempTM = new TourManager();
+    geneticTM.clone(TM);
+
+    let graphIndex = 0;
+    let fittestTours = new Array();
+    let worstTours = new Array();
+    let mutationRate = 0.015;
+    let eliteSize = 1;
+    let populationSize = 100;
+    let genNumber = 50;
+    let xAxisInterval = 5;
+
+    // Initialize population
+    let pop = new Population(populationSize, geneticTM, true);
+    let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+    pop = ga.evolvePopulation(pop, geneticTM);
+
+    // get initial solution
+    let best = pop.getFittest();
+    let current = new Tour();
+
+    // console.log("Initial distance: " + pop.getFittest().getDistance());
+    // console.log("Tour: " + pop.getFittest().printTour());
+
+    best = new Tour(pop.getFittest().getTour());
+
+    convertCityToNodes(geneticTM, graph);
+    updateSigma(s,graph);
+
+    // Evolve population for 100 generations
+    // evolve();
+    // for (let i = 0; i < 100; i++) {
+    //     pop = ga.evolvePopulation(pop, geneticTM);
+    // }
+    // Print final results
+    // console.log("Final distance: " + pop.getFittest().getDistance());
+    // console.log("Tour: " + pop.getFittest().printTour());
+    // console.log("best distance: " + pop.getFittest().getDistance());
+    // console.log("Tour: " + best.printTour());
+
+    // Section for functions
+    async function evolve()
+    {
+        tempTM.clone(geneticTM);
+
+        console.log("Initial distance: " + pop.getFittest().getDistance());
+        console.log("Tour: " + pop.getFittest().printTour());
+
+        addData(fitnessChart, 0, pop.getFittest().getFitness().toFixed(2),
+            pop.getMeanFitness().toFixed(2), pop.getWorst().getFitness().toFixed(2));
+        addData(distanceChart, 0, pop.getFittest().getDistance().toFixed(2),
+            pop.getMeanDistance().toFixed(2), pop.getWorst().getDistance().toFixed(2));
+        fittestTours.push(pop.getFittest());
+        worstTours.push(pop.getWorst());
+
+
+        // Evolve population for 100 generations
+        for (let i = 1; i <= genNumber; i++) {
+            pop = ga.evolvePopulation(pop, geneticTM);
+            $("#gen").text(i);
+            $("#category").text("Best");
+            $("#tour").text(pop.getFittest().printTour());
+            $("#distance").text(pop.getFittest().getDistance().toFixed(2));
+            $("#fitness").text(pop.getFittest().getFitness().toFixed(2));
+
+            // pop.sort();
+            // console.log("gen: " + (i));
+            // console.log(pop);
+
+            fittestTours.push(pop.getFittest());
+            worstTours.push(pop.getWorst());
+
+            convertCityToNodes(geneticTM, graph);
+            convertTourToEdges(pop.getFittest(), graph);
+            updateSigma(s, graph);
+
+            if((i)%xAxisInterval==0 || i==genNumber) {
+                addData(fitnessChart, (i), pop.getFittest().getFitness().toFixed(2),
+                    pop.getMeanFitness().toFixed(2), pop.getWorst().getFitness().toFixed(2));
+                addData(distanceChart, (i), pop.getFittest().getDistance().toFixed(2),
+                    pop.getMeanDistance().toFixed(2), pop.getWorst().getDistance().toFixed(2));
+            }
+
+            await sleep(1);
+        }
+        console.log("Final distance: " + pop.getFittest().getDistance());
+        console.log("Tour: " + pop.getFittest().printTour());
+
+        enableAll();
+
+    }
+
+    function run()
+    {
+        disableAll();
+        updateInterval();
+        cleanChart(fitnessChart);
+        cleanChart(distanceChart);
+        clearArray(fittestTours);
+        clearArray(worstTours);
+        pop = new Population(populationSize, geneticTM, true);
+        ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+        evolve();
+    }
+
+    function addData(chart, label, bestData, avgData, worstData) {
+        let index = parseInt(label);
+        chart.data.labels[index] = label;
+        chart.data.datasets[0].data[index] = bestData;
+        chart.data.datasets[1].data[index] = avgData;
+        chart.data.datasets[2].data[index] = worstData;
+        chart.update();
+    }
+
+    function cleanChart(chart)
+    {
+        for(let i=0;i<3;i++)
+        {
+            chart.data.datasets[i].data = [];
+            chart.data.labels = [];
+        }
+    }
+
+    function randomiseCities()
+    {
+
+        let num = $("#nodeNum").val();
+        num = parseInt(num);
+
+        geneticTM.clear();
+
+        // let alp = 65;
+        //
+        // for(let i =65; i < (alp + num);i++)
+        // {
+        //     geneticTM.addCity(new City(String.fromCharCode(i)));
+        // }
+        for(let i=1;i<=num;i++)
+        {
+            geneticTM.addCity(new City( "c" + i));
+        }
+        pop = new Population(populationSize, geneticTM, true);
+        ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+
+        convertCityToNodes(geneticTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+    }
+
+    function resetDefault() {
+        geneticTM.clear();
+        geneticTM.clone(TM);
+        pop = new Population(populationSize, geneticTM, true);
+        ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+        convertCityToNodes(geneticTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+    }
+
+    function updateInterval()
+    {
+        if(genNumber<120)
+            xAxisInterval = 5;
+        else if(genNumber>=120 && genNumber<200)
+            xAxisInterval = 10;
+        else if(genNumber>=200 && genNumber<350)
+            xAxisInterval = 20;
+        else if(genNumber>=350 && genNumber<=500)
+            xAxisInterval = 50;
+    }
+
+    function allowDrag(event)
+    {
+        // replace city with new coordinates
+        let node = event.data.node;
+        let cityIndex = geneticTM.findIndexByName(node.label);
+        let newCity = new City(node.label, node.x, node.y);
+        geneticTM.destinationCities.splice(cityIndex,1, newCity);
+        pop = ga.evolvePopulation(pop, geneticTM);
+
+        convertCityToNodes(geneticTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+    }
+
+    function disableAll()
+    {
+        // $("#editIcon").off("click");
+        $("#runBtn").attr("disabled", true);
+        $("#randomBtn").attr("disabled", true);
+        $("#resetBtn").attr("disabled", true);
+        $(".slider").attr("disabled", true);
+
+        $('.disableAble').each(function() {
+            this.className = this.className.replace(" disableAble", " disabled");
+        });
+
+        // document.getElementById("editIcon").className += " disabled"
+
+        $('.slider').each(function() {
+            this.className = this.className.replace(" slider", " slider2");
+        });
+
+        sigma.plugins.killDragNodes(s);
+    }
+
+    function enableAll()
+    {
+        $("#runBtn").attr("disabled", false);
+        $("#randomBtn").attr("disabled", false);
+        $("#resetBtn").attr("disabled", false);
+        $(".slider2").attr("disabled", false);
+
+        $('.disabled').each(function() {
+            this.className = this.className.replace(" disabled", " disableAble");
+        });
+
+        $('.slider2').each(function() {
+            this.className = this.className.replace(" slider2", " slider");
+        });
+
+        // $("#editIcon").on("click", edit);
+        // document.getElementById("editIcon").className += "circle icon";
+
+        dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+        dragListener.bind('dragend', function(event) {
+            allowDrag(event);
+        });
+    }
+
+
+</script>

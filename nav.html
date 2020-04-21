@@ -1,0 +1,41 @@
+<script>
+    $("#currentAlgo").text(AlgoName);
+</script>
+
+
+<nav class="nav">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <a href="index.html">Home</a>
+        </div>
+
+        <div class="dropdown nav-item">
+            Algorithms
+            <span class="caret"></span>
+            <div class="dropdown-content">
+                <a href="greedy.html" class="dropdown-item">Greedy</a>
+                <a href="SA.html" class="dropdown-item">Simulated Annealing</a>
+                <a href="geneticAlgorithm.html" class="dropdown-item">Genetic Algorithm</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+    </div>
+
+</nav>
+
+<script>
+    $(".dropdown-item").click(function () {
+
+        let x = $(this).text();
+        $("#currentAlgo").text(x);
+        AlgoName = x;
+    })
+
+    $("#currentAlgo").text(AlgoName);
+</script>
+
+
+
