@@ -52,7 +52,6 @@ class GA
             let p1 = this.crossover(parent1, parent2);
             let p2 = this.crossover(parent1, parent2);
 
-
             // Crossover parents
             let child = this.crossover(p1, p2);
             // Add child to new population

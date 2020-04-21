@@ -219,7 +219,8 @@
             final();
         else
         {
-            reset()
+            let x = nodeSlider.value;
+            reset(x);
             document.getElementById("auto").checked = true;
             auto();
         }
@@ -435,7 +436,7 @@
         reset();
     }
 
-    function reset()
+    function reset(num=15)
     {
         convertCityToNodes(greedyTM, graph);
         clearArray(graph.edges);
@@ -443,8 +444,8 @@
         index = 0   ;
         visited.clear();
         unvisited = new Tour(greedyTM.getTour());
-        nodeSlider.value = 15;
-        nodeVal.innerHTML = nodeSlider.value;
+        nodeSlider.value = num;
+        nodeVal.innerHTML = num;
         resetInfo();
         isRunning = false;
     }
