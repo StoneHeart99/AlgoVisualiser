@@ -20,7 +20,6 @@ class GA
         // console.log("mutation rate: " + this.mutationRate);
         // console.log("population size: "+ pop.populationSize());
         // console.log("elite: " + this.eliteSize);
-        console.log(pop.populationSize());
 
         this.population = pop;
         this.tourManager = tourManager;
@@ -30,18 +29,11 @@ class GA
         // Keep our best individual if elitism is enabled
         let elitismOffset = 0;
         if (this.elitism) {
-            // pop.sort();
-            // for(let i=0;i<this.eliteSize;i++)
-            // {
-            //     newPopulation.saveTour(i, pop.getFittest());
-            // }
-            // elitismOffset = this.eliteSize;
 
             newPopulation.saveTour(0, pop.getFittest());
             elitismOffset = 1;
         }
 
-        // console.log(newPopulation);
 
         // Crossover population
         // Loop over the new population's size and create individuals from Current population
@@ -57,20 +49,6 @@ class GA
             // Add child to new population
             newPopulation.saveTour(i, child);
 
-            // console.log("parent1");
-            // console.log(parent1);
-            // console.log("parent2");
-            // console.log(parent2);
-            // child.getDistance();
-            // console.log("child");
-            // console.log(child);
-
-
-            // console.log(child);
-            // // console.log("i: " + i);
-            // // console.log("p1: " + parent1.size());
-            // // console.log("p2: " + parent2.size());
-            // // console.log();
         }
 
         // console.log("before mutate");
@@ -177,12 +155,11 @@ class GA
                 let tourPos2 = Math.floor(tour.size() * Math.random());
                 if( tourPos2 == 0)
                     tourPos2++;
-
                 // Swap them around
                 tour.swapCities(tourPos1, tourPos2);
-
             }
         }
+
     }
 
     // Selects candidate tour for crossover
@@ -202,4 +179,177 @@ class GA
         let fittest = tournament.getFittest();
         return fittest;
     }
+
+    evolvePopulation2(pop, tourManager)
+    {
+        this.population = pop;
+        this.tourManager = tourManager;
+        let size = pop.populationSize();
+
+
+        let newPopulation = new Population(size, tourManager, true);
+        newPopulation.sort();
+
+        let elitismOffset = 0;
+        if (this.elitism) {
+            newPopulation.saveTour(0, pop.getFittest());
+            elitismOffset = 1;
+        }
+
+        // Select parents
+        let parent1 = this.tournamentSelection(pop);
+        let parent2 = this.tournamentSelection(pop);
+
+        while(parent1.getDistance()==parent2.getDistance())
+        {
+            parent2 = this.tournamentSelection(pop);
+        }
+
+
+        let children = new Array(2);
+
+        // crossover
+        children = this.crossover2(parent1,parent2)
+
+        // Mutation
+        for(let i=0;i<children.length;i++)
+            this.mutate2(children[i]);
+
+        console.log({newPopulation})
+
+        // survival selection
+        newPopulation.saveTour(size-1, children[0]);
+        newPopulation.saveTour(size-2, children[1]);
+
+        console.log("new");
+        console.log({newPopulation})
+
+        return newPopulation;
+    }
+
+    crossover2(parent1,parent2) // tour, tour
+    {
+        // Create new child tour
+        let children = new Array(2);
+        let child1 = new Tour();
+        child1.cities = new Array(parent1.size());
+        let child2 = new Tour();
+        child2.cities = new Array(parent1.size());
+
+        let p1 = new Tour();
+        let p2 = new Tour();
+        p1.clone(parent1);
+        p2.clone(parent2);
+
+        // add start city to child solution and remove it from parents
+        child1.setCity(0, parent1.getCity(0));
+        child2.setCity(0, parent1.getCity(0));
+        p1.cities.shift();
+        p2.cities.shift();
+
+        // Get start and end sub tour positions for parent1's tour
+        let startPos = Math.floor(Math.random() * parent1.size());
+        let endPos = Math.floor(Math.random() * parent1.size());
+        if(startPos == endPos)
+        {
+            if(startPos == p1.size())
+            {
+                startPos--;
+            }
+            else
+            {
+                startPos++;
+            }
+        }
+        if(startPos > endPos)
+        {
+            let temp = 0;
+            temp = startPos;
+            startPos = endPos;
+            endPos = temp;
+        }
+
+        // child 1
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                child1.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child1.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child1.getCity(ii) == null) {
+                        child1.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        // child 2
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i < startPos || i > endPos) {
+                child2.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child2.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child2.getCity(ii) == null) {
+                        child2.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        children[0] = child1;
+        children[1] = child2;
+
+        return children;
+    }
+
+    mutate2(tour)
+    {
+        if(Math.random() < this.mutationRate) {
+
+            let tourPos1 = 0;
+            let tourPos2 = 0;
+
+            for (let i = 0; i < 2; i++) {
+                tourPos1 = Math.floor(tour.size() * Math.random());
+                tourPos2 = Math.floor(tour.size() * Math.random());
+
+                // Skip start node
+                if (tourPos1 == 0)
+                    tourPos1++;
+                if (tourPos2 == 0)
+                    tourPos2++;
+
+                // ensure no index are different
+                if (tourPos1 == tourPos2) {
+                    if (tourPos1 == tour.size() - 1) {
+                        tourPos1--;
+                    } else {
+                        tourPos1++;
+                    }
+                }
+
+                tour.swapCities(tourPos1, tourPos2);
+            }
+        }
+    }
+
 }

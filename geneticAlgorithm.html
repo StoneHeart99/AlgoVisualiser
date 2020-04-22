@@ -173,8 +173,8 @@
             </div>
             <div class="slideContainer panel-item">
                 <div class="sliderTitle disableAble">Generations:</div>
-                <input type="range" min="30" max="500" value="50" step="5" class=" slider disableAble" id="genNum">
-                <input type="number" id="genNumVal" class="sliderValue disableAble" value="50">
+                <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
+                <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
             </div>
             <div class="slideContainer panel-item">
                 <div class="sliderTitle disableAble">Population Size:</div>
@@ -247,10 +247,10 @@
         else
         {
             this.value = value;
-            if (value < 30 )
-                this.value = 30;
-            else if (value > 500)
-                this.value = 500;
+            if (value < 50 )
+                this.value = 50;
+            else if (value > 1000)
+                this.value = 1000;
             $("#genNum").val(this.value);
             genNumber = this.value;
         }
@@ -643,7 +643,12 @@
     // Initialize population
     let pop = new Population(populationSize, geneticTM, true);
     let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
-    pop = ga.evolvePopulation(pop, geneticTM);
+    pop = ga.evolvePopulation2(pop, geneticTM);
+
+    // for(let i=0;i<2;i++)
+    // {
+    //     pop = ga.evolvePopulation2(pop, geneticTM);
+    // }
 
     // get initial solution
     let best = pop.getFittest();
@@ -686,7 +691,7 @@
 
         // Evolve population for 100 generations
         for (let i = 1; i <= genNumber; i++) {
-            pop = ga.evolvePopulation(pop, geneticTM);
+            pop = ga.evolvePopulation2(pop, geneticTM);
             $("#gen").text(i);
             $("#category").text("Best");
             $("#tour").text(pop.getFittest().printTour());
@@ -798,6 +803,10 @@
             xAxisInterval = 20;
         else if(genNumber>=350 && genNumber<=500)
             xAxisInterval = 50;
+        else if(genNumber>=500 && genNumber<=800)
+            xAxisInterval = 80;
+        else if(genNumber>=800 && genNumber<=1000)
+            xAxisInterval = 100;
     }
 
     function allowDrag(event)
@@ -807,7 +816,7 @@
         let cityIndex = geneticTM.findIndexByName(node.label);
         let newCity = new City(node.label, node.x, node.y);
         geneticTM.destinationCities.splice(cityIndex,1, newCity);
-        pop = ga.evolvePopulation(pop, geneticTM);
+        pop = ga.evolvePopulation2(pop, geneticTM);
 
         convertCityToNodes(geneticTM, graph);
         clearArray(graph.edges);

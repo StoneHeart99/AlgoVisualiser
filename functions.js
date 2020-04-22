@@ -63,13 +63,14 @@ function convertCityToNodes(TM, graph)
 {
     clearArray(graph.nodes);
     let nodeSize = 10;
-    let nodeColor = "black";
+    // let nodeColor = "black";
+    let nodeColor = "#2196F3";
     for(let i=0;i<TM.size();i++)
     {
         if(i==0)
-            nodeColor = "red";
+            nodeColor = "#50c878";
         else
-            nodeColor = "orange";
+            nodeColor = "#2196F3";
 
         graph.nodes.push(
             {
