@@ -20,7 +20,7 @@ class GA
         // console.log("mutation rate: " + this.mutationRate);
         // console.log("population size: "+ pop.populationSize());
         // console.log("elite: " + this.eliteSize);
-
+        console.log(pop.populationSize());
 
         this.population = pop;
         this.tourManager = tourManager;
