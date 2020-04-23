@@ -37,6 +37,7 @@
             position: absolute;
             bottom: 0;
             z-index: 1;
+            padding-bottom: 10px;
         }
 
         .rightContainer {
@@ -100,7 +101,7 @@
 
         .icon {
             position: absolute;
-            right: 1px;
+            left: 1px;
             top: -1px;
             z-index: 1;
             font-size: 1.3em;
@@ -504,8 +505,8 @@
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
 
-                        console.log(selectedTours[graphIndex].getDistance());
-                        console.log(selectedTours[graphIndex].printTour())
+                        // console.log(selectedTours[graphIndex].getDistance());
+                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
             },
@@ -616,9 +617,9 @@
                         convertCityToNodes(tempTM, graph);
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
-
-                        console.log(selectedTours[graphIndex].getDistance());
-                        console.log(selectedTours[graphIndex].printTour())
+                        //
+                        // console.log(selectedTours[graphIndex].getDistance());
+                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
 
@@ -678,8 +679,8 @@
     {
         tempTM.clone(geneticTM);
 
-        console.log("Initial distance: " + pop.getFittest().getDistance());
-        console.log("Tour: " + pop.getFittest().printTour());
+        // console.log("Initial distance: " + pop.getFittest().getDistance());
+        // console.log("Tour: " + pop.getFittest().printTour());
 
         addData(fitnessChart, 0, pop.getFittest().getFitness().toFixed(2),
             pop.getMeanFitness().toFixed(2), pop.getWorst().getFitness().toFixed(2));
@@ -716,10 +717,13 @@
                     pop.getMeanDistance().toFixed(2), pop.getWorst().getDistance().toFixed(2));
             }
 
-            await sleep(1);
+            if(i==genNumber)
+                await sleep(1).then(()=> {toast("The algorithm has completed!");});
+            else
+                await sleep(1);
         }
-        console.log("Final distance: " + pop.getFittest().getDistance());
-        console.log("Tour: " + pop.getFittest().printTour());
+        // console.log("Final distance: " + pop.getFittest().getDistance());
+        // console.log("Tour: " + pop.getFittest().printTour());
 
         enableAll();
 
@@ -784,6 +788,7 @@
     }
 
     function resetDefault() {
+        // reset node
         geneticTM.clear();
         geneticTM.clone(TM);
         pop = new Population(populationSize, geneticTM, true);
@@ -791,6 +796,19 @@
         convertCityToNodes(geneticTM, graph);
         clearArray(graph.edges);
         updateSigma(s,graph);
+
+        // reset settings
+        nodeSlider.value = 15;
+        nodeVal.value = 15;
+        genNumSlider.value = 100;
+        genNumVal.value = 100;
+        genNumber = 100;
+        popSizeSlider.value = 50;
+        popSizeVal.value = 50;
+        populationSize = 50;
+        mutationRateSlider.value = 0.015;
+        mutationRateVal.value = 0.015;
+        mutationRate = 0.015;
     }
 
     function updateInterval()

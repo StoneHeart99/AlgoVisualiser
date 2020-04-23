@@ -215,14 +215,9 @@ class GA
         for(let i=0;i<children.length;i++)
             this.mutate2(children[i]);
 
-        console.log({newPopulation})
-
         // survival selection
         newPopulation.saveTour(size-1, children[0]);
         newPopulation.saveTour(size-2, children[1]);
-
-        console.log("new");
-        console.log({newPopulation})
 
         return newPopulation;
     }

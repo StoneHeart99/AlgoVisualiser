@@ -1,8 +1,9 @@
-html, body {
+body {
     padding: 0px;
     margin: 0px;
     /*height: 100vh;*/
     /*font-size: 1.05em;*/
+    background: #f1f1f1;
 }
 
 nav {
@@ -13,15 +14,7 @@ nav {
     font-size: 1.25em;
 }
 
-#currentAlgo {
-    cursor: default;
-}
-
-#currentAlgo:hover {
-    color: white;
-}
-
-.nav-container {
+.nav-menu {
     /*background: #292e34;*/
     /*height: 60px;*/
     display: flex;
@@ -56,6 +49,14 @@ nav {
     border-left: 6px solid transparent;
     /*-webkit-transition: border-color 0.25s, color 0.25s;*/
     /*transition: border-color 0.25s, color 0.25s;*/
+}
+
+#currentAlgo {
+    cursor: default;
+}
+
+#currentAlgo:hover {
+    color: white;
 }
 
 #sigma-container {
@@ -227,7 +228,6 @@ input:checked + .toggle:before {
     border-radius: 8px;
     min-width: 80px;
     width: 30%;
-
 }
 
 .button:hover {

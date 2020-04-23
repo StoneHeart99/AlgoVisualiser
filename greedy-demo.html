@@ -78,9 +78,9 @@
         </div>
 
         <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
+            <button class="button" onclick="run()">Run</button>
             <button class="button" onclick="randomiseCities()" >Randomise Cities</button>
             <button class="button" onclick="resetDefault()">Reset Default</button>
-            <button class="button" onclick="run()">Run</button>
         </div>
 
         <div class="row d-flex justify-content-start panel-item" style="padding-left: 15px;">
@@ -388,7 +388,7 @@
                 }
             }
         }
-        console.log(visited);
+        // console.log(visited);
 
         index++;
         if(index==greedyTM.size()*2)
@@ -462,7 +462,7 @@
         $("#tour").text("");
         $("#distance").text("");
         index--;
-        console.log(index);
+        // console.log(index);
         updateSigma(s, graph);
     }
 
@@ -471,6 +471,9 @@
         greedyTM.clone(TM);
         tour = new Tour(greedyTM.getTour());
         isAuto = false;
+        algoSpeedIndex = 2;
+        speedSlider.value = 3;
+        speedVal.value = 3;
         simpleGreedy(tour, greedyTM);
         reset();
     }

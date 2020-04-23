@@ -95,5 +95,6 @@ TM.addCity(city15);
 //     $("#nav-placeholder").load("nav.html");
 // });
 
+console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")
 
 

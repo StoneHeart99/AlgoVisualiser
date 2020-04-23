@@ -546,11 +546,13 @@
         console.log("Tour: " + bestSolution.printTour());
 
         enableAll();
+        toast("The algorithm has completed!");
     }
 
     function resetInfo() {
         $("#temperature").text("Temperature: ");
         $("#threshold").text("Max Threshold: ");
+        $("#iteration").text("Iteration: ");
         $("#initTour").text("");
         $("#initDistance").text("");
         $("#currentTour").text("");
@@ -601,15 +603,33 @@
     }
 
     function resetDefault() {
+        // restore default node
         simulatedTM.clear();
         simulatedTM.clone(TM);
         tour = new Tour(simulatedTM.getTour());
-        convertCityToNodes(simulatedTM, graph);
-        clearArray(graph.edges);
-        updateSigma(s,graph);
         currentSolution = new Tour(simulatedTM.getTour());
         currentSolution.generateIndividual();
         bestSolution = new Tour(currentSolution);
+        convertCityToNodes(simulatedTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+        // restore default setting
+        speedSlider.value = 3;
+        speedVal.value = 3;
+        algoSpeedIndex = 2;
+        nodeSlider.value = 15;
+        nodeVal.value = 15;
+        initTempSlider.value = 1000;
+        initTempVal.value = 1000;
+        initTemp = 1000;
+        coolingRateSlider.value = 0.003;
+        coolingRateVal.value = 0.003;
+        initCoolingRate = 0.003;
+        initIterationSlider.value = 1000;
+        iterationVal.value = 1000;
+        iterationNum = 1000;
+        if(enableReheat)
+            setReheatFalse();
         resetInfo();
     }
 
@@ -636,6 +656,18 @@
                 = document.getElementById("initIteration").className.replace(" slider2", " slider");
 
         }
+    }
+
+    function setReheatFalse()
+    {
+        document.getElementById("reheat").checked = false;
+        enableReheat = false;
+        $('.disabled').each(function() {
+            this.className = this.className.replace(" disabled", " disableAble");
+        });
+        $("#initIteration").attr("disabled", false);
+        document.getElementById("initIteration").className
+            = document.getElementById("initIteration").className.replace(" slider2", " slider");
     }
 
     function disableAll()
@@ -696,6 +728,7 @@
         convertCityToNodes(simulatedTM, graph);
         clearArray(graph.edges);
         updateSigma(s,graph);
+        resetInfo();
     }
 
 </script>

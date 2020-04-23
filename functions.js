@@ -54,9 +54,9 @@ function simpleGreedy(tour, TM)
         tour.addCity(currentCity);
         unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
     }
-
-    console.log(tour.printTour());
-    console.log(tour.getDistance());
+    //
+    // console.log(tour.printTour());
+    // console.log(tour.getDistance());
 }
 
 function convertCityToNodes(TM, graph)
