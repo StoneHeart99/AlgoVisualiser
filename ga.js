@@ -205,10 +205,8 @@ class GA
             parent2 = this.tournamentSelection(pop);
         }
 
-
-        let children = new Array(2);
-
         // crossover
+        let children = new Array(2);
         children = this.crossover2(parent1,parent2)
 
         // Mutation

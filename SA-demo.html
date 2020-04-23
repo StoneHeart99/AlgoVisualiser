@@ -354,6 +354,16 @@
         allowDrag(event);
     });
 
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        showPointerCursor();
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        showDefaultCursor()
+    });
+
     // SA Program
     let simulatedTM = new TourManager();
     simulatedTM.clone(TM);
@@ -402,7 +412,6 @@
             iterationNum = 99999;
         else
             iterationNum = initIterationSlider.value;
-
 
         // Set initial temp and cooling rate, etc
         let temp = initTemp;
@@ -691,6 +700,9 @@
         document.getElementById("speed").className = "slider";
 
         sigma.plugins.killDragNodes(s);
+        s.bind('overNode', function(e) {
+            showDefaultCursor();
+        });
     }
 
     function enableAll()
@@ -714,6 +726,9 @@
         dragListener.bind('dragend', function(event) {
             allowDrag(event);
         });
+        s.bind('overNode', function(e) {
+            showPointerCursor();
+        });
     }
 
     function allowDrag(event)
@@ -729,6 +744,16 @@
         clearArray(graph.edges);
         updateSigma(s,graph);
         resetInfo();
+    }
+
+    function showPointerCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    }
+
+    function showDefaultCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'default';
     }
 
 </script>

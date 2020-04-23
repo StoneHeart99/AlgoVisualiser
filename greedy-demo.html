@@ -165,22 +165,6 @@
         }
     });
 
-
-
-    // Greedy program
-    let greedyTM = new TourManager();
-    greedyTM.clone(TM);
-    let tour = new Tour(greedyTM.getTour());
-    let algoSpeed = [1800, 1400, 1000, 600, 100];
-    let algoSpeedIndex = 2;
-    let isAuto = false;
-    let isfinal = false;
-    let isRunning = false;
-    let index = 0;  // use to find state of graph
-    let visited = new Tour(tour);
-    let unvisited = new Tour(greedyTM.getTour());
-    visited.clear();
-
     // Initialise nodes and load it
     let s = new sigma(
         {
@@ -196,7 +180,6 @@
                 enableCamera: false,
                 defaultEdgeLabelSize: 15,
                 sideMargin: 30,
-                edgeHoverColor: 'blue',
             }
         }
     );
@@ -204,11 +187,6 @@
         nodes: [],
         edges: []
     };
-
-    simpleGreedy(tour, greedyTM);
-    convertCityToNodes(greedyTM, graph);
-    updateSigma(s, graph);
-
 
     let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
     dragListener.bind('dragend', function(event) {
@@ -247,9 +225,36 @@
         updateSigma(s,graph);
     });
 
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        document.getElementById('sigma-container').style.cursor = 'default';
+    });
+
+    // Greedy program
+    let greedyTM = new TourManager();
+    greedyTM.clone(TM);
+    let tour = new Tour(greedyTM.getTour());
+    let algoSpeed = [1800, 1400, 1000, 600, 100];
+    let algoSpeedIndex = 2;
+    let isAuto = false;
+    let isfinal = false;
+    let isRunning = false;
+    let index = 0;  // use to find state of graph
+    let visited = new Tour(tour);
+    let unvisited = new Tour(greedyTM.getTour());
+    visited.clear();
+
+    simpleGreedy(tour, greedyTM);
+    convertCityToNodes(greedyTM, graph);
+    updateSigma(s, graph);
+
 
     // Section for functions
-
     function run()
     {
         isRunning = true;

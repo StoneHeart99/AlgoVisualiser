@@ -399,6 +399,16 @@
         allowDrag(event);
     });
 
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        showPointerCursor();
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        showDefaultCursor()
+    });
+
     // HTML chart
 
     let ctx = document.getElementById('fitnessChart').getContext('2d');
@@ -444,6 +454,25 @@
         },
         // Configuration options go here
         options: {
+            tooltips: {
+                mode: 'index',
+            },
+            legend: {
+                onHover: function(e) {
+                    e.target.style.cursor = 'pointer';
+                }
+            },
+            hover: {
+                mode: 'index',
+                onHover: function(e) {
+                    let point = this.getElementAtEvent(e);
+                    if (point.length)
+                        e.target.style.cursor = 'pointer';
+                    else
+                        e.target.style.cursor = 'default';
+                    $("#FitnessChart").css("cursor", e[0] ? "pointer" : "default");
+                }
+            },
             title: {
                 display: true,
                 text: 'Fitness Value vs. Generation',
@@ -556,6 +585,23 @@
         },
         // Configuration options go here
         options: {
+            tooltips: {
+                mode: 'index',
+            },
+            legend: {
+                onHover: function(e) {
+                    e.target.style.cursor = 'pointer';
+                }
+            },
+            hover: {
+                mode: 'index',
+                onHover: function(e) {
+                    var point = this.getElementAtEvent(e);
+                    if (point.length) e.target.style.cursor = 'pointer';
+                    else e.target.style.cursor = 'default';
+                    // $("#distanceChart").css("cursor", e[0] ? "pointer" : "default");
+                }
+            },
             title: {
                 display: true,
                 text: 'Distance vs. Generation',
@@ -638,7 +684,7 @@
     let mutationRate = 0.015;
     let eliteSize = 1;
     let populationSize = 100;
-    let genNumber = 50;
+    let genNumber = 100;
     let xAxisInterval = 5;
 
     // Initialize population
@@ -860,6 +906,9 @@
         });
 
         sigma.plugins.killDragNodes(s);
+        s.bind('overNode', function(e) {
+            showDefaultCursor();
+        });
     }
 
     function enableAll()
@@ -884,6 +933,19 @@
         dragListener.bind('dragend', function(event) {
             allowDrag(event);
         });
+        s.bind('overNode', function(e) {
+            showPointerCursor();
+        });
+    }
+
+    function showPointerCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    }
+
+    function showDefaultCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'default';
     }
 
 
