@@ -1,5 +1,5 @@
 TM = new TourManager();
-animateTM = new TourManager();
+
 // city1 = new City("A", 120, 80);
 // city2 = new City("B", 180, 200);
 // city3 = new City("C", 80, 180);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
-    <link rel="icon" href="logo.png">
+    <link rel="icon" href="assets/logo.png">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
@@ -117,7 +117,7 @@
                 An interactive and fun way to visualise how algorithms are implemented to solve Travelling Salesman Problems (TSP)
             </p>
 
-            <a href="nearest-neigbour-demo.html">
+            <a href="nearest-neighbour-demo.html">
                 <button class="button" style="margin-top: 50px;"><b>Learn More</b></button>
             </a>
         </div>
@@ -163,6 +163,7 @@
     cityA6 = new City("a6", 180, 60);
     cityA7 = new City("a7", 20, 160);
 
+    animateTM = new TourManager();
     animateTM.addCity(cityA1);
     animateTM.addCity(cityA2);
     animateTM.addCity(cityA3);
@@ -188,8 +189,6 @@
                 edgeHoverColor: 'blue',
                 drawLabels: false,
                 enableHovering: false,
-                animationTime: 2000,
-
             }
         }
     );

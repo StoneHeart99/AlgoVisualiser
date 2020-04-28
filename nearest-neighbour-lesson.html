@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearest Neighbour</title>
+    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="default-data.js"></script>
+    <style>
+        .content-container {
+            width: 100%;
+        }
+
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            padding-bottom: 50px;
+            height: calc(100vh - (60px));
+
+        }
+
+        .article {
+            text-align: justify;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        #sigma-container{
+            margin: auto auto 50px;
+            height: 400px;
+            width: 400px;
+            border: 1px solid #555;
+        }
+
+        .img-container {
+            width: 400px;
+            margin: auto;
+            background-color: #E1E1E1;
+            display: flex;
+            justify-content: center;
+            border: 1px solid #555;
+        }
+
+        .img {
+            height: 350px;
+            width: 350px;
+            padding: 30px;
+            background-color: #E1E1E1;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <div id="nav-placeholder" ></div>
+    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+        Nearest Neighbour
+    </div>
+</nav>
+
+<div class="content-container">
+    <div class="container">
+        <h2>Lesson 2 - Nearest Neighbour</h2>
+
+<!--        <div class="section">-->
+<!--            <h3>1.1 Overview</h3>-->
+<!--            <p class="article">-->
+<!--                The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the shortest-->
+<!--                route between a list of cities that must be visited exactly once and return to the starting city.-->
+<!--                It is a famous algorithmic problem in the fields of computer science and operations research-->
+<!--                because it is easy to state yet tough to solve. The complexity of obtaining a best route for the-->
+<!--                problem will also grow exponentially as more cities are added. For example, with 10 cities, there-->
+<!--                are more than 300,000 different round-trips. However, with 15 cities, with 15 cities, the number of-->
+<!--                possible round-trips skyrocket to more than 87 billion. Hence, it is impractical for computer to-->
+<!--                calculate every possible route to find out the shortest route. We would need other methods or-->
+<!--                algorithms to find a good solution for TSP.-->
+<!--            </p>-->
+<!--        </div>-->
+
+<!--        <div class="section">-->
+<!--            <h3>1.2 Representation of TSP in Computer</h3>-->
+<!--            <h4>a) Weighted Graph</h4>-->
+<!--            <p class="article">-->
+<!--                TSP can be represented in computer by using weighted graph, where the graph’s vertices represent the-->
+<!--                cities, the graph’s edges represent the path, and the weight of an edge represent the distance.-->
+<!--            </p>-->
+
+<!--            <div id="sigma-container"></div>-->
+
+<!--            <h4>b) Adjacency Matrix</h4>-->
+<!--            <p>-->
+<!--                Adjacency Matrix is a square matrix used to represent a graph in graph theory and computer science.-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                An entry M<sub>ij</sub>  in the adjacency matrix representation shows the weight from-->
+<!--                V<sub>i</sub> to V<sub>j</sub>.-->
+<!--            </p>-->
+<!--            <div class="img-container">-->
+<!--                <img class="img" src="assets/matrix.png">-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="section">-->
+<!--            <h3>1.3 Tackling TSP with Optimisation Algorithm</h3>-->
+<!--            <p>-->
+<!--                Optimisation is the process of choosing inputs that could increase the efficiency of a solution,-->
+<!--                or obtain best possible outputs. However, the optimal results are often not guaranteed. It also-->
+<!--                often involves in either maximising or minimising a value. In this context, we try to minimise-->
+<!--                the distance for the route.-->
+<!--            </p>-->
+<!--            <p>-->
+<!--                There are various optimisation methods that can be implemented on TSP, and each of them have-->
+<!--                their own pros and cons. These optimisation methods are further explain in other lesson pages.-->
+<!--            </p>-->
+<!--        </div>-->
+`
+<!--        <div class="button-container">-->
+<!--            <a href="nearest-neighbour-demo.html"><button class="button purple">Demo</button></a>-->
+<!--            <a href="nearest-neighbour-lesson.html"><button class="button">Next</button></a>-->
+<!--        </div>`-->
+    </div>
+
+
+</div>
+
+
+
+</body>
+</html>

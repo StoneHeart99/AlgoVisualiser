@@ -2,7 +2,7 @@ body {
     padding: 0px;
     margin: 0px;
     /*height: 100vh;*/
-    /*font-size: 1.05em;*/
+    font-size: 1.05em;
     background: #f1f1f1;
 }
 
@@ -225,9 +225,9 @@ input:checked + .toggle:before {
     padding: 6px 10px;
     margin: 1px;
     color: white;
-    border-radius: 8px;
+    border-radius: 5px;
     min-width: 80px;
-    width: 30%;
+    /*width: 30%;*/
 }
 
 .button:hover {
@@ -265,7 +265,7 @@ button:disabled {
 }
 
 
-
+/* Scrollbar */
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -290,6 +290,11 @@ button:disabled {
     ont-size: 1.03em;
 }
 
+h2 {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
 h3 {
     margin-bottom: 20px;
 }
@@ -304,6 +309,8 @@ disabled::-webkit-slider-thumb {
     display: none;
 }
 
+
+/*dropdown*/
 nav a:link {
     color: white;
     text-decoration: none;
@@ -344,8 +351,6 @@ nav a:active {
     text-decoration: none;
 }
 
-
-
 .dropdown-content {
     display: none;
     position: absolute;
@@ -381,3 +386,12 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
+.button-container {
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.purple {
+    background: #a95aec;
+}

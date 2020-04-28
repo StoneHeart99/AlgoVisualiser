@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="icon" href="logo.png">
+    <link rel="icon" href="assets/logo.png">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
@@ -25,6 +25,12 @@
     <script src="default-data.js"></script>
 
     <title>Nearest Neighbour</title>
+
+    <style>
+        .button {
+            width: 30%;
+        }
+    </style>
 
 </head>
 <body>
@@ -476,11 +482,22 @@
         greedyTM.clone(TM);
         tour = new Tour(greedyTM.getTour());
         isAuto = false;
-        algoSpeedIndex = 2;
         speedSlider.value = 3;
         speedVal.value = 3;
+        algoSpeedIndex = 2;
         simpleGreedy(tour, greedyTM);
+        if(isfinal)
+        {
+            document.getElementById("final").checked = false;
+            isfinal = false;
+        }
+        if(!isAuto)
+        {
+            document.getElementById("auto").checked = true;
+            // isAuto = true;
+        }
         reset();
+
     }
 
     function reset(num=15)
