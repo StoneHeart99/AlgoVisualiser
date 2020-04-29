@@ -47,7 +47,7 @@
             margin: auto auto 50px;
             height: 400px;
             width: 400px;
-            border: 1px solid #555;
+            /*border: 1px solid #555;*/
         }
 
         .img-container {
@@ -56,7 +56,7 @@
             background-color: #E1E1E1;
             display: flex;
             justify-content: center;
-            border: 1px solid #555;
+            /*border: 1px solid #555;*/
         }
 
         .img {
@@ -78,10 +78,10 @@
 
     <div class="content-container">
         <div class="container">
-            <h2>Lesson 1 - Travelling Salesman Problem</h2>
+            <h2>Lesson - Travelling Salesman Problem</h2>
 
             <div class="section">
-                <h3>1.1 Overview</h3>
+                <h3>Overview</h3>
                 <p class="article">
                     The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the shortest
                     route between a list of cities that must be visited exactly once and return to the starting city.
@@ -93,47 +93,53 @@
                     calculate every possible route to find out the shortest route. We would need other methods or
                     algorithms to find a good solution for TSP.
                 </p>
+                <p class="article">
+                    There also exists several variations for TSP. For our website, TSP will be implemented
+                    to minimise route distance with the assumption of the starting city is always fixed to the
+                    same city.
+                </p>
             </div>
 
             <div class="section">
-                <h3>1.2 Representation of TSP in Computer</h3>
-                <h4>a) Weighted Graph</h4>
+                <h3>Representation of TSP in Computer</h3>
+                <h5>a) Weighted Graph</h5>
                 <p class="article">
                     TSP can be represented in computer by using weighted graph, where the graph’s vertices represent the
                     cities, the graph’s edges represent the path, and the weight of an edge represent the distance.
                 </p>
-
+                <br>
                 <div id="sigma-container"></div>
 
-                <h4>b) Adjacency Matrix</h4>
-                <p>
+                <h5>b) Adjacency Matrix</h5>
+                <p class="article">
                     Adjacency Matrix is a square matrix used to represent a graph in graph theory and computer science.
                 </p>
                 <p>
                     An entry M<sub>ij</sub>  in the adjacency matrix representation shows the weight from
                     V<sub>i</sub> to V<sub>j</sub>.
                 </p>
+                <br>
                 <div class="img-container">
                     <img class="img" src="assets/matrix.png">
                 </div>
             </div>
 
             <div class="section">
-                <h3>1.3 Tackling TSP with Optimisation Algorithm</h3>
-                <p>
+                <h3>Tackling TSP with Optimisation Algorithm</h3>
+                <p class="article">
                     Optimisation is the process of choosing inputs that could increase the efficiency of a solution,
                     or obtain best possible outputs. However, the optimal results are often not guaranteed. It also
                     often involves in either maximising or minimising a value. In this context, we try to minimise
                     the distance for the route.
                 </p>
-                <p>
-                    There are various optimisation methods that can be implemented on TSP, and each of them have
-                    their own pros and cons. These optimisation methods are further explain in other lesson pages.
+                <p class="article">
+                    There are various optimisation methods that can be implemented on TSP, and each of them has
+                    its pros and cons. These optimisation methods are further explained in other lesson pages.
                 </p>
             </div>
 
             <div class="button-container">
-                <a href="nearest-neighbour-demo.html"><button class="button purple">Demo</button></a>
+                <a href="nearest-neighbour-demo.html"><button class="button purple">Demo Program</button></a>
                 <a href="nearest-neighbour-lesson.html"><button class="button">Next</button></a>
             </div>
         </div>

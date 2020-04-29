@@ -44,104 +44,382 @@
         }
 
         #sigma-container{
-            margin: auto auto 50px;
-            height: 400px;
-            width: 400px;
-            border: 1px solid #555;
+            /*margin: auto auto 50px;*/
+            height: 330px;
+            /*width: 400px;*/
+            width: 60%;
+            /*border: 1px solid #555;*/
         }
 
-        .img-container {
-            width: 400px;
-            margin: auto;
-            background-color: #E1E1E1;
-            display: flex;
-            justify-content: center;
-            border: 1px solid #555;
+        td, th {
+            width: 50%;
+            /*border: 1px solid #555;*/
+            border: none;
         }
 
-        .img {
-            height: 350px;
-            width: 350px;
-            padding: 30px;
+        th {
+            border-bottom: 1px solid #555;
+        }
+
+
+        .table {
             background-color: #E1E1E1;
+            color: black;
+            /*border: 1px solid #555;*/
+            /*width: 80%;*/
+            /*margin: auto;*/
+            border: none;
+            width: 100%;
+        }
+
+        .pseudocode {
+            background-color: #D6D6D6;
+            height: 330px;
+            width: 40%;
+            position: absolute;
+            right: 0;
+            /*border: 1px solid #555;*/
+            padding: 20px;
+            border-left: none;
+        }
+
+        .highlight {
+            border: 2px solid #50c878;
+            padding: 5px;
         }
 
     </style>
 </head>
 <body>
-<nav class="nav">
-    <div id="nav-placeholder" ></div>
-    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
-        Nearest Neighbour
+    <nav class="nav">
+        <div id="nav-placeholder" ></div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Nearest Neighbour
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div class="container">
+            <h2>Lesson - Nearest Neighbour Algorithm</h2>
+
+            <div class="section">
+                <h3>Overview</h3>
+                <p class="article">
+                    Nearest neighbour algorithm is a greedy algorithm, where it solves problem by taking best
+                    solution at the moment (local level) and try to obtain an optimal final solution (global level).
+                </p>
+                <p class="article">
+                    Nearest neighbour algorithm is one of the easier implementation to obtain a solution for TSP.
+                    The key of this algorithm is to always choose the nearest unvisited city as the next destination.
+                    Once all the cities all visited, then only we return back to the starting city.
+                </p>
+            </div>
+
+            <div class="section">
+                <h3>Pros and Cons</h3>
+                <div style="padding: 25px; background-color: #E1E1E1; width: 100%; margin: auto">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th scope="col">Pros</th>
+                            <th scope="col">Cons</th>
+                        </tr>
+                        <tr>
+                            <td scope="col">- Fast execution</td>
+                            <td scope="col">- Unable to explore other solution space</td>
+                        </tr>
+                        <tr>
+                            <td scope="col">- Easy to implement</td>
+                            <td scope="col"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="section">
+                <h3>Implementation</h3>
+                <h5>a) Pseudocode / Steps</h5>
+                <div class="article" style="margin-bottom: 30px;">
+                    <div id="s1"><b>1.</b> Set all cities as unvisited</div>
+                    <div id="s2"><b>2.</b>  Select a city as starting city <i>s</i>.
+                        Set <i>s</i> as current city <i>u</i></div>
+                    <div id="s3"><b>3.</b>  <b>IF</b> s is not the only one in unvisited cities list</div>
+                    <div id="s4"><b>4.</b>  &#8195;  Find out the shortest distance between current city <i>u</i>
+                        and an unvisited city <i>v</i> (excluding starting city <i>s</i>)</div>
+                    <div id="s5"><b>5.</b>  &#8195; Set <i>v</i> as current city <i>u</i> and remove it from
+                        unvisited cities list</div>
+                    <div id="s6"><b>6.</b>  &#8195; Go to step 3</div>
+                    <div id="s7"><b>7.</b>  <b>ELSE</b> Set <i>s</i> as the final destination</div>
+                </div>
+
+                <div style="position: relative">
+                    <h5>b) Quick Demo</h5>
+                    <div class="pseudocode">
+                        <div><b>Start city:</b> <span id="start"></span> </div>
+                        <div><b>Current city:</b> <span id="current"></span> </div>
+                        <div><b>Unvisited list:</b> <span id="unvisited"></span> </div>
+                        <div><b>Visited list:</b> <span id="visited"></span> </div>
+                        <div><b>Tour:</b> <span id="tour"></span> </div>
+                        <div style="margin-top: 30px; float: right">
+                            <button id="startBtn" class="button" onclick="start()">Start</button>
+                        </div>
+
+                    </div>
+                    <div id="sigma-container"></div>
+
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="TSP-lesson.html"><button class="button">Previous</button></a>
+                <a href="nearest-neighbour-demo.html"><button class="button purple">Demo Program</button></a>
+                <a href="SA-lesson.html"><button class="button">Next</button></a>
+            </div>
+        </div>
     </div>
-</nav>
-
-<div class="content-container">
-    <div class="container">
-        <h2>Lesson 2 - Nearest Neighbour</h2>
-
-<!--        <div class="section">-->
-<!--            <h3>1.1 Overview</h3>-->
-<!--            <p class="article">-->
-<!--                The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the shortest-->
-<!--                route between a list of cities that must be visited exactly once and return to the starting city.-->
-<!--                It is a famous algorithmic problem in the fields of computer science and operations research-->
-<!--                because it is easy to state yet tough to solve. The complexity of obtaining a best route for the-->
-<!--                problem will also grow exponentially as more cities are added. For example, with 10 cities, there-->
-<!--                are more than 300,000 different round-trips. However, with 15 cities, with 15 cities, the number of-->
-<!--                possible round-trips skyrocket to more than 87 billion. Hence, it is impractical for computer to-->
-<!--                calculate every possible route to find out the shortest route. We would need other methods or-->
-<!--                algorithms to find a good solution for TSP.-->
-<!--            </p>-->
-<!--        </div>-->
-
-<!--        <div class="section">-->
-<!--            <h3>1.2 Representation of TSP in Computer</h3>-->
-<!--            <h4>a) Weighted Graph</h4>-->
-<!--            <p class="article">-->
-<!--                TSP can be represented in computer by using weighted graph, where the graph’s vertices represent the-->
-<!--                cities, the graph’s edges represent the path, and the weight of an edge represent the distance.-->
-<!--            </p>-->
-
-<!--            <div id="sigma-container"></div>-->
-
-<!--            <h4>b) Adjacency Matrix</h4>-->
-<!--            <p>-->
-<!--                Adjacency Matrix is a square matrix used to represent a graph in graph theory and computer science.-->
-<!--            </p>-->
-<!--            <p>-->
-<!--                An entry M<sub>ij</sub>  in the adjacency matrix representation shows the weight from-->
-<!--                V<sub>i</sub> to V<sub>j</sub>.-->
-<!--            </p>-->
-<!--            <div class="img-container">-->
-<!--                <img class="img" src="assets/matrix.png">-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="section">-->
-<!--            <h3>1.3 Tackling TSP with Optimisation Algorithm</h3>-->
-<!--            <p>-->
-<!--                Optimisation is the process of choosing inputs that could increase the efficiency of a solution,-->
-<!--                or obtain best possible outputs. However, the optimal results are often not guaranteed. It also-->
-<!--                often involves in either maximising or minimising a value. In this context, we try to minimise-->
-<!--                the distance for the route.-->
-<!--            </p>-->
-<!--            <p>-->
-<!--                There are various optimisation methods that can be implemented on TSP, and each of them have-->
-<!--                their own pros and cons. These optimisation methods are further explain in other lesson pages.-->
-<!--            </p>-->
-<!--        </div>-->
-`
-<!--        <div class="button-container">-->
-<!--            <a href="nearest-neighbour-demo.html"><button class="button purple">Demo</button></a>-->
-<!--            <a href="nearest-neighbour-lesson.html"><button class="button">Next</button></a>-->
-<!--        </div>`-->
-    </div>
-
-
-</div>
-
-
-
 </body>
 </html>
+<script>
+    city1 = new City("c1", 40, 20);
+    city2 = new City("c2", 55, 36);
+    city3 = new City("c3", 38, 38);
+    city4 = new City("c4", 26, 26);
+
+    graphTM = new TourManager();
+    graphTM.addCity(city1);
+    graphTM.addCity(city2);
+    graphTM.addCity(city3);
+    graphTM.addCity(city4);
+    tour = new Tour(graphTM);
+
+    simpleGreedy(tour, graphTM);
+
+    let visited = [];
+    let unvisited = ["c1", "c2", "c3", "c4"];
+    let stepIndex = 1;
+    let step = "s1";
+    let currentCity = "c1";
+
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 5,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                defaultNodeColor: 'black',
+                sideMargin: 4,
+                enableHovering:  true,
+                labelHoverBGColor: "#000",
+            }
+        }
+    );
+
+    let graph = {
+        nodes: [
+            { id: "c1", label: "c1", x: 40, y: 20, size: 15, },
+            { id: "c2", label: "c2", x: 55, y: 36, size: 15, },
+            { id: "c3", label: "c3", x: 38, y: 38, size: 15, },
+            { id: "c4", label: "c4", x: 26, y: 26, size: 15, },
+        ],
+        edges: [
+            { id: "e1", source: "c1", target: "c2", label: "20", color: 'black', type:'line', size:0.5 },
+            { id: "e2", source: "c1", target: "c3", label: "35", color: 'black', type:'line', size:0.5 },
+            { id: "e3", source: "c1", target: "c4", label: "42", color: 'black', type:'line', size:0.5 },
+            { id: "e4", source: "c2", target: "c3", label: "34", color: 'black', type:'line', size:0.5 },
+            { id: "e5", source: "c2", target: "c4", label: "30", color: 'black', type:'line', size:0.5 },
+            { id: "e6", source: "c3", target: "c4", label: "12", color: 'black', type:'line', size:0.5 },
+
+        ]
+    }
+
+    updateSigma(s, graph);
+
+
+
+    // auto();
+
+    function step1()
+    {
+        $("#unvisited").text(printArray(unvisited));
+        // let x = document.getElementsByClassName("highlight");
+        // x[0].className = "";
+        step = "s" + stepIndex.toString();
+        document.getElementById(step).className = "highlight";
+
+        stepIndex++;
+    }
+
+    function step2()
+    {
+        updateStep();
+        graph.nodes[0].color = "#50c878";
+        $("#start").text("c1");
+        $("#current").text("c1");
+        $("#visited").text(printArray(visited));
+
+    }
+
+    function step3()
+    {
+        updateStep();
+        if(unvisited.length==1 && unvisited.includes("c1"))
+            stepIndex=7;
+    }
+
+    function step4()
+    {
+        updateStep();
+
+        let shortestIndex = -1;
+        let shortest = Number.MAX_VALUE;
+        let nextCity = currentCity;
+
+        for(let i=0;i<graph.edges.length;i++)
+        {
+            if((graph.edges[i].source == currentCity))
+            {
+                if(graph.edges[i].label=="c1")
+                    break;
+
+                let distance = parseInt(graph.edges[i].label);
+                if(distance < shortest)
+                {
+                    shortest = distance;
+                    shortestIndex = i;
+                    nextCity = graph.edges[i].target;
+
+                }
+            }
+        }
+
+        if(visited.length==2)
+        {
+            shortestIndex = 5;
+            nextCity = "c3"
+        }
+        graph.edges[shortestIndex].color = '#50c878';
+        for(let i=0;i<graph.nodes.length;i++)
+        {
+            if(graph.nodes[i].label==nextCity)
+                graph.nodes[i].color = '#50c878';
+        }
+
+
+        visited.push(nextCity);
+        unvisited.splice(unvisited.indexOf(nextCity),1);
+        currentCity = nextCity;
+
+
+    }
+
+    function step5()
+    {
+        updateStep();
+        $("#current").text(currentCity);
+        $("#visited").text(printArray(visited));
+        $("#unvisited").text(printArray(unvisited));
+
+    }
+
+    function step6()
+    {
+        updateStep();
+        stepIndex = 3;
+    }
+
+    function step7()
+    {
+        updateStep();
+        graph.edges[1].color = '#50c878';
+        stepIndex++;
+
+        visited.push("c1");
+        unvisited.splice(unvisited.indexOf("c1"),1);
+
+        $("#current").text("c1");
+        $("#visited").text(printArray(visited));
+        $("#unvisited").text(printArray(unvisited));
+        $("#tour").text("c1 → c2 → c4 → c3 → c1");
+    }
+
+    async function auto()
+    {
+        while(stepIndex <= 7)
+        {
+            if(stepIndex==1)
+                step1();
+            else if(stepIndex==2)
+                step2();
+            else if(stepIndex==3)
+                step3();
+            else if(stepIndex==4)
+                step4();
+            else if(stepIndex==5)
+                step5();
+            else if(stepIndex==6)
+                step6();
+            else if(stepIndex==7)
+                step7();
+
+            updateSigma(s, graph);
+            await sleep(1500);
+
+        }
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = "";
+        stepIndex = 1;
+        enableDemo();
+    }
+
+    function updateStep()
+    {
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = "";
+        step = "s" + stepIndex.toString();
+        document.getElementById(step).className = "highlight";
+        stepIndex++;
+    }
+
+    function resetDemo()
+    {
+        for(let i=0;i<graph.nodes.length;i++)
+        {
+            graph.nodes[i].color = 'black';
+        }
+
+        for(let i=0;i<graph.edges.length;i++)
+        {
+            graph.edges[i].color = 'black';
+        }
+    }
+
+    function start() {
+        disableDemo();
+        resetDemo();
+        auto();
+    }
+
+    function disableDemo() {
+        $("#startBtn").attr("disabled", true);
+        document.getElementById("startBtn"). className += " disabled";
+    }
+
+    function enableDemo() {
+        $("#startBtn").attr("disabled", false);
+        document.getElementById("startBtn"). className =
+            document.getElementById("startBtn"). className.replace(" disabled", "");
+    }
+
+
+
+
+</script>
