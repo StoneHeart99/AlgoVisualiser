@@ -462,6 +462,9 @@
                 mode: 'index',
             },
             legend: {
+                labels: {
+                    fontColor: 'black',
+                },
                 onHover: function(e) {
                     e.target.style.cursor = 'pointer';
                 }
@@ -481,28 +484,33 @@
                 display: true,
                 text: 'Fitness Value vs. Generation',
                 fontSize: 16,
+                fontColor: 'black',
             },
             scales: {
                 xAxes: [{
                     ticks: {
                         autoSkip: false,
                         min:0,
+                        fontColor: 'black',
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Generation',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+                    },
                 }],
                 yAxes: [{
                     ticks: {
                         min:0,
+                        fontColor: 'black',
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Fitness Value',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+                    },
                 }]
             },
             onClick: function(evt) {
@@ -564,28 +572,28 @@
                 pointHoverBorderColor: 'black',
                 spanGaps: true,
             },
-                {
-                    label: 'Average Distance',
-                    backgroundColor: 'rgba(255, 159, 64)',
-                    borderColor: 'rgba(255, 159, 64)',
-                    data: [],
-                    fill: false,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: 'rgba(255, 159, 64)',
-                    pointHoverBorderColor: 'black',
-                    spanGaps: true,
-                },
-                {
-                    label: 'Maximum Distance',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [],
-                    fill: false,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: 'rgb(255, 99, 132)',
-                    pointHoverBorderColor: 'black',
-                    spanGaps: true,
-                }]
+            {
+                label: 'Average Distance',
+                backgroundColor: 'rgba(255, 159, 64)',
+                borderColor: 'rgba(255, 159, 64)',
+                data: [],
+                fill: false,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: 'rgba(255, 159, 64)',
+                pointHoverBorderColor: 'black',
+                spanGaps: true,
+            },
+            {
+                label: 'Maximum Distance',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [],
+                fill: false,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: 'rgb(255, 99, 132)',
+                pointHoverBorderColor: 'black',
+                spanGaps: true,
+            }]
         },
         // Configuration options go here
         options: {
@@ -593,14 +601,17 @@
                 mode: 'index',
             },
             legend: {
+                labels: {
+                    fontColor: 'black',
+                },
                 onHover: function(e) {
                     e.target.style.cursor = 'pointer';
-                }
+                },
             },
             hover: {
                 mode: 'index',
                 onHover: function(e) {
-                    var point = this.getElementAtEvent(e);
+                    let point = this.getElementAtEvent(e);
                     if (point.length) e.target.style.cursor = 'pointer';
                     else e.target.style.cursor = 'default';
                     // $("#distanceChart").css("cursor", e[0] ? "pointer" : "default");
@@ -610,28 +621,39 @@
                 display: true,
                 text: 'Distance vs. Generation',
                 fontSize: 16,
+                fontColor: 'black',
+
             },
             scales: {
                 xAxes: [{
                     ticks: {
                         autoSkip: false,
                         min:0,
+                        fontColor: 'black',
+
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Generation',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+
+                    },
+
                 }],
                 yAxes: [{
                     ticks: {
                         min:0,
+                        fontColor: 'black',
+
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Distance',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+
+                    },
                 }]
             },
             onClick: function(evt) {

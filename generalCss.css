@@ -387,11 +387,79 @@ input::-webkit-inner-spin-button {
 }
 
 .button-container {
-    margin-bottom: 50px;
+    margin-bottom: 80px;
     display: flex;
     justify-content: space-between;
 }
 
+
+/* Lesson */
+
+.lesson-content-container {
+    width: 100%;
+    height: calc(100vh - (60px));
+    margin: auto;
+    background-color:#f1f1f1;
+    position: absolute;
+    right: 0;
+    box-sizing: border-box;
+    padding: 20px 50px 20px 50px;
+    overflow: auto;
+}
+
+.lesson-container {
+    width: 60%;
+    margin: 50px auto;
+    padding-bottom: 50px;
+    max-height: calc(100vh - (60px));
+
+}
+
+.article {
+    text-align: justify;
+}
+
+.section {
+    margin-bottom: 80px;
+}
+
 .purple {
     background: #a95aec;
+}
+
+
+td, th {
+    width: 50%;
+    /*border: 1px solid #555;*/
+    border: none;
+}
+
+th {
+    border-bottom: 1px solid #555;
+}
+
+.table {
+    background-color: #E1E1E1;
+    color: black;
+    /*border: 1px solid #555;*/
+    /*width: 80%;*/
+    /*margin: auto;*/
+    border: none;
+    width: 100%;
+}
+
+.pseudocode {
+    background-color: #D6D6D6;
+    height: 330px;
+    width: 40%;
+    position: absolute;
+    right: 0;
+    /*border: 1px solid #555;*/
+    padding: 20px;
+    border-left: none;
+}
+
+.highlight {
+    border: 2px solid #2196F3;
+    padding: 5px;
 }

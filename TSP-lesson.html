@@ -23,25 +23,7 @@
     <script src="tour.js"></script>
     <script src="default-data.js"></script>
     <style>
-        .content-container {
-            width: 100%;
-        }
 
-        .container {
-            width: 60%;
-            margin: 50px auto;
-            padding-bottom: 50px;
-            height: calc(100vh - (60px));
-
-        }
-
-        .article {
-            text-align: justify;
-        }
-
-        .section {
-            margin-bottom: 80px;
-        }
 
         #sigma-container{
             margin: auto auto 50px;
@@ -76,8 +58,8 @@
         </div>
     </nav>
 
-    <div class="content-container">
-        <div class="container">
+    <div class="lesson-content-container">
+        <div class="lesson-container">
             <h2>Lesson - Travelling Salesman Problem</h2>
 
             <div class="section">
@@ -138,13 +120,11 @@
                 </p>
             </div>
 
-            <div class="button-container">
-                <a href="nearest-neighbour-demo.html"><button class="button purple">Demo Program</button></a>
-                <a href="nearest-neighbour-lesson.html"><button class="button">Next</button></a>
+            <div class="button-container" style="justify-content: flex-end">
+<!--                <a href="NN-demo.html"><button class="button purple">Demo Program</button></a>-->
+                <a href="NN-lesson.html"><button class="button">Next</button></a>
             </div>
         </div>
-
-
     </div>
 
 
@@ -183,7 +163,7 @@
             }
         }
     );
-    var graph = {
+    let graph = {
         nodes: [
             { id: "c1", label: "c1", x: 20, y: 20, size: 15, },
             { id: "c2", label: "c2", x: 40, y: 20, size: 15, },

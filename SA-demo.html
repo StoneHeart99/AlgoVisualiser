@@ -381,32 +381,7 @@
     updateSigma(s, graph);
 
     // Section for functions
-    function convertCityToNodes_SA(tour, graph, pos1, pos2)
-    {
-        clearArray(graph.nodes);
-        let nodeSize = 10;
-        let nodeColor = "#2196F3";
-        for(let i=0;i<tour.size();i++)
-        {
-            if(i==0)
-                nodeColor = "#50c878";
-            else if (i==pos1 || i==pos2)
-                nodeColor = "#a95aec";
-            else
-                nodeColor = "#2196F3";
 
-            graph.nodes.push(
-                {
-                    id: tour.getCity(i).name,
-                    label: tour.getCity(i).name,
-                    x: tour.getCity(i).x,
-                    y: tour.getCity(i).y,
-                    size: nodeSize,
-                    color: nodeColor,
-                }
-            )
-        }
-    }
 
     async function SA_TSP()
     {
@@ -492,7 +467,7 @@
             newSolution.swapCities(tourPos1, tourPos2);
 
             // Print new solution
-            convertCityToNodes_SA(newSolution, graph, tourPos1, tourPos2);
+            convertSwapCityToNodes(newSolution, graph, tourPos1, tourPos2);
             convertTourToEdges(newSolution, graph);
             updateSigma(s, graph);
             $("#temperature").text("Temperature: " + temp.toFixed(2) + "℃");

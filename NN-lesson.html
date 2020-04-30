@@ -23,25 +23,6 @@
     <script src="tour.js"></script>
     <script src="default-data.js"></script>
     <style>
-        .content-container {
-            width: 100%;
-        }
-
-        .container {
-            width: 60%;
-            margin: 50px auto;
-            padding-bottom: 50px;
-            height: calc(100vh - (60px));
-
-        }
-
-        .article {
-            text-align: justify;
-        }
-
-        .section {
-            margin-bottom: 80px;
-        }
 
         #sigma-container{
             /*margin: auto auto 50px;*/
@@ -51,42 +32,6 @@
             /*border: 1px solid #555;*/
         }
 
-        td, th {
-            width: 50%;
-            /*border: 1px solid #555;*/
-            border: none;
-        }
-
-        th {
-            border-bottom: 1px solid #555;
-        }
-
-
-        .table {
-            background-color: #E1E1E1;
-            color: black;
-            /*border: 1px solid #555;*/
-            /*width: 80%;*/
-            /*margin: auto;*/
-            border: none;
-            width: 100%;
-        }
-
-        .pseudocode {
-            background-color: #D6D6D6;
-            height: 330px;
-            width: 40%;
-            position: absolute;
-            right: 0;
-            /*border: 1px solid #555;*/
-            padding: 20px;
-            border-left: none;
-        }
-
-        .highlight {
-            border: 2px solid #50c878;
-            padding: 5px;
-        }
 
     </style>
 </head>
@@ -98,8 +43,8 @@
         </div>
     </nav>
 
-    <div class="content-container">
-        <div class="container">
+    <div class="lesson-content-container">
+        <div class="lesson-container">
             <h2>Lesson - Nearest Neighbour Algorithm</h2>
 
             <div class="section">
@@ -126,32 +71,31 @@
                         </tr>
                         <tr>
                             <td scope="col">- Fast execution</td>
-                            <td scope="col">- Unable to explore other solution space</td>
+                            <td scope="col">- Always obtain same solution</td>
                         </tr>
                         <tr>
                             <td scope="col">- Easy to implement</td>
-                            <td scope="col"></td>
+                            <td scope="col">- Unable to explore other solution space</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="section">
                 <h3>Implementation</h3>
-                <h5>a) Pseudocode / Steps</h5>
+                <h5>a) Steps</h5>
                 <div class="article" style="margin-bottom: 30px;">
                     <div id="s1"><b>1.</b> Set all cities as unvisited</div>
-                    <div id="s2"><b>2.</b>  Select a city as starting city <i>s</i>.
-                        Set <i>s</i> as current city <i>u</i></div>
-                    <div id="s3"><b>3.</b>  <b>IF</b> s is not the only one in unvisited cities list</div>
-                    <div id="s4"><b>4.</b>  &#8195;  Find out the shortest distance between current city <i>u</i>
-                        and an unvisited city <i>v</i> (excluding starting city <i>s</i>)</div>
-                    <div id="s5"><b>5.</b>  &#8195; Set <i>v</i> as current city <i>u</i> and remove it from
+                    <div id="s2"><b>2.</b>  Select a city as starting city, <i>s</i>.
+                        Set <i>s</i> as current city, <i>u</i></div>
+                    <div id="s3"><b>3.</b>  <b>If</b> s is not the only one in unvisited cities list</div>
+                    <div id="s4"><b>4.</b>  &#8195;  Find out the shortest distance between <i>u</i>
+                        and an unvisited city, <i>v</i> (excluding <i>s</i>)</div>
+                    <div id="s5"><b>5.</b>  &#8195; Set <i>v</i> as <i>u</i> and remove it from
                         unvisited cities list</div>
                     <div id="s6"><b>6.</b>  &#8195; Go to step 3</div>
-                    <div id="s7"><b>7.</b>  <b>ELSE</b> Set <i>s</i> as the final destination</div>
+                    <div id="s7"><b>7.</b>  <b>Else</b> Set <i>s</i> as the final destination</div>
                 </div>
 
                 <div style="position: relative">
@@ -162,20 +106,21 @@
                         <div><b>Unvisited list:</b> <span id="unvisited"></span> </div>
                         <div><b>Visited list:</b> <span id="visited"></span> </div>
                         <div><b>Tour:</b> <span id="tour"></span> </div>
-                        <div style="margin-top: 30px; float: right">
-                            <button id="startBtn" class="button" onclick="start()">Start</button>
-                        </div>
-
+<!--                        <div style="position: absolute; bottom:10px; right: 10px;">-->
+<!--                            <button id="startBtn" class="button" onclick="start()">Start</button>-->
+<!--                        </div>-->
                     </div>
                     <div id="sigma-container"></div>
-
                 </div>
+                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">
+                    Start
+                </button>
             </div>
 
             <div class="button-container">
                 <a href="TSP-lesson.html"><button class="button">Previous</button></a>
-                <a href="nearest-neighbour-demo.html"><button class="button purple">Demo Program</button></a>
-                <a href="SA-lesson.html"><button class="button">Next</button></a>
+                <a href="NN-demo.html"><button class="button purple">Demo Program</button></a>
+                <a href="HC-lesson.html"><button class="button">Next</button></a>
             </div>
         </div>
     </div>
@@ -210,15 +155,13 @@
             },
             settings: {
                 minEdgeSize: 1,
-                maxEdgeSize: 5,
+                maxEdgeSize: 3,
                 minNodeSize: 1,
                 maxNodeSize: 10,
                 enableCamera: false,
                 defaultEdgeLabelSize: 15,
                 defaultNodeColor: 'black',
                 sideMargin: 4,
-                enableHovering:  true,
-                labelHoverBGColor: "#000",
             }
         }
     );
@@ -261,7 +204,7 @@
     function step2()
     {
         updateStep();
-        graph.nodes[0].color = "#50c878";
+        graph.nodes[0].color = "#2196F3";
         $("#start").text("c1");
         $("#current").text("c1");
         $("#visited").text(printArray(visited));
@@ -306,11 +249,11 @@
             shortestIndex = 5;
             nextCity = "c3"
         }
-        graph.edges[shortestIndex].color = '#50c878';
+        graph.edges[shortestIndex].color = '#2196F3';
         for(let i=0;i<graph.nodes.length;i++)
         {
             if(graph.nodes[i].label==nextCity)
-                graph.nodes[i].color = '#50c878';
+                graph.nodes[i].color = '#2196F3';
         }
 
 
@@ -339,7 +282,7 @@
     function step7()
     {
         updateStep();
-        graph.edges[1].color = '#50c878';
+        graph.edges[1].color = '#2196F3';
         stepIndex++;
 
         visited.push("c1");

@@ -97,6 +97,33 @@ function convertCityToNodes(TM, graph)
     }
 }
 
+function convertSwapCityToNodes(tour, graph, pos1, pos2)
+{
+    clearArray(graph.nodes);
+    let nodeSize = 10;
+    let nodeColor = "#2196F3";
+    for(let i=0;i<tour.size();i++)
+    {
+        if(i==0)
+            nodeColor = "#50c878";
+        else if (i==pos1 || i==pos2)
+            nodeColor = "#a95aec";
+        else
+            nodeColor = "#2196F3";
+
+        graph.nodes.push(
+            {
+                id: tour.getCity(i).name,
+                label: tour.getCity(i).name,
+                x: tour.getCity(i).x,
+                y: tour.getCity(i).y,
+                size: nodeSize,
+                color: nodeColor,
+            }
+        )
+    }
+}
+
 function convertTourToEdges(tour, graph)
 {
     clearArray(graph.edges);
@@ -131,6 +158,7 @@ function convertTourToEdges(tour, graph)
         }
     }
 }
+
 
 function toast(msg, time=1000)
 {
