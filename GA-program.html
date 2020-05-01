@@ -67,15 +67,23 @@
         }
 
         .setting-container {
-            width: 40%;
-            padding-right: 50px;
+            position: absolute;
+            width: 50%;
+            height: 40vh;
+            background-color:#f1f1f1;
+            bottom: 0;
+            padding: 20px 20px 20px 50px;
         }
 
         .result-container {
             position: absolute;
-            left: 50%;
-            padding-left: 50px;
-            padding-right: 50px;
+            width: 50%;
+            height: 40vh;
+            background-color:#f1f1f1;
+            right: 0;
+            bottom: 0;
+            padding: 20px 50px 20px 50px;
+            overflow: auto;
         }
 
         .circle {
@@ -127,79 +135,82 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="nav">
-        <div id="nav-placeholder" ></div>
-        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
-            Genetic Algorithm
-        </div>
-    </nav>
+<!-- Navbar -->
+<nav class="nav">
+    <div id="nav-placeholder" ></div>
+    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+        Genetic Algorithm
+    </div>
+</nav>
 
-    <div class="rightContainer">
-        <div id="showDistanceGraph" class="circle icon" >
-            <i class="fas fa-sync-alt"></i>
-        </div>
+<div class="rightContainer">
+    <div id="showDistanceGraph" class="circle icon" >
+        <i class="fas fa-sync-alt"></i>
+    </div>
 
-        <div class="chart-container" id="c1">
-            <canvas id="distanceChart"></canvas>
+    <div class="chart-container" id="c1">
+        <canvas id="distanceChart"></canvas>
+    </div>
+    <div class="chart-container" id="c2">
+        <canvas id="fitnessChart"></canvas>
+    </div>
+</div>
+
+<div class="leftContainer">
+    <!--        <div id="editIcon" class="circle icon">-->
+    <!--            <i class="fas fa-edit" style="font-size: 0.9em;"></i>-->
+    <!--        </div>-->
+    <!--        <div id="viewIcon" class="circle icon">-->
+    <!--            <i  class="fas fa-eye" style="font-size: 0.9em;"></i>-->
+    <!--        </div>-->
+    <div id='sigma-container'></div>
+</div>
+
+<!--<div class="content-container">-->
+<div class="result-container">
+    <div class="panel-item" style=""><h3>Result</h3></div>
+    <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
+    <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
+    <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
+    <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
+    <div class="solutionHeader"><b>Tour:</b></div>
+    <div id="tour" style="padding-bottom: 10px;"></div>
+</div>
+
+<div class="setting-container">
+    <div style="width: 75%;">
+        <div class="panel-item" style=""><h3>Setting</h3></div>
+        <div class="slideContainer panel-item">
+            <div class="sliderTitle disableAble">Number of Cities:</div>
+            <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+            <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
         </div>
-        <div class="chart-container" id="c2">
-            <canvas id="fitnessChart"></canvas>
+        <div class="slideContainer panel-item">
+            <div class="sliderTitle disableAble">Generations:</div>
+            <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
+            <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
+        </div>
+        <div class="slideContainer panel-item">
+            <div class="sliderTitle disableAble">Population Size:</div>
+            <input type="range" min="30" max="1000" value="50" step="10" class=" slider disableAble" id="popSize">
+            <input type="number" id="popSizeVal" class="sliderValue disableAble" value="50">
+        </div>
+        <div class="slideContainer panel-item">
+            <div class="sliderTitle disableAble">Mutation Rate:</div>
+            <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
+            <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
+        </div>
+        <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
+            <button id="runBtn" class="button" onclick="run()">Run</button>
+            <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+            <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
         </div>
     </div>
 
-    <div class="leftContainer">
-<!--        <div id="editIcon" class="circle icon">-->
-<!--            <i class="fas fa-edit" style="font-size: 0.9em;"></i>-->
-<!--        </div>-->
-<!--        <div id="viewIcon" class="circle icon">-->
-<!--            <i  class="fas fa-eye" style="font-size: 0.9em;"></i>-->
-<!--        </div>-->
-        <div id='sigma-container'></div>
-    </div>
+</div>
+<!--</div>-->
 
-    <div class="content-container">
-        <div class="result-container">
-            <div class="panel-item" style=""><h3>Result</h3></div>
-            <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
-            <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
-            <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
-            <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
-            <div class="solutionHeader"><b>Tour:</b></div>
-            <div id="tour" style="padding-bottom: 10px;"></div>
-        </div>
-
-        <div class="setting-container">
-            <div class="panel-item" style=""><h3>Setting</h3></div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Number of Cities:</div>
-                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
-                <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
-            </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Generations:</div>
-                <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
-                <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
-            </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Population Size:</div>
-                <input type="range" min="30" max="1000" value="50" step="10" class=" slider disableAble" id="popSize">
-                <input type="number" id="popSizeVal" class="sliderValue disableAble" value="50">
-            </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Mutation Rate:</div>
-                <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
-                <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
-            </div>
-            <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
-                <button id="runBtn" class="button" onclick="run()">Run</button>
-                <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
-                <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast"></div>
+<div id="toast"></div>
 </body>
 </html>
 <script>
@@ -572,28 +583,28 @@
                 pointHoverBorderColor: 'black',
                 spanGaps: true,
             },
-            {
-                label: 'Average Distance',
-                backgroundColor: 'rgba(255, 159, 64)',
-                borderColor: 'rgba(255, 159, 64)',
-                data: [],
-                fill: false,
-                pointHoverRadius: 8,
-                pointHoverBackgroundColor: 'rgba(255, 159, 64)',
-                pointHoverBorderColor: 'black',
-                spanGaps: true,
-            },
-            {
-                label: 'Maximum Distance',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [],
-                fill: false,
-                pointHoverRadius: 8,
-                pointHoverBackgroundColor: 'rgb(255, 99, 132)',
-                pointHoverBorderColor: 'black',
-                spanGaps: true,
-            }]
+                {
+                    label: 'Average Distance',
+                    backgroundColor: 'rgba(255, 159, 64)',
+                    borderColor: 'rgba(255, 159, 64)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgba(255, 159, 64)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                },
+                {
+                    label: 'Maximum Distance',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: 'rgb(255, 99, 132)',
+                    pointHoverBorderColor: 'black',
+                    spanGaps: true,
+                }]
         },
         // Configuration options go here
         options: {
@@ -881,6 +892,21 @@
         mutationRateSlider.value = 0.015;
         mutationRateVal.value = 0.015;
         mutationRate = 0.015;
+
+        $("#gen").text("");
+        $("#category").text("");
+        $("#tour").text("");
+        $("#distance").text("");
+        $("#fitness").text("");
+
+        cleanChart(fitnessChart);
+        cleanChart(distanceChart);
+        clearArray(fittestTours);
+        clearArray(worstTours);
+
+        distanceChart.update();
+        fitnessChart.update();
+
     }
 
     function updateInterval()
@@ -920,6 +946,10 @@
         $("#randomBtn").attr("disabled", true);
         $("#resetBtn").attr("disabled", true);
         $(".slider").attr("disabled", true);
+        $("#nodeNumVal").attr("disabled", true);
+        $("#genNumVal").attr("disabled", true);
+        $("#popSizeVal").attr("disabled", true);
+        $("#mutationRateVal").attr("disabled", true);
 
         $('.disableAble').each(function() {
             this.className = this.className.replace(" disableAble", " disabled");
@@ -943,6 +973,10 @@
         $("#randomBtn").attr("disabled", false);
         $("#resetBtn").attr("disabled", false);
         $(".slider2").attr("disabled", false);
+        $("#nodeNumVal").attr("disabled", false);
+        $("#genNumVal").attr("disabled", false);
+        $("#popSizeVal").attr("disabled", false);
+        $("#mutationRateVal").attr("disabled", false);
 
         $('.disabled').each(function() {
             this.className = this.className.replace(" disabled", " disableAble");

@@ -495,7 +495,7 @@
 
             // Reheat
             // let enableReheat = false;
-            if(temp < 10 && bestSolution.getDistance() > thresholdDistance && enableReheat==true) {
+            if(temp <= 1 && bestSolution.getDistance() > thresholdDistance && enableReheat==true) {
                 temp = initTemp/4;
                 reheatCtr++;
 
@@ -630,6 +630,7 @@
             document.getElementById("initIteration").className += " disabled";
             document.getElementById("iterationVal").className += " disabled";
             $("#initIteration").attr("disabled", true);
+            $("#iterationVal").attr("disabled", true);
             document.getElementById("initIteration").className
                 = document.getElementById("initIteration").className.replace(" slider", " slider2");
         }
@@ -640,6 +641,7 @@
                 this.className = this.className.replace(" disabled", " disableAble");
             });
             $("#initIteration").attr("disabled", false);
+            $("#iterationVal").attr("disabled", false);
             document.getElementById("initIteration").className
                 = document.getElementById("initIteration").className.replace(" slider2", " slider");
 
@@ -654,6 +656,7 @@
             this.className = this.className.replace(" disabled", " disableAble");
         });
         $("#initIteration").attr("disabled", false);
+        $("#iterationVal").attr("disabled", false);
         document.getElementById("initIteration").className
             = document.getElementById("initIteration").className.replace(" slider2", " slider");
     }
@@ -666,6 +669,10 @@
         $("#reheat").attr("disabled", true);
         $(".toggle").css("cursor", "not-allowed");
         $(".slider").attr("disabled", true);
+        $("#nodeNumVal").attr("disabled", true);
+        $("#initTempVal").attr("disabled", true);
+        $("#coolingRateVal").attr("disabled", true);
+        $("#iterationVal").attr("disabled", true);
 
         $('.disableAble').each(function() {
             this.className = this.className.replace(" disableAble", " disabled");
@@ -692,6 +699,10 @@
         $("#reheat").attr("disabled", false);
         $(".toggle").css("cursor", "pointer");
         $(".slider2").attr("disabled", false);
+        $("#nodeNumVal").attr("disabled", false);
+        $("#initTempVal").attr("disabled", false);
+        $("#coolingRateVal").attr("disabled", false);
+        $("#iterationVal").attr("disabled", false);
 
         $('.disabled').each(function() {
             this.className = this.className.replace(" disabled", " disableAble");

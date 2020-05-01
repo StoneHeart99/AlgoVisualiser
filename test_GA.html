@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="icon" href="../assets/logo.png">
+    <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../generalCss.css">
+    <link rel="stylesheet" href="generalCss.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -13,21 +13,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script src="../Sigma/sigma.min.js"></script>
-    <script src="../Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
-    <script src="../Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
-    <script src="../Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
-    <script src="../Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
-    <script src="../Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="../functions.js"></script>
-    <script src="../city.js"></script>
-    <script src="../tour-manager.js"></script>
-    <script src="../tour.js"></script>
-    <script src="../population.js"></script>
-    <script src="../ga.js"></script>
-    <script src="../default-data.js"></script>
-    <title>GA</title>
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="population.js"></script>
+    <script src="ga.js"></script>
+    <script src="default-data.js"></script>
+    <title>Genetic Algorithm</title>
     <style>
 
         .content-container {
@@ -37,6 +37,7 @@
             position: absolute;
             bottom: 0;
             z-index: 1;
+            padding-bottom: 10px;
         }
 
         .rightContainer {
@@ -66,15 +67,23 @@
         }
 
         .setting-container {
-            width: 40%;
-            padding-right: 50px;
+            position: absolute;
+            width: 50%;
+            height: 40vh;
+            background-color:#f1f1f1;
+            bottom: 0;
+            padding: 20px 20px 20px 50px;
         }
 
         .result-container {
             position: absolute;
-            left: 50%;
-            padding-left: 50px;
-            padding-right: 50px;
+            width: 50%;
+            height: 40vh;
+            background-color:#f1f1f1;
+            right: 0;
+            bottom: 0;
+            padding: 20px 50px 20px 50px;
+            overflow: auto;
         }
 
         .circle {
@@ -100,7 +109,7 @@
 
         .icon {
             position: absolute;
-            right: 1px;
+            left: 1px;
             top: -1px;
             z-index: 1;
             font-size: 1.3em;
@@ -116,6 +125,10 @@
         #editIcon.disabled {
             opacity: 0.35;
             cursor: not-allowed;
+        }
+
+        .button {
+            width: 30%;
         }
 
     </style>
@@ -153,18 +166,19 @@
     <div id='sigma-container'></div>
 </div>
 
-<div class="content-container">
-    <div class="result-container">
-        <div class="panel-item" style=""><h3>Result</h3></div>
-        <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
-        <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
-        <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
-        <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
-        <div class="solutionHeader"><b>Tour:</b></div>
-        <div id="tour" style="padding-bottom: 10px;"></div>
-    </div>
+<!--<div class="content-container">-->
+<div class="result-container">
+    <div class="panel-item" style=""><h3>Result</h3></div>
+    <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
+    <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
+    <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
+    <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
+    <div class="solutionHeader"><b>Tour:</b></div>
+    <div id="tour" style="padding-bottom: 10px;"></div>
+</div>
 
-    <div class="setting-container">
+<div class="setting-container">
+    <div style="width: 75%;">
         <div class="panel-item" style=""><h3>Setting</h3></div>
         <div class="slideContainer panel-item">
             <div class="sliderTitle disableAble">Number of Cities:</div>
@@ -192,7 +206,9 @@
             <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
         </div>
     </div>
+
 </div>
+<!--</div>-->
 
 <div id="toast"></div>
 </body>
@@ -398,6 +414,16 @@
         allowDrag(event);
     });
 
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        showPointerCursor();
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        showDefaultCursor()
+    });
+
     // HTML chart
 
     let ctx = document.getElementById('fitnessChart').getContext('2d');
@@ -443,32 +469,59 @@
         },
         // Configuration options go here
         options: {
+            tooltips: {
+                mode: 'index',
+            },
+            legend: {
+                labels: {
+                    fontColor: 'black',
+                },
+                onHover: function(e) {
+                    e.target.style.cursor = 'pointer';
+                }
+            },
+            hover: {
+                mode: 'index',
+                onHover: function(e) {
+                    let point = this.getElementAtEvent(e);
+                    if (point.length)
+                        e.target.style.cursor = 'pointer';
+                    else
+                        e.target.style.cursor = 'default';
+                    $("#FitnessChart").css("cursor", e[0] ? "pointer" : "default");
+                }
+            },
             title: {
                 display: true,
                 text: 'Fitness Value vs. Generation',
                 fontSize: 16,
+                fontColor: 'black',
             },
             scales: {
                 xAxes: [{
                     ticks: {
                         autoSkip: false,
                         min:0,
+                        fontColor: 'black',
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Generation',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+                    },
                 }],
                 yAxes: [{
                     ticks: {
                         min:0,
+                        fontColor: 'black',
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Fitness Value',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+                    },
                 }]
             },
             onClick: function(evt) {
@@ -504,8 +557,8 @@
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
 
-                        console.log(selectedTours[graphIndex].getDistance());
-                        console.log(selectedTours[graphIndex].printTour())
+                        // console.log(selectedTours[graphIndex].getDistance());
+                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
             },
@@ -555,32 +608,63 @@
         },
         // Configuration options go here
         options: {
+            tooltips: {
+                mode: 'index',
+            },
+            legend: {
+                labels: {
+                    fontColor: 'black',
+                },
+                onHover: function(e) {
+                    e.target.style.cursor = 'pointer';
+                },
+            },
+            hover: {
+                mode: 'index',
+                onHover: function(e) {
+                    let point = this.getElementAtEvent(e);
+                    if (point.length) e.target.style.cursor = 'pointer';
+                    else e.target.style.cursor = 'default';
+                    // $("#distanceChart").css("cursor", e[0] ? "pointer" : "default");
+                }
+            },
             title: {
                 display: true,
                 text: 'Distance vs. Generation',
                 fontSize: 16,
+                fontColor: 'black',
+
             },
             scales: {
                 xAxes: [{
                     ticks: {
                         autoSkip: false,
                         min:0,
+                        fontColor: 'black',
+
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Generation',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+
+                    },
+
                 }],
                 yAxes: [{
                     ticks: {
                         min:0,
+                        fontColor: 'black',
+
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Distance',
                         fontStyle: 'bold',
-                    }
+                        fontColor: 'black',
+
+                    },
                 }]
             },
             onClick: function(evt) {
@@ -616,9 +700,9 @@
                         convertCityToNodes(tempTM, graph);
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
-
-                        console.log(selectedTours[graphIndex].getDistance());
-                        console.log(selectedTours[graphIndex].printTour())
+                        //
+                        // console.log(selectedTours[graphIndex].getDistance());
+                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
 
@@ -637,7 +721,7 @@
     let mutationRate = 0.015;
     let eliteSize = 1;
     let populationSize = 100;
-    let genNumber = 50;
+    let genNumber = 100;
     let xAxisInterval = 5;
 
     // Initialize population
@@ -678,8 +762,8 @@
     {
         tempTM.clone(geneticTM);
 
-        console.log("Initial distance: " + pop.getFittest().getDistance());
-        console.log("Tour: " + pop.getFittest().printTour());
+        // console.log("Initial distance: " + pop.getFittest().getDistance());
+        // console.log("Tour: " + pop.getFittest().printTour());
 
         addData(fitnessChart, 0, pop.getFittest().getFitness().toFixed(2),
             pop.getMeanFitness().toFixed(2), pop.getWorst().getFitness().toFixed(2));
@@ -716,10 +800,13 @@
                     pop.getMeanDistance().toFixed(2), pop.getWorst().getDistance().toFixed(2));
             }
 
-            await sleep(1);
+            if(i==genNumber)
+                await sleep(1).then(()=> {toast("The algorithm has completed!");});
+            else
+                await sleep(1);
         }
-        console.log("Final distance: " + pop.getFittest().getDistance());
-        console.log("Tour: " + pop.getFittest().printTour());
+        // console.log("Final distance: " + pop.getFittest().getDistance());
+        // console.log("Tour: " + pop.getFittest().printTour());
 
         enableAll();
 
@@ -784,6 +871,7 @@
     }
 
     function resetDefault() {
+        // reset node
         geneticTM.clear();
         geneticTM.clone(TM);
         pop = new Population(populationSize, geneticTM, true);
@@ -791,6 +879,19 @@
         convertCityToNodes(geneticTM, graph);
         clearArray(graph.edges);
         updateSigma(s,graph);
+
+        // reset settings
+        nodeSlider.value = 15;
+        nodeVal.value = 15;
+        genNumSlider.value = 100;
+        genNumVal.value = 100;
+        genNumber = 100;
+        popSizeSlider.value = 50;
+        popSizeVal.value = 50;
+        populationSize = 50;
+        mutationRateSlider.value = 0.015;
+        mutationRateVal.value = 0.015;
+        mutationRate = 0.015;
     }
 
     function updateInterval()
@@ -830,6 +931,10 @@
         $("#randomBtn").attr("disabled", true);
         $("#resetBtn").attr("disabled", true);
         $(".slider").attr("disabled", true);
+        $("#nodeNumVal").attr("disabled", true);
+        $("#genNumVal").attr("disabled", true);
+        $("#popSizeVal").attr("disabled", true);
+        $("#mutationRateVal").attr("disabled", true);
 
         $('.disableAble').each(function() {
             this.className = this.className.replace(" disableAble", " disabled");
@@ -842,6 +947,9 @@
         });
 
         sigma.plugins.killDragNodes(s);
+        s.bind('overNode', function(e) {
+            showDefaultCursor();
+        });
     }
 
     function enableAll()
@@ -850,6 +958,10 @@
         $("#randomBtn").attr("disabled", false);
         $("#resetBtn").attr("disabled", false);
         $(".slider2").attr("disabled", false);
+        $("#nodeNumVal").attr("disabled", false);
+        $("#genNumVal").attr("disabled", false);
+        $("#popSizeVal").attr("disabled", false);
+        $("#mutationRateVal").attr("disabled", false);
 
         $('.disabled').each(function() {
             this.className = this.className.replace(" disabled", " disableAble");
@@ -866,6 +978,19 @@
         dragListener.bind('dragend', function(event) {
             allowDrag(event);
         });
+        s.bind('overNode', function(e) {
+            showPointerCursor();
+        });
+    }
+
+    function showPointerCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    }
+
+    function showDefaultCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'default';
     }
 
 
