@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Nearest Neighbour</title>
-
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
     <script src="Sigma/sigma.min.js"></script>
     <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
@@ -29,10 +26,9 @@
 
         #sigma-container{
             /*margin: auto auto 50px;*/
-            /*height: 330px;*/
-            height: inherit;
+            height: 330px;
             /*width: 400px;*/
-            width: 50%;
+            width: 60%;
             /*border: 1px solid #555;*/
         }
 
@@ -87,71 +83,43 @@
             </div>
 
             <div class="section">
-                <h3>Concept Visualiser</h3>
-                <div class="d-flex align-items-center" style="margin-bottom: 10px;">
-                    <div><h5>General Implementation</h5></div>
-                    <div id="startBtn" class="circle icon" onclick="start()">
-                        <i class="fas fa-play"></i>
-                    </div>
+                <h3>Implementation</h3>
+                <h5>a) Steps</h5>
+                <div class="article" style="margin-bottom: 30px;">
+                    <div id="s1"><b>1.</b> Set all cities as unvisited</div>
+                    <div id="s2"><b>2.</b>  Select a city as starting city, <i>s</i>.
+                        Set <i>s</i> as current city, <i>u</i></div>
+                    <div id="s3"><b>3.</b>  <b>If</b> s is not the only one in unvisited cities list</div>
+                    <div id="s4"><b>4.</b>  &#8195;  Find out the shortest distance between <i>u</i>
+                        and an unvisited city, <i>v</i> (excluding <i>s</i>)</div>
+                    <div id="s5"><b>5.</b>  &#8195; Set <i>v</i> as <i>u</i> and remove it from
+                        unvisited cities list</div>
+                    <div id="s6"><b>6.</b>  &#8195; Go to step 3</div>
+                    <div id="s7"><b>7.</b>  <b>Else</b> Set <i>s</i> as the final destination</div>
                 </div>
-                <div>
-                    <div class="d-flex">
-                        <div id="sigma-container"></div>
-                        <div class="pseudocode">
-                            <h6 style="font-size: 1.5em">Steps</h6>
-                            <div id="s1" class="d-flex">
-                                <div class="num">1.</div>
-                                <div>Set all cities as unvisited</div>
-                            </div>
-                            <div id="s2" class="d-flex">
-                                <div class="num">2.</div>
-                                <div>Select a city as starting city, <i>s</i>.
-                                    Set <i>s</i> as current city, <i>u</i></div>
-                            </div>
-                            <div id="s3" class="d-flex">
-                                <div class="num">3.</div>
-                                <div><b>If</b> s is not the only one in unvisited cities list</div>
-                            </div>
-                            <div id="s4" class="d-flex">
-                                <div class="num">4.</div>
-                                <div class="tab">Find out the shortest distance between <i>u</i>
-                                    and an unvisited city, <i>v</i> (excluding <i>s</i>)</div>
-                            </div>
-                            <div id="s5" class="d-flex">
-                                <div class="num">5.</div>
-                                <div class="tab">Set <i>v</i> as <i>u</i> and remove it from
-                                    unvisited cities list</div>
-                            </div>
-                            <div id="s6" class="d-flex">
-                                <div class="num">6.</div>
-                                <div class="tab">Go to step 3</div>
-                            </div>
-                            <div id="s7" class="d-flex">
-                                <div class="num">7.</div>
-                                <div><b>Else</b> Set <i>s</i> as the final destination</div>
-                            </div>
 
-                            <h6 style="font-size: 1.5em; margin-top: 30px;">Result</h6>
-                            <div><b>Start city:</b> <span id="start"></span> </div>
-                            <div><b>Current city:</b> <span id="current"></span> </div>
-                            <div><b>Unvisited list:</b> <span id="unvisited"></span> </div>
-                            <div><b>Visited list:</b> <span id="visited"></span> </div>
-                            <div><b>Tour:</b> <span id="tour"></span> </div>
-                            <!--                        <div style="position: absolute; bottom:10px; right: 10px;">-->
-                            <!--                            <button id="startBtn" class="button" onclick="start()">Start</button>-->
-                            <!--                        </div>-->
-                        </div>
-
+                <div style="position: relative">
+                    <h5>b) Concept Visualiser</h5>
+                    <div class="pseudocode">
+                        <div><b>Start city:</b> <span id="start"></span> </div>
+                        <div><b>Current city:</b> <span id="current"></span> </div>
+                        <div><b>Unvisited list:</b> <span id="unvisited"></span> </div>
+                        <div><b>Visited list:</b> <span id="visited"></span> </div>
+                        <div><b>Tour:</b> <span id="tour"></span> </div>
+<!--                        <div style="position: absolute; bottom:10px; right: 10px;">-->
+<!--                            <button id="startBtn" class="button" onclick="start()">Start</button>-->
+<!--                        </div>-->
                     </div>
+                    <div id="sigma-container"></div>
                 </div>
-<!--                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">-->
-<!--                    Start-->
-<!--                </button>-->
+                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">
+                    Start
+                </button>
             </div>
 
             <div class="button-container">
                 <a href="TSP-lesson.html"><button class="button">Previous</button></a>
-                <a href="NN-program.html"><button class="button purple">Algorithm Program</button></a>
+                <a href="NN-demo.html"><button class="button purple">Demo Program</button></a>
                 <a href="HC-lesson.html"><button class="button">Next</button></a>
             </div>
         </div>
@@ -228,7 +196,7 @@
         // let x = document.getElementsByClassName("highlight");
         // x[0].className = "";
         step = "s" + stepIndex.toString();
-        document.getElementById(step).className += " highlight";
+        document.getElementById(step).className = "highlight";
 
         stepIndex++;
     }
@@ -350,7 +318,7 @@
 
         }
         let x = document.getElementsByClassName("highlight");
-        x[0].className = x[0].className.replace(" highlight", "");
+        x[0].className = "";
         stepIndex = 1;
         enableDemo();
     }
@@ -358,9 +326,9 @@
     function updateStep()
     {
         let x = document.getElementsByClassName("highlight");
-        x[0].className = x[0].className.replace(" highlight", "");
+        x[0].className = "";
         step = "s" + stepIndex.toString();
-        document.getElementById(step).className += " highlight"
+        document.getElementById(step).className = "highlight";
         stepIndex++;
     }
 

@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Hill Climbing</title>
+
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="Sigma/sigma.min.js"></script>
@@ -26,11 +30,12 @@
     <style>
 
         #sigma-container{
-            height: 315px;
+            height: 300px;
             width: 50%;
         }
+
         #sigma-container2{
-            height: 315px;
+            height: 300px;
             width: 50%;
             background-color: #D6D6D6;
         }
@@ -44,14 +49,20 @@
         #leftInfo {
             width: 50%;
             background: #E1E1E1;
-            padding: 12px;
+            padding: 12px 12px 0;
         }
 
         #rightInfo {
             width: 50%;
             background: #D6D6D6;
-            padding: 12px;
+            padding: 12px 12px 0;
         }
+
+        .pseudocode {
+            width: 100%;
+            background: #c6c6c6;
+        }
+
 
 
     </style>
@@ -122,44 +133,67 @@
             </div>
 
             <div class="section">
-                <h3>Implementation</h3>
-                <h5>a) Steps</h5>
-                <div class="article" style="margin-bottom: 30px;">
-                    <div id="s1"><b>1.</b> Generate a random initial solution <i>i</i>. Set <i>i</i> as
-                        current solution, <i>u</i></div>
-                    <div id="s2"><b>2. Repeat</b></div>
-                    <div id="s3"><b>3.</b>  &#8195; Generate new solution <i>k</i> by swapping 2 cities
-                        in <i>u</i></div>
-                    <div id="s4"><b>4.</b>  &#8195;  <b>If</b> <i>k</i> shorter than <i>u</i>,
-                        replace <i>u</i> with <i>k</i></div>
-                    <div id="s5"><b>5.</b>  &#8195; <b>Else</b> discard <i>k</i></div>
-                    <div id="s6"><b>6.</b>  <b>Until</b> run out of time</div>
+            <h3>Concept Visualiser</h3>
+                <div class="d-flex align-items-center" style="margin-bottom: 10px;">
+                    <div><h5>a) General Implementation</h5></div>
+                    <div id="startBtn" class="circle icon" onclick="start()">
+                        <i class="fas fa-play"></i>
+                    </div>
                 </div>
 
-                <div style="position: relative">
-                    <h5>b) Quick Demo</h5>
-                    <div style="display: flex;">
-                        <div id="leftInfo">
-                            <div><b>Current solution</b></div>
-                            <div id="d1">Distance: </div>
-                        </div>
-                        <div id="rightInfo">
-                            <div><b>New solution</b></div>
-                            <div id="d2">Distance: </div>
-                        </div>
+                <div style="display: flex;">
+                    <div id="leftInfo">
+                        <div><b>Current solution</b></div>
+                        <div id="d1">Distance: </div>
                     </div>
-                    <div style="display: flex;">
-                            <div id="sigma-container"></div>
-                            <div id="sigma-container2"></div>
+                    <div id="rightInfo">
+                        <div><b>New solution</b></div>
+                        <div id="d2">Distance: </div>
                     </div>
-                    <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">
-                        Start
-                    </button>
                 </div>
+                <div style="display: flex;">
+                        <div id="sigma-container"></div>
+                        <div id="sigma-container2"></div>
+                </div>
+                <div class="pseudocode">
+                    <h6 style="font-size: 1.5em">Steps</h6>
+                    <div id="s1" class="d-flex">
+                        <div class="num">1.</div>
+                        <div>Generate a random initial solution <i>i</i>. Set <i>i</i> as
+                            current solution, <i>u</i></div>
+                    </div>
+                    <div id="s2" class="d-flex">
+                        <div class="num">2.</div>
+                        <div><b>Repeat</b></div>
+                    </div>
+                    <div id="s3" class="d-flex">
+                        <div class="num">3.</div>
+                        <div class="tab">Generate new solution <i>k</i> by swapping 2 cities
+                            in <i>u</i></div>
+                    </div>
+                    <div id="s4" class="d-flex">
+                        <div class="num">4.</div>
+                        <div class="tab"><b>If</b> <i>k</i> shorter than <i>u</i>, replace
+                            <i>u</i> with <i>k</i></div>
+                    </div>
+                    <div id="s5" class="d-flex">
+                        <div class="num">5.</div>
+                        <div class="tab"><b>Else</b> discard <i>k</i></div>
+                    </div>
+                    <div id="s6" class="d-flex">
+                        <div class="num">6.</div>
+                        <div><b>Until</b> run out of time</div>
+                    </div>
+                </div>
+
+<!--                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">-->
+<!--                    Start-->
+<!--                </button>-->
             </div>
 
             <div class="button-container">
                 <a href="NN-lesson.html"><button class="button">Previous</button></a>
+                <a href="HC-program.html"><button class="button purple">Algorithm Program</button></a>
                 <a href="SA-lesson.html"><button class="button">Next</button></a>
             </div>
         </div>
@@ -360,7 +394,7 @@
     {
         while(stepIndex <= 6)
         {
-            if(counter>5)
+            if(counter>10)
             {
                 stepIndex = 6;
                 step6();
@@ -383,7 +417,7 @@
             await sleep(1500);
         }
         let x = document.getElementsByClassName("highlight");
-        x[0].className = "";
+        x[0].className = x[0].className.replace(" highlight", "");
         stepIndex = 1;
         enableDemo();
     }
@@ -394,7 +428,7 @@
         convertTourToEdges(currentSolution, graph);
         updateSigma(s, graph);
         step = "s" + stepIndex.toString();
-        document.getElementById(step).className = "highlight";
+        document.getElementById(step).className += " highlight";
         $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
 
         stepIndex = 2;
@@ -478,9 +512,9 @@
     function updateStep()
     {
         let x = document.getElementsByClassName("highlight");
-        x[0].className = "";
+        x[0].className = x[0].className.replace(" highlight", "");
         step = "s" + stepIndex.toString();
-        document.getElementById(step).className = "highlight";
+        document.getElementById(step).className += " highlight";
         stepIndex++;
     }
 

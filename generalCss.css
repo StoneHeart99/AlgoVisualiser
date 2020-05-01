@@ -11,7 +11,7 @@ nav {
     height: 60px;
     display: flex;
     justify-content: space-between;
-    font-size: 1.25em;
+    font-size: 1.20em;
 }
 
 .nav-menu {
@@ -408,7 +408,7 @@ input::-webkit-inner-spin-button {
 }
 
 .lesson-container {
-    width: 60%;
+    width: 70%;
     margin: 50px auto;
     padding-bottom: 50px;
     max-height: calc(100vh - (60px));
@@ -450,16 +450,70 @@ th {
 
 .pseudocode {
     background-color: #D6D6D6;
-    height: 330px;
-    width: 40%;
-    position: absolute;
+    /*height: 510px;*/
+    /*height: 100%;*/
+    height: inherit;
+    width: 50%;
+    /*position: absolute;*/
     right: 0;
     /*border: 1px solid #555;*/
-    padding: 20px;
+    padding: 25px;
     border-left: none;
 }
 
 .highlight {
     border: 2px solid #2196F3;
     padding: 5px;
+    display: flex;
+}
+
+.num {
+    font-weight: 500;
+    padding-right: 10px;
+}
+
+.tab {
+    padding-left: 20px;
+}
+
+.info-panel {
+    width: 50%;
+    height: 180px;
+    background: #e5e5e5;
+    padding: 20px;
+}
+
+h5 {
+    font-weight: 500;
+    margin-right: 20px;
+}
+
+.circle {
+    color: hsla(0,0%,100%,.5);
+    background-color: #2196F3;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 0;
+    margin: .5em;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    transition: color .25s,background-color .5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.circle:hover {
+    opacity: 1;
+}
+
+.icon {
+    color: white;
+}
+
+.icon.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
 }
