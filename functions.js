@@ -97,6 +97,27 @@ function convertCityToNodes(TM, graph)
     }
 }
 
+function convertCityToNodes_black(TM, graph)
+{
+    clearArray(graph.nodes);
+    let nodeSize = 10;
+    // let nodeColor = "black";
+    let nodeColor = "black";
+    for(let i=0;i<TM.size();i++)
+    {
+        graph.nodes.push(
+            {
+                id: TM.getTour()[i].name,
+                label: TM.getTour()[i].name,
+                x: TM.getTour()[i].x,
+                y: TM.getTour()[i].y,
+                size: nodeSize,
+                color: nodeColor,
+            }
+        )
+    }
+}
+
 function convertSwapCityToNodes(tour, graph, pos1, pos2)
 {
     clearArray(graph.nodes);
@@ -171,3 +192,37 @@ function toast(msg, time=1000)
 $( document ).ready(function() {
     $("#nav-placeholder").load("nav.html");
 });
+
+function updateStep()
+{
+    let x = document.getElementsByClassName("highlight");
+    x[0].className = x[0].className.replace(" highlight", "");
+    step = "s" + stepIndex.toString();
+    document.getElementById(step).className += " highlight";
+    stepIndex++;
+}
+
+function convertSwapCityToNodes_black(tour, graph, pos1, pos2)
+{
+    clearArray(graph.nodes);
+    let nodeSize = 10;
+    let nodeColor = "#2196F3";
+    for(let i=0;i<tour.size();i++)
+    {
+        if (i==pos1 || i==pos2)
+            nodeColor = "#2196F3";
+        else
+            nodeColor = "black";
+
+        graph.nodes.push(
+            {
+                id: tour.getCity(i).name,
+                label: tour.getCity(i).name,
+                x: tour.getCity(i).x,
+                y: tour.getCity(i).y,
+                size: nodeSize,
+                color: nodeColor,
+            }
+        )
+    }
+}

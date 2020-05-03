@@ -173,12 +173,12 @@
                     </div>
                     <div id="s4" class="d-flex">
                         <div class="num">4.</div>
-                        <div class="tab"><b>If</b> <i>k</i> shorter than <i>u</i>, replace
+                        <div class="tab"><b>If</b> <i>k</i> is shorter than <i>u</i>, replace
                             <i>u</i> with <i>k</i></div>
                     </div>
                     <div id="s5" class="d-flex">
                         <div class="num">5.</div>
-                        <div class="tab"><b>Else</b> discard <i>k</i></div>
+                        <div class="tab"><b>Else</b> reject <i>k</i></div>
                     </div>
                     <div id="s6" class="d-flex">
                         <div class="num">6.</div>
@@ -373,7 +373,6 @@
     graphTM.addCity(city4);
     graphTM.addCity(city5);
     tour = new Tour(graphTM.destinationCities);
-    let initialSolution = new Tour(graphTM.destinationCities);
     let currentSolution = new Tour(graphTM.destinationCities);
     let newSolution = new Tour(graphTM.destinationCities);
     let stepIndex = 1;
@@ -382,7 +381,7 @@
 
 
 
-    convertCityToNodes(graphTM, graph);
+    // convertCityToNodes_black(graphTM, graph);
     updateSigma(s, graph);
 
     // step1();
@@ -471,7 +470,7 @@
         }
         // Swap them
         newSolution.swapCities(tourPos1, tourPos2);
-        convertSwapCityToNodes(newSolution, graph, tourPos1, tourPos2);
+        convertSwapCityToNodes_black(newSolution, graph, tourPos1, tourPos2);
         convertTourToEdges(newSolution, graph);
         updateSigma(s2, graph);
 
@@ -489,7 +488,7 @@
 
     function step4() {
         updateStep();
-        convertCityToNodes(graphTM, graph);
+        convertCityToNodes_black(graphTM, graph);
         updateSigma(s, graph);
         stepIndex = 2;
         $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
@@ -518,51 +517,9 @@
         stepIndex++;
     }
 
-    function convertCityToNodes(TM, graph)
-    {
-        clearArray(graph.nodes);
-        let nodeSize = 10;
-        // let nodeColor = "black";
-        let nodeColor = "black";
-        for(let i=0;i<TM.size();i++)
-        {
-            graph.nodes.push(
-                {
-                    id: TM.getTour()[i].name,
-                    label: TM.getTour()[i].name,
-                    x: TM.getTour()[i].x,
-                    y: TM.getTour()[i].y,
-                    size: nodeSize,
-                    color: nodeColor,
-                }
-            )
-        }
-    }
 
-    function convertSwapCityToNodes(tour, graph, pos1, pos2)
-    {
-        clearArray(graph.nodes);
-        let nodeSize = 10;
-        let nodeColor = "#2196F3";
-        for(let i=0;i<tour.size();i++)
-        {
-             if (i==pos1 || i==pos2)
-                nodeColor = "#2196F3";
-            else
-                nodeColor = "black";
 
-            graph.nodes.push(
-                {
-                    id: tour.getCity(i).name,
-                    label: tour.getCity(i).name,
-                    x: tour.getCity(i).x,
-                    y: tour.getCity(i).y,
-                    size: nodeSize,
-                    color: nodeColor,
-                }
-            )
-        }
-    }
+
 
     function start() {
         disableDemo();
@@ -589,7 +546,7 @@
         counter = 1;
         s2.graph.clear();
         s2.refresh();
-        convertCityToNodes(graphTM, graph);
+        convertCityToNodes_black(graphTM, graph);
         updateSigma(s, graph);
     }
 

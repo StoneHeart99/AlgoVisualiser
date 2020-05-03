@@ -2,7 +2,7 @@ body {
     padding: 0px;
     margin: 0px;
     /*height: 100vh;*/
-    font-size: 1.05em;
+    font-size: 1.0em;
     background: #f1f1f1;
 }
 
@@ -474,6 +474,10 @@ th {
 
 .tab {
     padding-left: 20px;
+}
+
+.tab2 {
+    padding-left: 40px;
 }
 
 .info-panel {
