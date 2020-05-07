@@ -27,17 +27,19 @@
 
         #sigma-container{
             margin: auto auto 50px;
-            height: 400px;
-            width: 400px;
+            height: 350px;
+            width: 350px;
             /*border: 1px solid #555;*/
         }
 
         .img-container {
-            width: 400px;
+            width: 350px;
+            height: 350px;
             margin: auto;
             background-color: #E1E1E1;
             display: flex;
             justify-content: center;
+            align-items: center;
             /*border: 1px solid #555;*/
         }
 
@@ -46,6 +48,23 @@
             width: 350px;
             padding: 30px;
             background-color: #E1E1E1;
+        }
+
+        .matrix {
+            text-align: center;
+            height: 250px;
+            width: 250px;
+        }
+
+        .matrix td {
+            height: 30px;
+            width: 30px;
+            border: 1px solid black;
+        }
+
+        .matrix .noBorder {
+            border: none;
+            font-weight: 500;
         }
 
     </style>
@@ -70,8 +89,8 @@
                     It is a famous algorithmic problem in the fields of computer science and operations research
                     because it is easy to state yet tough to solve. The complexity of obtaining a best route for the
                     problem will also grow exponentially as more cities are added. For example, with 10 cities, there
-                    are more than 300,000 different round-trips. However, with 15 cities, with 15 cities, the number of
-                    possible round-trips skyrocket to more than 87 billion. Hence, it is impractical for computer to
+                    are more than 300,000 different routes. However, with 15 cities, with 15 cities, the number of
+                    possible route skyrocket to more than 87 billion. Hence, it is impractical for computer to
                     calculate every possible route to find out the shortest route. We would need other methods or
                     algorithms to find a good solution for TSP.
                 </p>
@@ -101,8 +120,46 @@
                     V<sub>i</sub> to V<sub>j</sub>.
                 </p>
                 <br>
+
                 <div class="img-container">
-                    <img class="img" src="assets/matrix.png">
+                    <table class="matrix">
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder">c1</td>
+                            <td class="noBorder">c2</td>
+                            <td class="noBorder">c3</td>
+                            <td class="noBorder">c4</td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder">c1</td>
+                            <td>0</td>
+                            <td>20</td>
+                            <td>30</td>
+                            <td>42</td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder">c2</td>
+                            <td>20</td>
+                            <td>0</td>
+                            <td>34</td>
+                            <td>35</td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder">c3</td>
+                            <td>30</td>
+                            <td>34</td>
+                            <td>0</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td  class="noBorder">c4</td>
+                            <td>42</td>
+                            <td>35</td>
+                            <td>12</td>
+                            <td>0</td>
+                        </tr>
+                    </table>
+<!--                    <img class="img" src="assets/matrix.png">-->
                 </div>
             </div>
 
@@ -122,7 +179,7 @@
 
             <div class="button-container" style="justify-content: flex-end">
 <!--                <a href="NN-program.html"><button class="button purple">Demo Program</button></a>-->
-                <a href="NN-lesson.html"><button class="button">Next</button></a>
+                <a href="NN-lesson.html"><button class="button lesson-button">Next</button></a>
             </div>
         </div>
     </div>
@@ -156,7 +213,7 @@
                 maxNodeSize: 10,
                 enableCamera: false,
                 defaultEdgeLabelSize: 15,
-                defaultNodeColor: '#2196F3',
+                defaultNodeColor: 'black',
                 sideMargin: 5,
                 enableHovering:  true,
                 labelHoverBGColor: "#000",
@@ -165,10 +222,10 @@
     );
     let graph = {
         nodes: [
-            { id: "c1", label: "c1", x: 20, y: 20, size: 15, },
-            { id: "c2", label: "c2", x: 40, y: 20, size: 15, },
-            { id: "c3", label: "c3", x: 40, y: 40, size: 15, },
-            { id: "c4", label: "c4", x: 20, y: 40, size: 15, },
+            { id: "c1", label: "c1", x: 40, y: 20, size: 15, },
+            { id: "c2", label: "c2", x: 55, y: 36, size: 15, },
+            { id: "c3", label: "c3", x: 38, y: 38, size: 15, },
+            { id: "c4", label: "c4", x: 26, y: 26, size: 15, },
         ],
         edges: [
             { id: "e1", source: "c1", target: "c2", label: "20", color: 'black', type:'line', size:0.5 },

@@ -9,7 +9,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="Sigma/sigma.min.js"></script>
     <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
@@ -21,49 +23,74 @@
     <script src="city.js"></script>
     <script src="tour-manager.js"></script>
     <script src="tour.js"></script>
+    <script src="population.js"></script>
+    <script src="ga.js"></script>
     <script src="default-data.js"></script>
     <style>
-        .content-container {
+        #sigma-container, #sigma-container2, #sigma-container3, #sigma-container4{
+            /*margin: auto auto 50px;*/
+            height: 20%;
             width: 100%;
         }
 
-        .container {
-            width: 60%;
-            margin: 50px auto;
-            padding-bottom: 50px;
-            height: calc(100vh - (60px));
-
+        #mutateChart {
+            width: 100%;
+            height: auto;
         }
 
-        .article {
-            text-align: justify;
-        }
-
-        .section {
-            margin-bottom: 80px;
-        }
-
-        #sigma-container{
-            margin: auto auto 50px;
-            height: 400px;
-            width: 400px;
-            border: 1px solid #555;
-        }
-
-        .img-container {
-            width: 400px;
-            margin: auto;
-            background-color: #E1E1E1;
+        .display-container {
+            position: relative;
+            left: 0;
+            background: #E1E1E1;
+            width: 70%;
+            height: inherit;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            border: 1px solid #555;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .img {
-            height: 350px;
-            width: 350px;
-            padding: 30px;
-            background-color: #E1E1E1;
+        .pseudocode {
+            width: 30%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            overflow: auto;
+            height: inherit;
+        }
+
+        .matrix {
+            text-align: center;
+            height: 250px;
+            width: 250px;
+        }
+
+        .matrix td {
+            height: 30px;
+            width: 30px;
+            border: 1px solid black;
+        }
+
+        .matrix .noBorder {
+            border: none;
+            /*font-weight: 500;*/
+        }
+
+        .crossTable {
+            text-align: center;
+            /*height: 50px;*/
+        }
+
+        .crossTable td {
+            height: 50px;
+            width: 50px;
+            border: 1px solid black;
+            /*padding: 1px;*/
+        }
+
+        .crossTable .noBorder {
+            border: none;
         }
 
     </style>
@@ -76,66 +103,432 @@
     </div>
 </nav>
 
-<div class="content-container">
-    <div class="container">
-        <h2>Lesson 4 - Genetic Algorithm</h2>
+<div class="lesson-content-container">
+    <div class="lesson-container">
+        <h2>Lesson - Genetic Algorithm</h2>
 
-<!--        <div class="section">-->
-<!--            <h3>1.1 Overview</h3>-->
-<!--            <p class="article">-->
-<!--                The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the shortest-->
-<!--                route between a list of cities that must be visited exactly once and return to the starting city.-->
-<!--                It is a famous algorithmic problem in the fields of computer science and operations research-->
-<!--                because it is easy to state yet tough to solve. The complexity of obtaining a best route for the-->
-<!--                problem will also grow exponentially as more cities are added. For example, with 10 cities, there-->
-<!--                are more than 300,000 different round-trips. However, with 15 cities, with 15 cities, the number of-->
-<!--                possible round-trips skyrocket to more than 87 billion. Hence, it is impractical for computer to-->
-<!--                calculate every possible route to find out the shortest route. We would need other methods or-->
-<!--                algorithms to find a good solution for TSP.-->
-<!--            </p>-->
-<!--        </div>-->
+        <div class="section">
+            <h3>Overview</h3>
+            <p class="article">
+                Genetic algorithm is inspired by evolutionary biology such as inheritance, mutation, selection,
+                and crossover. It simulates the “survival of the fittest”, which means the individual who is
+                the fittest survives and the weakest will be eliminated. In genetic algorithm, we will have a
+                population of possible solution that will undergo crossover and mutation process to introduce new
+                solutions to the population. Hence, we can keep evolve our solution over generations until we reach
+                a stopping criterion.
+            </p>
+        </div>
 
-<!--        <div class="section">-->
-<!--            <h3>1.2 Representation of TSP in Computer</h3>-->
-<!--            <h4>a) Weighted Graph</h4>-->
-<!--            <p class="article">-->
-<!--                TSP can be represented in computer by using weighted graph, where the graph’s vertices represent the-->
-<!--                cities, the graph’s edges represent the path, and the weight of an edge represent the distance.-->
-<!--            </p>-->
+        <div class="section">
+            <h3>Basic Terminology</h3>
+            <ul>
+                <li>
+                    <b>Gene:</b> a city
+                </li>
+                <li>
+                    <b>Individual:</b> a route (a solution)
+                </li>
+                <li>
+                    <b>Population:</b> a collection of the possible solution
+                </li>
+                <li>
+                    <b>Parents:</b> two individuals that are used to create child (new solution)
+                </li>
+                <li>
+                    <b>Fitness value:</b> a value to indicate how “good” a solution is. A solution with shorter distance
+                    will be assigned with higher fitness value.
+                </li>
+            </ul>
 
-<!--            <div id="sigma-container"></div>-->
+            <br>
 
-<!--            <h4>b) Adjacency Matrix</h4>-->
-<!--            <p>-->
-<!--                Adjacency Matrix is a square matrix used to represent a graph in graph theory and computer science.-->
-<!--            </p>-->
-<!--            <p>-->
-<!--                An entry M<sub>ij</sub>  in the adjacency matrix representation shows the weight from-->
-<!--                V<sub>i</sub> to V<sub>j</sub>.-->
-<!--            </p>-->
-<!--            <div class="img-container">-->
-<!--                <img class="img" src="assets/matrix.png">-->
-<!--            </div>-->
-<!--        </div>-->
+            <div class="d-flex justify-content-around" style="background: #E1E1E1; padding: 25px;">
+                <div>
+                    <table class="matrix">
+                        <tr>
+                            <td>c1</td>
+                            <td>c2</td>
+                            <td>c3</td>
+                            <td>c4</td>
+                            <td>c5</td>
+                        </tr>
+                        <tr>
+                            <td>c1</td>
+                            <td>c3</td>
+                            <td>c2</td>
+                            <td>c4</td>
+                            <td>c5</td>
+                        </tr>
+                        <tr>
+                            <td >c1</td>
+                            <td >c2</td>
+                            <td >c3</td>
+                            <td >c5</td>
+                            <td >c4</td>
+                        </tr>
+                        <tr>
+                            <td>c1</td>
+                            <td>c2</td>
+                            <td>c5</td>
+                            <td>c4</td>
+                            <td>c3</td>
+                        </tr>
+                        <tr>
+                            <td>c1</td>
+                            <td>c5</td>
+                            <td>c3</td>
+                            <td>c4</td>
+                            <td>c2</td>
+                        </tr>
+                    </table>
+                    <div style="text-align: center; margin-top: 5px;"><b>Population</b></div>
+                </div>
 
-<!--        <div class="section">-->
-<!--            <h3>1.3 Tackling TSP with Optimisation Algorithm</h3>-->
-<!--            <p>-->
-<!--                Optimisation is the process of choosing inputs that could increase the efficiency of a solution,-->
-<!--                or obtain best possible outputs. However, the optimal results are often not guaranteed. It also-->
-<!--                often involves in either maximising or minimising a value. In this context, we try to minimise-->
-<!--                the distance for the route.-->
-<!--            </p>-->
-<!--            <p>-->
-<!--                There are various optimisation methods that can be implemented on TSP, and each of them have-->
-<!--                their own pros and cons. These optimisation methods are further explain in other lesson pages.-->
-<!--            </p>-->
-<!--        </div>-->
-`
-<!--        <div class="button-container">-->
-<!--            <a href="NN-program.html"><button class="button purple">Demo</button></a>-->
-<!--            <a href="NN-lesson.html"><button class="button">Next</button></a>-->
-<!--        </div>`-->
+                <div>
+                    <table class="matrix">
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td >c1</td>
+                            <td >c2</td>
+                            <td >c3</td>
+                            <td >c4</td>
+                            <td >c5</td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                    </table>
+                    <div style="text-align: center; margin-top: 5px;"><b>Individual</b></div>
+                </div>
+
+                <div>
+                    <table class="matrix">
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td ></td>
+                            <td ></td>
+                            <td >c3</td>
+                            <td ></td>
+                            <td ></td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                        <tr>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                            <td class="noBorder"></td>
+                        </tr>
+                    </table>
+                    <div style="text-align: center; margin-top: 5px;"><b>Gene</b></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Implementation </h3>
+            <p class="article">
+                <div class="light-bold">1. Create population</div>
+                <div>Randomly generate 30 individuals</div>
+            </p>
+            <p class="article">
+                <div class="light-bold">2. Determine fitness of population</div>
+                <div>Calculate the fitness of each individuals</div>
+            </p>
+            <p class="article">
+                <div class="light-bold">3. Selection of parents (tournament selection)</div>
+                <div>Randomly pick 5 individuals from the population and select 2 individuals with highest fitness
+                    values as parents</div>
+            </p>
+            <p class="article">
+                <div class="light-bold">4. Crossover (ordered crossover)</div>
+                <div class="article">
+                    Create 2 children (new individuals) by combining subsets of the parents. First, randomly
+                    select a subset of first parent and copy it to first child. The remaining part of the first child is
+                    then filled with the genes from second parent in the order they are found to prevent any duplicate
+                    gene. Second child is created with the same process, however, the unselected subset of first parent
+                    is copied to the second child instead of the selected subset.
+                </div>
+            <div class="d-flex align-items-center flex-column"
+                 style="padding: 50px 100px; background: #E1E1E1; width: fit-content; margin: 20px auto auto;">
+                <div>
+                    <div class="light-bold">Parent 1</div>
+                    <table class="crossTable">
+                        <tr>
+                            <td>c1</td>
+                            <td class="noBorder"></td>
+                            <td>c2</td>
+                            <td>c3</td>
+                            <td>c4</td>
+                            <td>c5</td>
+                            <td style="background: #b6b6b6">c6</td>
+                            <td style="background: #b6b6b6">c7</td>
+                            <td style="background: #b6b6b6">c8</td>
+                            <td>c9</td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <div>
+                    <div class="light-bold">Parent 2</div>
+                    <table class="crossTable">
+                        <tr>
+                            <td>c1</td>
+                            <td class="noBorder"></td>
+                            <td>c9</td>
+                            <td>c8</td>
+                            <td>c7</td>
+                            <td>c6</td>
+                            <td>c5</td>
+                            <td>c4</td>
+                            <td>c3</td>
+                            <td>c2</td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <div>
+                    <div class="light-bold">Child 1</div>
+                    <table class="crossTable" style="margin-top: 5px;">
+                        <tr>
+                            <td>c1</td>
+                            <td class="noBorder"></td>
+                            <td id="c1-2"></td>
+                            <td id="c1-3"></td>
+                            <td id="c1-4"></td>
+                            <td id="c1-5"></td>
+                            <td id="c1-6"></td>
+                            <td id="c1-7"></td>
+                            <td id="c1-8"></td>
+                            <td id="c1-9"></td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <div>
+                    <div class="light-bold">Child 2</div>
+                    <table class="crossTable">
+                        <tr>
+                            <td>c1</td>
+                            <td class="noBorder"></td>
+                            <td id="c2-2"></td>
+                            <td id="c2-3"></td>
+                            <td id="c2-4"></td>
+                            <td id="c2-5"></td>
+                            <td id="c2-6"></td>
+                            <td id="c2-7"></td>
+                            <td id="c2-8"></td>
+                            <td id="c2-9"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br>
+            </p>
+            <p class="article">
+                <div class="light-bold">5. Mutation (swap mutation)</div>
+                <div>-	Mutation are applied to children solution to further introduce variation in population.
+                    For each gene in the children solution, it has a probability to mutate, or swapped its
+                    position with another gene in the same solution. </div>
+                <div class="d-flex align-items-center flex-column"
+                     style="padding: 50px 100px; background: #E1E1E1; width: fit-content; margin: 20px auto auto;">
+                    <table class="crossTable">
+                        <tr>
+                            <td id="ms-1">c1</td>
+                            <td class="noBorder"></td>
+                            <td id="ms-2">c2</td>
+                            <td id="ms-3">c3</td>
+                            <td id="ms-4">c4</td>
+                            <td id="ms-5">c5</td>
+                            <td id="ms-6">c6</td>
+                            <td id="ms-7">c7</td>
+                            <td id="ms-8">c8</td>
+                            <td id="ms-9">c9</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <div style="align-self: flex-start">
+                        <div>Mutation Rate: 0.5</div>
+                        <div>Random Number: <span id="mutateRand"></span></div>
+                        <div>Mutation: <span id="isMutate"></span></div>
+                    </div>
+                </div>
+            </p>
+            <p class="article">
+                <div class="light-bold">6. Survival</div>
+                <div>Replace two worst solutions in the population with the children solution</div>
+            </p>
+            <p class="article">
+            <div class="light-bold">7. Repeat</div>
+            <div>Continuously evolve the population to find “good” solution </div>
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Pros and Cons</h3>
+            <div class="d-flex">
+                <div class="pros">
+                    <h5>Pros</h5>
+                    <div>- Produce a collection of "good" solutions</div>
+                    <div>- Useful when the search space is very large</div>
+                </div>
+                <div class="cons">
+                    <h5>Cons</h5>
+                    <div>- Requires more computer memory</div>
+                    <div>- time consuming compared to other algorithms</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="d-flex align-items-center" style="margin-bottom: 10px;">
+                <h3 style="margin-right: 15px">Concept Visualiser</h3>
+                <div id="startBtn" class="circle icon" onclick="start()">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div style="width: 100%; height: 500px; position: relative">
+                <div class="display-container" id="display">
+                        <canvas id="mutateChart"></canvas>
+                </div>
+                <div class="display-container" id="display2">
+                    <div id="parent1" style="align-self: flex-start; margin-left: 60px;">Parent 1</div>
+                    <div id="sigma-container"></div>
+                    <div id="parent2" style="align-self: flex-start; margin-left: 60px;">Parent 2</div>
+                    <div id="sigma-container2"></div>
+                    <div id="child1" style="align-self: flex-start; margin-left: 60px;">Child 1</div>
+                    <div id="sigma-container3"></div>
+                    <div id="child2" style="align-self: flex-start; margin-left: 60px;">Child 2</div>
+                    <div id="sigma-container4"></div>
+                </div>
+
+                <div class="pseudocode">
+                    <h6 style="font-size: 1.5em">Steps</h6>
+                    <div id="main">
+                        <div id="s1" class="d-flex">
+                            <div class="num">1. </div>
+                            <div>Create population</div>
+                        </div>
+                        <div id="s2" class="d-flex">
+                            <div class="num">2. </div>
+                            <div>Determine fitness of population</div>
+                        </div>
+                        <div id="s3" class="d-flex">
+                            <div class="num">3. </div>
+                            <div>Tournament selection</div>
+                        </div>
+                        <div id="s4" class="d-flex">
+                            <div class="num">4. </div>
+                            <div>Crossover</div>
+                        </div>
+                        <div id="s5" class="d-flex">
+                            <div class="num">5. </div>
+                            <div>Mutation</div>
+                        </div>
+                        <div id="s6" class="d-flex">
+                            <div class="num">6. </div>
+                            <div>Survival</div>
+                        </div>
+                    </div>
+                    <div id="s3-details">
+                        <div class="d-flex"><b>Tournament selection</b></div>
+                        <div id="s3a" class="d-flex">
+                            <div class="num">3a. </div> Sort the individuals based on fitness value
+                        </div>
+                        <div id="s3b" class="d-flex">
+                            <div class="num">3b. </div> Randomly select 5 individuals
+                        </div>
+                        <div id="s3c" class="d-flex">
+                            <div class="num">3c. </div> Keep 2 best individuals as parents
+                        </div>
+                    </div>
+                    <div id="s4-details">
+                        <div class="d-flex"><b>Crossover</b></div>
+                        <div id="s4a" class="d-flex">
+                            <div class="num">4a. </div> Randomly select subset from parent 1
+                        </div>
+                        <div id="s4b" class="d-flex">
+                            <div class="num">4b. </div> create child 1
+                        </div>
+                        <div id="s4c" class="d-flex">
+                            <div class="num">4c. </div> create child 2
+                        </div>
+                    </div>
+                    <div id="s5-details">
+                        <div class="d-flex"><b>Mutation</b></div>
+                        <div id="s5a" class="d-flex">
+                            <div class="num">5a. </div> Mutate first child
+                        </div>
+                        <div id="s5b" class="d-flex">
+                            <div class="num">5b. </div> Mutate second child
+                        </div>
+                    </div>
+                    <div id="s6-details">
+                        <div class="d-flex"><b>Survival</b></div>
+                        <div id="s6a" class="d-flex">
+                            <div class="num">6a. </div> Remove 2 worst solution
+                        </div>
+                        <div id="s6b" class="d-flex">
+                            <div class="num">6b. </div> add children solution
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+        <div class="button-container">
+            <a href="SAR-lesson.html"><button class="button lesson-button">Previous</button></a>
+            <a href="GA-program.html"><button class="button lesson-button purple">GA Program</button></a>
+            <div class="lesson-button"></div>
+        </div>
     </div>
 
 
@@ -145,3 +538,858 @@
 
 </body>
 </html>
+<script>
+    let ctx = document.getElementById('mutateChart').getContext('2d');
+    let mutateChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Fitness Value',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+            }]
+        },
+        options: {
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                showTooltips: false,
+            },
+            responsive: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        maxRotation: 90,
+                        minRotation: 80,
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Individuals',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                    gridLines: {
+                        display: false,
+                        color: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        // max:10,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fitness Value',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                    gridLines: {
+                        display: false,
+                        color: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    let c1 = new City("c1", 10, 0);
+    let c2 = new City("c2", 20, 0);
+    let c3 = new City("c3", 30, 0);
+    let c4 = new City("c4", 40, 0);
+    let c5 = new City("c5", 50, 0);
+    let c6 = new City("c6", 60, 0);
+    let c7 = new City("c7", 70, 0);
+    let c8 = new City("c8", 80, 0);
+    let c9 = new City("c9", 90, 0);
+    let city1 = new City("c1", 120, 80);
+    let city2 = new City("c2", 180, 200);
+    let city3 = new City("c3", 80, 180);
+    let city4 = new City("c4", 140, 180);
+    let city5 = new City("c5", 20, 160);
+    let city6 = new City("c6", 100, 160);
+    let city7 = new City("c7", 200, 160);
+    let city8 = new City("c8", 140, 140);
+    let city9 = new City("c9", 40, 120);
+
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 6,
+            }
+        }
+    );
+
+    let s2 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container2'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 6,
+            }
+        }
+    );
+
+    let s3 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container3'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 6,
+            }
+        }
+    );
+
+    let s4 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container4'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 6,
+            }
+        }
+    );
+    let graph = {
+        nodes: [],
+        edges: []
+    };
+
+    let geneticTM = new TourManager();
+    geneticTM.addCity(city1);
+    geneticTM.addCity(city2);
+    geneticTM.addCity(city3);
+    geneticTM.addCity(city4);
+    geneticTM.addCity(city5);
+    geneticTM.addCity(city6);
+    geneticTM.addCity(city7);
+    geneticTM.addCity(city8);
+    geneticTM.addCity(city9);
+    // geneticTM.clone(TM);
+    displayTM = new TourManager();
+    displayTM.addCity(c1);
+    displayTM.addCity(c2);
+    displayTM.addCity(c3);
+    displayTM.addCity(c4);
+    displayTM.addCity(c5);
+    displayTM.addCity(c6);
+    displayTM.addCity(c7);
+    displayTM.addCity(c8);
+    displayTM.addCity(c9);
+
+    let mutationRate = 0.015;
+    let eliteSize = 1;
+    let populationSize = 30;
+    let parents = [];
+    let children = [];
+
+    let stepIndex = 1;
+    let step = "s1";
+    let counter = 0;
+
+    let animateBarSpd = 25;
+    let stepInterval = 1500;
+    let mutateCount = 1;
+
+    let pop = new Population(populationSize, geneticTM, true);
+    let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+
+    convertCityToNodes_black(displayTM, graph);
+    updateSigma(s, graph);
+    // updateSigma(s2, graph);
+    // updateSigma(s3, graph);
+    // updateSigma(s4, graph);
+
+    $("#mutateChart").hide();
+    // $("#display").hide();
+    $("#display2").hide();
+    $("#s3-details").hide();
+    $("#s4-details").hide();
+    $("#s5-details").hide();
+    $("#s6-details").hide();
+    $("#child1").hide();
+    $("#child2").hide();
+
+    // for(let i=0;i<pop.populationSize();i++){
+    //     addData(mutateChart, i+1, 0);
+    // }
+
+    // step1();
+    // step2();
+    // step3();
+
+    // auto();
+    // let tournament = tournamentSelection(pop);
+
+
+    animateCrossover();
+    setInterval(animateCrossover, 10000);
+
+    animateMutation();
+    setInterval(animateMutation, 10000);
+
+
+    function addData(chart, label, data) {
+        let index = parseInt(label);
+        chart.data.labels[index] = label;
+        chart.data.datasets[0].data[index] = data;
+        chart.update();
+    }
+
+
+
+
+    async function step1()
+    {
+        step = "s" + stepIndex.toString();
+        document.getElementById(step).className += " highlight";
+        $("#mutateChart").show();
+        // $("#display").show();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, 0);
+            await sleep(animateBarSpd);
+        }
+        stepIndex++;
+    }
+
+    async function step2()
+    {
+        await sleep(stepInterval);
+        updateStep();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+            await sleep(animateBarSpd);
+        }
+    }
+
+    async function step3()
+    {
+        await sleep(stepInterval);
+        showMain();
+        updateStep();
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s3-details").show();
+
+        await tournamentSelection(pop);
+    }
+
+    async function step4()
+    {
+
+        await sleep(stepInterval);
+
+        showMain();
+        updateStep();
+        $("#display").hide();
+        $("#display2").show();
+        $("#sigma-container").show();
+        $("#sigma-container2").show();
+        $("#parent1").show();
+        $("#parent2").show();
+        $("#child1").hide();
+        $("#child2").hide();
+        $("#sigma-container3").hide();
+        $("#sigma-container4").hide();
+
+
+        updateCrossoverNode(s, parents[0]);
+        updateCrossoverNode(s2, parents[1]);
+
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s4-details").show();
+
+        await crossover2(parents[0], parents[1]);
+    }
+
+    async function step5()
+    {
+        await sleep(stepInterval);
+
+        $("#parent1").hide();
+        $("#parent2").hide();
+        $("#sigma-container").hide();
+        $("#sigma-container2").hide();
+
+        updateNodeBlack(s3, children[0]);
+        updateNodeBlack(s4, children[1]);
+
+        showMain();
+        updateStep();
+
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s5-details").show();
+
+        // 5a
+        stepIndex--;
+        updateStep('a');
+        await mutateVisual(s3, children[0]);
+        await sleep(stepInterval);
+
+        // 5b
+        stepIndex--;
+        updateStep('b');
+        await mutateVisual(s4, children[1]);
+    }
+
+    async function step6()
+    {
+        pop.sort();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+        }
+
+        await sleep(stepInterval);
+        updateStep();
+        showMain();
+        $("#display").show();
+        $("#display2").hide();
+
+        await sleep(stepInterval);
+
+        $("#main").hide();
+        $("#s6-details").show();
+
+        // 6a
+        stepIndex--;
+        updateStep('a');
+        for(let i=pop.populationSize();i>pop.populationSize()-2;i--)
+        {
+            addData(mutateChart, i, 0);
+        }
+
+        await sleep(stepInterval);
+
+        stepIndex--;
+        updateStep('b');
+
+        addData(mutateChart, 29, children[0].getFitness().toFixed(2));
+        addData(mutateChart, 30, children[1].getFitness().toFixed(2));
+
+        await sleep(stepInterval);
+        // updateStep();
+        showMain();
+
+        await sleep(stepInterval);
+    }
+
+    function updateStep(sub)
+    {
+        if(arguments.length == 0)
+            sub = '';
+
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = x[0].className.replace(" highlight", "");
+        step = "s" + stepIndex.toString() + sub;
+        document.getElementById(step).className += " highlight";
+        stepIndex++;
+    }
+
+
+    async function auto()
+    {
+        step1().then(step2).then(step3).then(step4)
+        .then(step5).then(step6).then(enableDemo);
+    }
+
+    async function tournamentSelection(pop) // Population
+    {
+
+        // 3a
+        stepIndex--;
+        updateStep('a');
+
+
+        pop.sort();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+            await sleep(animateBarSpd);
+        }
+        await sleep(stepInterval);
+
+
+        // 3b
+        stepIndex--;
+        updateStep('b');
+
+        // Create a tournament population
+        let tournament = new Population(5, geneticTM, false);
+        let randoms = []
+
+
+        // For each place in the tournament get a random candidate tour and add it
+        for (let i = 0; i < tournament.populationSize(); i++) {
+            let randomId = Math.floor(Math.random() * pop.populationSize());
+
+            while(randoms.includes(randomId))
+            {
+                randomId = Math.floor(Math.random() * pop.populationSize());
+            }
+            randoms.push(randomId);
+            tournament.saveTour(i, pop.getTour(randomId));
+        }
+
+        for(let i=0; i<pop.populationSize();i++)
+        {
+            if(randoms.includes(i))
+                continue
+
+            addData(mutateChart, i+1, 0);
+        }
+
+        await sleep(stepInterval);
+
+        // 3c
+        stepIndex--;
+        updateStep('c');
+
+        tournament.sort();
+
+        for(let i=0; i< tournament.populationSize();i++)
+        {
+            if( (pop.getTour(randoms[i]).getFitness() == tournament.getTour(0).getFitness()) ||
+                (pop.getTour(randoms[i]).getFitness() == tournament.getTour(1).getFitness())  )
+                continue;
+
+            addData(mutateChart, randoms[i]+1, 0);
+        }
+
+        parents[0] = tournament.getTour(0);
+        parents[1] = tournament.getTour(1);
+
+
+        await sleep(stepInterval);
+    }
+
+    async function crossover2(parent1,parent2) // tour, tour
+    {
+        // Create new child tour
+        let child1 = new Tour();
+        child1.cities = new Array(parent1.size());
+        let child2 = new Tour();
+        child2.cities = new Array(parent1.size());
+
+        let p1 = new Tour();
+        let p2 = new Tour();
+        p1.clone(parent1);
+        p2.clone(parent2);
+
+        // add start city to child solution and remove it from parents
+        child1.setCity(0, parent1.getCity(0));
+        child2.setCity(0, parent1.getCity(0));
+        p1.cities.shift();
+        p2.cities.shift();
+
+
+        // Get start and end sub tour positions for parent1's tour
+        let startPos = Math.floor(Math.random() * parent1.size());
+        let endPos = Math.floor(Math.random() * parent1.size());
+
+        if(startPos == endPos)
+        {
+            if(startPos == p1.size())
+            {
+                startPos--;
+            }
+            else
+            {
+                startPos++;
+            }
+        }
+        if(startPos > endPos)
+        {
+            let temp = 0;
+            temp = startPos;
+            startPos = endPos;
+            endPos = temp;
+        }
+        if(endPos == p1.size()-1)
+        {
+            endPos -= 2;
+        }
+
+        console.log({startPos, endPos});
+        console.log({p1});
+
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+
+        stepIndex--;
+        updateStep('a');
+        updateCrossoverNode(s, parents[0]);
+        updateSigma(s, graph);
+        await sleep(stepInterval);
+
+
+        // child 1
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                child1.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child1.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child1.getCity(ii) == null) {
+                        child1.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        stepIndex--;
+        updateStep('b');
+        $("#child1").show();
+        $("#sigma-container3").show();
+        convertCityToNodes_black(displayTM, graph);
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i < startPos || i > endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+        updateCrossoverNode(s3, child1);
+
+        await sleep(stepInterval);
+
+        // child 2
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i < startPos || i > endPos) {
+                child2.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child2.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child2.getCity(ii) == null) {
+                        child2.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        stepIndex--;
+        updateStep('c');
+        $("#child2").show();
+        $("#sigma-container4").show();
+        convertCityToNodes_black(displayTM, graph);
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+        updateCrossoverNode(s4, child2);
+
+        children[0] = child1;
+        children[1] = child2;
+    }
+
+
+    async function child1() {
+
+        let fillSpd = 800;
+
+        await sleep(fillSpd);
+
+        $("#c1-6").text("c6");
+        $("#c1-7").text("c7");
+        $("#c1-8").text("c8");
+
+        await sleep(fillSpd);
+
+        $("#c1-2").text("c9");
+        $("#c1-2").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c1-3").text("c5");
+        $("#c1-3").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c1-4").text("c4");
+        $("#c1-4").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c1-5").text("c3");
+        $("#c1-5").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c1-9").text("c2");
+        $("#c1-9").css({background:  '#b6b6b6'});
+    }
+    
+    async function child2() {
+        let fillSpd = 800;
+
+        await sleep(fillSpd);
+
+        $("#c2-2").text("c2");
+        $("#c2-3").text("c3");
+        $("#c2-4").text("c4");
+        $("#c2-5").text("c5");
+        $("#c2-9").text("c9");
+
+        await sleep(fillSpd);
+
+        $("#c2-6").text("c8");
+        $("#c2-6").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c2-7").text("c7");
+        $("#c2-7").css({background:  '#b6b6b6'});
+        await sleep(fillSpd);
+        $("#c2-8").text("c6");
+        $("#c2-8").css({background:  '#b6b6b6'});
+
+    }
+
+    async function animateCrossover() {
+
+        for(let i=1;i<=9;i++)
+        {
+            let id = "#c1-" + i.toString();
+            let id2 = "#c2-" + i.toString();
+            $(id).text("");
+            $(id).css({background:  '#E1E1E1'});
+
+            $(id2).text("");
+            $(id2).css({background:  '#E1E1E1'});
+        }
+
+        child1().then(child2);
+    }
+
+    function showMain() {
+        $("#s3-details").hide();
+        $("#s4-details").hide();
+        $("#s5-details").hide();
+        $("#s6-details").hide();
+        $("#main").show();
+    }
+
+    async function start() {
+        disableDemo();
+        resetDemo();
+        auto();
+    }
+
+    function updateCrossoverNode(sigma, tour)
+    {
+        for(let i=0;i<tour.size();i++)
+        {
+            graph.nodes[i].label = tour.getCity(i).getName();
+        }
+        updateSigma(sigma, graph);
+    }
+
+    function updateNodeBlack(sigma, tour)
+    {
+
+        console.log({tour});
+        for(let i=0;i<tour.size();i++)
+        {
+            graph.nodes[i].label = tour.getCity(i).getName();
+            graph.nodes[i].color = 'black';
+        }
+        updateSigma(sigma, graph);
+    }
+
+    function updateNodeHighlight(sigma, tour, pos)
+    {
+        let color = 'black';
+        for(let i=0;i<9;i++)
+        {
+            if(pos==i)
+                color = '#2196F3';
+            else
+                color = 'black'
+
+            graph.nodes[i].label = tour.getCity(i).getName();
+            graph.nodes[i].color = color;
+        }
+        updateSigma(sigma, graph);
+    }
+
+    async function animateMutation(){
+
+        let tourPos1 = 2; // skip start city
+        let id;
+        let mutationRate = 0.5;
+        for(tourPos1; tourPos1 <= 9; tourPos1++){
+
+            for(let i=1; i<=9; i++)
+            {
+                id = "#ms-" + parseInt(i);
+                $(id).css("background", "#E1E1E1");
+            }
+
+            id = "#ms-" + parseInt(tourPos1);
+            $(id).css("background", "#B6B6B6");
+
+            let mutateRand = Math.random();
+            $("#mutateRand").text(mutateRand.toFixed(3));
+            if(mutateRand < mutationRate)
+                $("#isMutate").text("Yes");
+            else
+                $("#isMutate").text("No");
+
+            await sleep(500);
+
+            // Apply mutation rate
+            if(mutateRand < mutationRate){
+                // Get a second random position in the tour
+                let tourPos2 = Math.floor(9 * Math.random()) + 1;
+                if( tourPos2 == 1)
+                    tourPos2++;
+                if(tourPos1 == tourPos2)
+                {
+                    if(tourPos2 == 9)
+                    {
+                        tourPos2--;
+                    }
+                    else
+                    {
+                        tourPos2++;
+                    }
+                }
+                // Swap them around
+                mutationSwap(tourPos1, tourPos2);
+
+                $("#isMutate").text("Yes");
+            }
+
+            await sleep(500);
+        }
+
+    }
+
+    function mutationSwap(swap, swapWith)
+    {
+        geneId = "#ms-" + parseInt(swap);
+        geneId2 = "#ms-" + parseInt(swapWith);
+
+        temp = $(geneId).text();
+        $(geneId).text($(geneId2).text());
+        $(geneId2).text(temp);
+    }
+
+    async function mutateVisual(sigma, tour)
+    {
+        let tourPos1 = 1; // skip start city
+        let mutationRate = 0.5
+        for(tourPos1; tourPos1 < tour.size(); tourPos1++){
+            // Apply mutation rate
+            updateNodeBlack(sigma, tour);
+            updateNodeHighlight(sigma, tour, tourPos1);
+            if(Math.random() < mutationRate){
+                // Get a second random position in the tour
+                let tourPos2 = Math.floor(tour.size() * Math.random());
+                if( tourPos2 == 0)
+                    tourPos2++;
+                if(tourPos1 == tourPos2)
+                {
+                    if(tourPos2 == tour.size())
+                    {
+                        tourPos2--;
+                    }
+                    else
+                    {
+                        tourPos2++;
+                    }
+                }
+                // Swap them around
+                tour.swapCities(tourPos1, tourPos2);
+            }
+
+            await sleep(200);
+        }
+        updateNodeBlack(sigma, tour);
+    }
+
+    function disableDemo() {
+        $("#startBtn").attr("disabled", true);
+        document.getElementById("startBtn"). className += " disabled";
+    }
+
+    function enableDemo() {
+        $("#startBtn").attr("disabled", false);
+        document.getElementById("startBtn"). className =
+            document.getElementById("startBtn"). className.replace(" disabled", "");
+    }
+
+    function resetDemo()
+    {
+        stepIndex = 1;
+
+        for(let i=0;i<pop.populationSize();i++)
+            removeData(mutateChart);
+
+        $("#mutateChart").hide();
+
+    }
+
+    function removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart.update();
+    }
+
+</script>

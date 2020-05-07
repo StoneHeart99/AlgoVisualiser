@@ -145,6 +145,31 @@ function convertSwapCityToNodes(tour, graph, pos1, pos2)
     }
 }
 
+function convertSwapCityToNodes_crossover(tour, graph, pos1, pos2, colour1, colour2)
+{
+    clearArray(graph.nodes);
+    let nodeSize = 10;
+    let nodeColor = colour1;
+    for(let i=0;i<tour.size();i++)
+    {
+        if(i < pos1 || i > pos2)
+            nodeColor = colour1;
+        else
+            nodeColor = colour2
+
+        graph.nodes.push(
+            {
+                id: tour.getCity(i).name,
+                label: tour.getCity(i).name,
+                x: tour.getCity(i).x,
+                y: tour.getCity(i).y,
+                size: nodeSize,
+                color: nodeColor,
+            }
+        )
+    }
+}
+
 function convertTourToEdges(tour, graph)
 {
     clearArray(graph.edges);

@@ -1,7 +1,6 @@
 body {
     padding: 0px;
     margin: 0px;
-    /*height: 100vh;*/
     font-size: 1.0em;
     background: #f1f1f1;
 }
@@ -296,7 +295,7 @@ h2 {
 }
 
 h3 {
-    margin-bottom: 20px;
+
 }
 
 .disabled {
@@ -392,6 +391,10 @@ input::-webkit-inner-spin-button {
     justify-content: space-between;
 }
 
+.lesson-button {
+    min-width: 90px;
+}
+
 
 /* Lesson */
 
@@ -405,6 +408,7 @@ input::-webkit-inner-spin-button {
     box-sizing: border-box;
     padding: 20px 50px 20px 50px;
     overflow: auto;
+    font-size: 18px;
 }
 
 .lesson-container {
@@ -457,7 +461,7 @@ th {
     /*position: absolute;*/
     right: 0;
     /*border: 1px solid #555;*/
-    padding: 25px;
+    padding: 20px;
     border-left: none;
 }
 
@@ -470,6 +474,8 @@ th {
 .num {
     font-weight: 500;
     padding-right: 10px;
+    width: 32px;
+    box-sizing: border-box;
 }
 
 .tab {
@@ -498,8 +504,8 @@ h5 {
     opacity: 0.8;
     cursor: pointer;
     padding: 0;
-    margin: .5em;
-    border-radius: 100%;
+    /*margin: .5em;*/
+    border-radius:  100%;
     width: 40px;
     height: 40px;
     transition: color .25s,background-color .5s;
@@ -520,4 +526,29 @@ h5 {
 .icon.disabled {
     opacity: 0.35;
     cursor: not-allowed;
+}
+
+
+.pros{
+    width: 50%;
+    background: #E1E1E1;
+    padding: 30px;
+}
+
+.cons{
+    width: 50%;
+    background: #D6D6D6;
+    padding: 30px;
+}
+
+.reference {
+    font-weight: 600;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+.light-bold {
+    font-weight: 500;
 }

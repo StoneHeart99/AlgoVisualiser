@@ -503,6 +503,8 @@
                 {
                     reheatCtr = 0;
                     threshold += 0.05;
+                    if(threshold > 1)
+                        threshold = 1;
                     thresholdDistance = avgDistance * threshold;
                     console.log("thresholdDistance:" + thresholdDistance);
                     $("#threshold").text("Max Threhold: " + thresholdDistance.toFixed(2));

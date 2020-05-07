@@ -7,7 +7,6 @@
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -78,7 +77,6 @@
     <div class="lesson-content-container">
         <div class="lesson-container">
             <h2>Lesson - Hill Climbing</h2>
-
             <div class="section">
                 <h3>Overview</h3>
                 <p class="article">
@@ -90,7 +88,6 @@
                     more improvements.
                 </p>
             </div>
-
             <div class="section">
                 <h3>State Space Diagram</h3>
                 <p class="article">
@@ -112,30 +109,23 @@
 
             <div class="section">
                 <h3>Pros and Cons</h3>
-                <div style="padding: 25px; background-color: #E1E1E1; width: 100%; margin: auto">
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <th scope="col">Pros</th>
-                            <th scope="col">Cons</th>
-                        </tr>
-                        <tr>
-                            <td scope="col">- Fast execution</td>
-                            <td scope="col">- Dependant on initial solution</td>
-                        </tr>
-                        <tr>
-                            <td scope="col">- Easy to implement</td>
-                            <td scope="col">- Get stuck at local minimum</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="d-flex">
+                    <div class="pros">
+                        <h5>Pros</h5>
+                        <div>- Fast execution</div>
+                        <div>- Easy to implement</div>
+                    </div>
+                    <div class="cons">
+                        <h5>Cons</h5>
+                        <div>- Dependant on initial solution</div>
+                        <div>- Get stuck at local minimum</div>
+                    </div>
                 </div>
             </div>
 
             <div class="section">
-            <h3>Concept Visualiser</h3>
                 <div class="d-flex align-items-center" style="margin-bottom: 10px;">
-                    <div><h5>a) General Implementation</h5></div>
+                    <h3 style="margin-right: 15px">Concept Visualiser</h3>
                     <div id="startBtn" class="circle icon" onclick="start()">
                         <i class="fas fa-play"></i>
                     </div>
@@ -182,7 +172,7 @@
                     </div>
                     <div id="s6" class="d-flex">
                         <div class="num">6.</div>
-                        <div><b>Until</b> run out of time</div>
+                        <div><b>Until</b> the number of iterations executed</div>
                     </div>
                 </div>
 
@@ -192,9 +182,9 @@
             </div>
 
             <div class="button-container">
-                <a href="NN-lesson.html"><button class="button">Previous</button></a>
-                <a href="HC-program.html"><button class="button purple">Algorithm Program</button></a>
-                <a href="SA-lesson.html"><button class="button">Next</button></a>
+                <a href="NN-lesson.html"><button class="button lesson-button">Previous</button></a>
+                <a href="HC-program.html"><button class="button lesson-button purple">HC Program</button></a>
+                <a href="SA-lesson.html"><button class="button lesson-button">Next</button></a>
             </div>
         </div>
     </div>

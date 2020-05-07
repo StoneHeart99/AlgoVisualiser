@@ -155,6 +155,17 @@ class GA
                 let tourPos2 = Math.floor(tour.size() * Math.random());
                 if( tourPos2 == 0)
                     tourPos2++;
+                if(tourPos1 == tourPos2)
+                {
+                    if(tourPos2 == tour.size())
+                    {
+                        tourPos2--;
+                    }
+                    else
+                    {
+                        tourPos2++;
+                    }
+                }
                 // Swap them around
                 tour.swapCities(tourPos1, tourPos2);
             }
@@ -211,7 +222,7 @@ class GA
 
         // Mutation
         for(let i=0;i<children.length;i++)
-            this.mutate2(children[i]);
+            this.mutate(children[i]);
 
         // survival selection
         newPopulation.saveTour(size-1, children[0]);
@@ -260,6 +271,10 @@ class GA
             temp = startPos;
             startPos = endPos;
             endPos = temp;
+        }
+        if(endPos == p1.size()-1)
+        {
+            endPos -= 2;
         }
 
         // child 1
