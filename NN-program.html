@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
     <script src="Sigma/sigma.min.js"></script>
     <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
@@ -30,6 +31,15 @@
         .button {
             width: 30%;
         }
+
+        .tutBtn {
+            width: 100px;
+        }
+
+        .article {
+            margin-top: 10px;
+        }
+
     </style>
 
 </head>
@@ -37,18 +47,22 @@
 
     <!-- Navbar -->
     <nav class="nav">
-        <div id="nav-placeholder" ></div>
+        <div class="d-flex">
+            <div id="nav-placeholder" ></div>
+            <div class="nav-item" id="tutorial">Tutorial</div>
+        </div>
         <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
             Nearest Neighbour
         </div>
+
+
+
     </nav>
-
-
 
     <!-- Right Panel -->
     <div class="content-container">
         <br>
-        <div class="panel-item" style=""><h3>Setting</h3></div>
+        <div class="panel-item" style=""><h3>Settings</h3></div>
 
         <div class="row">
             <div class="slideContainer panel-item col">
@@ -104,12 +118,96 @@
         </div>
         <div class="solutionHeader"><b>Tour:</b></div>
         <div class="panel-item" id="tour"></div>
-
     </div>
 
     <div id='sigma-container'></div>
 
     <div id="toast"></div>
+
+    <div class="modal fade" id="tut1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <h6>Dragging city nodes</h6>
+                        <div>Drag city nodes to relocate them</div>
+                        <video autoplay loop muted class="video">
+                            <source src="assets/drag.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </p>
+                    <h6>Legend</h6>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                            <div>Start City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);"></div>
+                            <div>Destination City</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="button tutBtn" id="nextTutBtn" style="width: fit-content">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="padding-left: 50px;">
+                    <div class=" article">
+                        <span class="light-bold">Number of Cities:</span> set number of city for TSP
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Speed:</span> set speed of algorithm
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Final:</span>  show the final result of the solution
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Auto:</span> Animate the process of nearest neighbour algorithm
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Previous:</span> show previous state of the solution (when auto mode is disable)
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Next:</span> show next state of the solution (when auto mode is disable)
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Run:</span> start the algorithm
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Randomise Cities:</span> randomise the cities location
+                    </div>
+                    <div class=" article">
+                        <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
 <script>
@@ -170,6 +268,27 @@
             randomiseCities();
         }
     });
+
+    // Modal
+    $("#tutorial").click(function () {
+        $("#tut1").modal("show");
+    })
+
+    $("#nextTutBtn").click(function () {
+        $("#tut1").modal("hide");
+        $("#tut2").modal("show");
+    })
+
+    $("#previousTutBtn").click(function () {
+        $("#tut1").modal("show");
+        $("#tut2").modal("hide");
+    })
+
+    $("#finishTutBtn").click(function () {
+        $("#tut2").modal("hide");
+    })
+
+    $("#tut1").modal("show");
 
     // Initialise nodes and load it
     let s = new sigma(
@@ -598,7 +717,4 @@
             isAuto = false;
         }
     }
-
-
-
 </script>

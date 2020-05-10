@@ -474,7 +474,7 @@ th {
 .num {
     font-weight: 500;
     padding-right: 10px;
-    width: 32px;
+    min-width: 32px;
     box-sizing: border-box;
 }
 
@@ -551,4 +551,27 @@ ul {
 
 .light-bold {
     font-weight: 500;
+}
+
+.legend-node {
+    background-color: #2196F3;
+    padding: 0;
+    /*margin: .5em;*/
+    border-radius:  100%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.video {
+    margin-top: 10px;
+    height: 300px;
+}
+
+.modal-body {
+    padding-left: 30px;
+    height: 500px;
 }

@@ -251,3 +251,4 @@ function convertSwapCityToNodes_black(tour, graph, pos1, pos2)
         )
     }
 }
+

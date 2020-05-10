@@ -2,89 +2,623 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <link rel="icon" href="assets/logo.png">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="default-data.js"></script>
+
+    <title>Nearest Neighbour</title>
+
     <style>
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-            transform: scale(0.8,0.8);
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        .toggle:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        input:checked + .toggle {
-            background-color: #2196F3;
-        }
-
-        input:focus + .toggle {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        input:checked + .toggle:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-        .toggle.round {
-            border-radius: 34px;
-        }
-
-        .toggle.round:before {
-            border-radius: 50%;
+        .button {
+            width: 30%;
         }
     </style>
+
 </head>
 <body>
-    <label class="switch">
-        <input type="checkbox">
-        <span class="toggle"></span>
-    </label>
 
-    <label class="switch">
-        <input type="checkbox" checked>
-        <span class="toggle"></span>
-    </label><br><br>
+<!-- Navbar -->
+<nav class="nav">
+    <div id="nav-placeholder" ></div>
+    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+        Nearest Neighbour
+    </div>
+</nav>
 
-    <label class="switch">
-        <input type="checkbox">
-        <span class="toggle round"></span>
-    </label>
+<!-- Right Panel -->
+<div class="content-container">
+    <br>
+    <div class="panel-item" style=""><h3>Setting</h3></div>
 
-    <label class="switch">
-        <input type="checkbox" checked>
-        <span class="toggle round"></span>
-    </label>
+    <div class="row">
+        <div class="slideContainer panel-item col">
+            <div class="sliderTitle">Number of Cities: </div>
+            <input type="range" min="5" max="100" value="15" class="slider" id="nodeNum">
+            <input type="number" id="nodeNumVal" class="sliderValue" value="15">
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="slideContainer panel-item col">
+            <div class="sliderTitle">Speed:</div>
+            <input type="range" min="1" max="5" value="3" class="slider" id="speed">
+            <input type="number" id="speedVal" class="sliderValue" value="3">
+        </div>
+    </div>
+
+    <div class="row panel-item">
+        <div class="col">
+            <div class="switchTitleOffset">Final</div>
+            <label class="switch">
+                <input id="final" type="checkbox" onclick="toggleFinal()">
+                <span class="toggle round"></span>
+            </label>
+        </div>
+        <div class="col-6">
+            <div class="switchTitleOffset">Auto</div>
+            <label class="switch">
+                <input id="auto" type="checkbox" onclick="toggleAuto()" checked>
+                <span class="toggle round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
+        <button class="button" onclick="run()">Run</button>
+        <button class="button" onclick="randomiseCities()" >Randomise Cities</button>
+        <button class="button" onclick="resetDefault()">Reset Default</button>
+    </div>
+
+    <div class="row d-flex justify-content-start panel-item" style="padding-left: 15px;">
+        <button id="nextBtn" class="button" onclick="printPrevious()" disabled style="margin-right: 25px;">Previous</button>
+        <button id="previousBtn" class="button " onclick="printNext()" disabled>Next</button>
+    </div>
+
+    <br><br>
+    <div><h3>Result</h3></div>
+    <div class="solutionHeader">
+        <b>Visited:</b> <span class="panel-item" id="visited"></span>
+    </div>
+    <div class="solutionHeader">
+        <b>Total Distance:</b> <span class="panel-item" id="distance"></span>
+    </div>
+    <div class="solutionHeader"><b>Tour:</b></div>
+    <div class="panel-item" id="tour"></div>
+
+    <!-- Button trigger modal -->
+
+</div>
+
+<div id='sigma-container'></div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
 </body>
 </html>
+<!--<script src="modal.js"></script>-->
+<script>
+
+    // HTML Related
+    let speedSlider = document.getElementById("speed");
+    let speedVal = document.getElementById("speedVal");
+
+    speedSlider.oninput = function() {
+        speedVal.value = this.value;
+        algoSpeedIndex = this.value - 1;
+    }
+
+    $("#speedVal").focusout(function () {
+        let temp = speedSlider.value;
+        let value = $("#speedVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 1 )
+                this.value = 1;
+            else if (value > 5)
+                this.value = 5;
+            $("#speed").val(value);
+            algoSpeedIndex = value - 1;
+        }
+    });
+
+    let nodeSlider = document.getElementById("nodeNum");
+    let nodeVal = document.getElementById("nodeNumVal");
+
+    nodeSlider.oninput = function() {
+        nodeVal.value = this.value;
+        randomiseCities();
+    }
+
+    $("#nodeNumVal").focusout(function () {
+        let temp = nodeSlider.value;
+        let value = $("#nodeNumVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 5 )
+                this.value = 5;
+            else if (value > 100)
+                this.value = 100;
+            $("#nodeNum").val(this.value);
+            randomiseCities();
+        }
+    });
+
+    // Initialise nodes and load it
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 3,
+                maxEdgeSize: 3,
+                minNodeSize: 10,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 30,
+            }
+        }
+    );
+    var graph = {
+        nodes: [],
+        edges: []
+    };
+
+    let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+    dragListener.bind('dragend', function(event) {
+        // replace city with new coordinates
+        let node = event.data.node;
+        let cityIndex = greedyTM.findIndexByName(node.label);
+        let newCity = new City(node.label, node.x, node.y);
+        greedyTM.destinationCities.splice(cityIndex,1, newCity);
+        tour = new Tour(greedyTM.getTour());
+
+        // recalculate route and update graph
+        simpleGreedy(tour,greedyTM);
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+        // index = 0;  //  reset index
+
+        // Instant get end result
+        if(isfinal)
+        {
+            convertTourToEdges(tour,graph);
+            index = greedyTM.size() * 2;
+            // visited = new Tour(tour.getTour());
+            visited.cloneVisited(tour);
+            unvisited.clear();
+            $("#visited").text(visited.printVisited());
+            $("#tour").text(tour.printTour());
+            $("#distance").text(tour.getDistance().toFixed(2));
+        }
+        else
+        {
+            index = 0   ;
+            visited.clear();
+            unvisited = new Tour(greedyTM.getTour());
+            resetInfo();
+        }
+        updateSigma(s,graph);
+    });
+
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        document.getElementById('sigma-container').style.cursor = 'default';
+    });
+
+    // Greedy program
+    let greedyTM = new TourManager();
+    greedyTM.clone(TM);
+    let tour = new Tour(greedyTM.getTour());
+    let algoSpeed = [1800, 1400, 1000, 600, 100];
+    let algoSpeedIndex = 2;
+    let isAuto = false;
+    let isfinal = false;
+    let isRunning = false;
+    let index = 0;  // use to find state of graph
+    let visited = new Tour(tour);
+    let unvisited = new Tour(greedyTM.getTour());
+    visited.clear();
+
+    simpleGreedy(tour, greedyTM);
+    convertCityToNodes(greedyTM, graph);
+    updateSigma(s, graph);
+
+
+    // Section for functions
+    function run()
+    {
+        isRunning = true;
+        simpleGreedy(tour, greedyTM);
+        if(isfinal)
+            final();
+        else
+        {
+            let x = nodeSlider.value;
+            reset(x);
+            document.getElementById("auto").checked = true;
+            auto();
+        }
+    }
+
+    function final()
+    {
+        convertTourToEdges(tour,graph);
+        index = greedyTM.size() * 2;
+        visited.cloneVisited(tour);
+        unvisited.clear();
+        updateSigma(s,graph);
+        $("#visited").text(visited.printVisited());
+        $("#tour").text(tour.printTour());
+        $("#distance").text(tour.getDistance().toFixed(2));
+        isRunning = false;
+    }
+
+    function printNext()
+    {
+        isRunning = true;
+
+        // skip if only left start node
+        if(visited.size()==greedyTM.size()-1)
+        {
+            index++;
+        }
+
+        if(index >= greedyTM.size() * 2)
+        {
+            toast("The algorithm has completed!");
+            return;
+        }
+        else
+        {
+            if(isfinal)
+            {
+                final();
+                return;
+            }
+
+            if((index % 2) == 0)    // finding possible solution case
+            {
+                for(let i=0; i< greedyTM.size(); i++)
+                {
+                    let cityIndex = visited.size();
+
+                    if(tour.getCity(cityIndex).getName() == tour.getCity(i).getName())  // skip itself
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        let canPrint = true;
+                        if(visited.cities.includes(tour.getCity(i)) ||
+                            tour.getCity(i).getName()==tour.getCity(0).getName()) // skip visited cities
+                            canPrint = false;
+
+                        if(canPrint)    // print all possible next solution
+                        {
+                            graph.edges.push(
+                                {
+                                    id: "e" + cityIndex.toString() + "-" + i.toString(),
+                                    source: tour.getCity(cityIndex).getName(),
+                                    target: tour.getCity(i).getName(),
+                                    color: 'gray',
+                                    type: 'arrow',
+                                    size: 0.5,
+                                    label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(i))).toString(),
+                                }
+                            );
+                        }
+                    }
+
+                }
+            }
+            else    // confirm next destination case
+            {
+                let cityIndex = visited.size();
+                for(let i=0;i<greedyTM.size()-cityIndex-1;i++)  // remove possible solution
+                {
+                    graph.edges.pop();
+                }
+
+                // add next destination
+                if (cityIndex + 1 < tour.size())
+                {
+                    graph.edges.push(
+                        {
+                            id: "E" + cityIndex.toString(),
+                            source: tour.getCity(cityIndex).getName(),
+                            target: tour.getCity(cityIndex+1).getName(),
+                            color: '#282c34',
+                            type:'arrow',
+                            size: 3,
+                            label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(cityIndex+1))).toString(),
+                        }
+                    )
+                    visited.addCity(tour.getCity(cityIndex+1));
+                    unvisited.removeCity(tour.getCity(cityIndex+1));
+                }
+                else    // travel back to start city
+                {
+                    graph.edges.push(
+                        {
+                            id: "E" + cityIndex.toString(),
+                            source: tour.getCity(cityIndex).getName(),
+                            target: tour.getCity(0).getName(),
+                            color: '#282c34',
+                            type:'arrow',
+                            size: 3,
+                            label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(0))).toString(),
+                        }
+                    )
+                    visited.addCity(tour.getCity(0));
+                    unvisited.removeCity(tour.getCity(0));
+                }
+                $("#visited").text(visited.printVisited());
+
+                if(index == (greedyTM.size()*2)-1)
+                {
+                    $("#tour").text(tour.printTour());
+                    $("#distance").text(tour.getDistance().toFixed(2));
+                    isRunning = false;
+                    toast("The algorithm has completed!");
+                }
+            }
+        }
+        // console.log(visited);
+
+        index++;
+        if(index==greedyTM.size()*2)
+            simpleGreedy(tour, greedyTM);
+        updateSigma(s, graph);
+    }
+
+    function printPrevious()
+    {
+        if(isfinal)
+        {
+            isfinal = false;
+            document.getElementById("final").checked = false;
+        }
+
+        if(index==0)
+        {
+            toast("TThe algorithm is at initial state!");
+            return;
+        }
+        else if((index % 2) == 0)   // backtrack one city and show all possible solutions
+        {
+            let tempCity = visited.pop();
+            unvisited.addCity(tempCity);
+            graph.edges.pop();
+            for(let i=0; i< greedyTM.size(); i++)
+            {
+                let cityIndex = visited.size();
+
+                if(tour.getCity(cityIndex).getName() == tour.getCity(i).getName())  // skip itself
+                {
+                    continue;
+                }
+                else
+                {
+                    let canPrint = true;
+
+                    if(visited.cities.includes(tour.getCity(i)) ||
+                        tour.getCity(i).getName()==tour.getCity(0).getName()) // skip visited cities
+                        canPrint = false;
+
+                    if(canPrint)    // print all possible next solution
+                    {
+                        graph.edges.push(
+                            {
+                                id: "e" + cityIndex.toString() + "-" + i.toString(),
+                                source: tour.getCity(cityIndex).getName(),
+                                target: tour.getCity(i).getName(),
+                                color: 'gray',
+                                type: 'arrow',
+                                size: 0.5,
+                                label: Math.round(tour.getCity(cityIndex).distanceTo(tour.getCity(i))).toString(),
+                            }
+                        );
+                    }
+                }
+
+            }
+
+            if(index == greedyTM.size() * 2)
+                index--;
+        }
+        else    // remove all possible solutions
+        {
+            for(let i=0;i<greedyTM.size()-visited.size()-1;i++)
+            {
+                graph.edges.pop();
+            }
+        }
+        $("#visited").text(visited.printVisited());
+        $("#tour").text("");
+        $("#distance").text("");
+        index--;
+        // console.log(index);
+        updateSigma(s, graph);
+    }
+
+    function resetDefault()
+    {
+        greedyTM.clone(TM);
+        tour = new Tour(greedyTM.getTour());
+        isAuto = false;
+        speedSlider.value = 3;
+        speedVal.value = 3;
+        algoSpeedIndex = 2;
+        simpleGreedy(tour, greedyTM);
+        if(isfinal)
+        {
+            document.getElementById("final").checked = false;
+            isfinal = false;
+        }
+        if(!isAuto)
+        {
+            document.getElementById("auto").checked = true;
+            // isAuto = true;
+        }
+        reset();
+
+    }
+
+    function reset(num=15)
+    {
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+        index = 0   ;
+        visited.clear();
+        unvisited = new Tour(greedyTM.getTour());
+        nodeSlider.value = num;
+        nodeVal.value = num;
+        resetInfo();
+        isRunning = false;
+    }
+
+
+    function randomiseCities()
+    {
+        isAuto = false;
+        let num = $("#nodeNum").val();
+        num = parseInt(num);
+        greedyTM.clear();
+
+        // let alp = 65;
+        // console.log((alp + num));
+        // for(let i =65; i < (alp + num);i++)
+        // {
+        //     greedyTM.addCity(new City(String.fromCharCode(i)));
+        // }
+        // tour = new Tour(greedyTM.getTour());
+
+        for(let i=1;i<=num;i++)
+        {
+            greedyTM.addCity(new City( "c" + i));
+        }
+        tour = new Tour(greedyTM.getTour());
+
+
+        // recalculate route and update graph
+        simpleGreedy(tour,greedyTM);
+        convertCityToNodes(greedyTM, graph);
+        clearArray(graph.edges);
+
+        // reset
+        index = 0;
+        isRunning = false;
+        visited.clear();
+        unvisited = new Tour(greedyTM.getTour());
+        updateSigma(s,graph);
+        resetInfo();
+    }
+
+    async function auto()
+    {
+        isAuto = true;
+        isRunning = true;
+        while (index < greedyTM.size() * 2) {
+            if(!isAuto)
+                break;
+
+            printNext();
+            await sleep(algoSpeed[algoSpeedIndex]);
+        }
+    }
+
+    function resetInfo()
+    {
+        $("#visited").text("");
+        $("#tour").text("");
+        $("#distance").text("");
+    }
+
+    function toggleFinal() {
+        let toggleFinal = document.getElementById("final").checked;
+        if(toggleFinal) {
+            isfinal = true;
+            if(isRunning)
+                final();
+        }
+        else
+            isfinal = false;
+    }
+
+    function toggleAuto()
+    {
+        let toggleAuto = document.getElementById("auto").checked;
+        if(toggleAuto) {
+            $("#nextBtn").attr("disabled", true);
+            $("#previousBtn").attr("disabled", true);
+            isAuto = true;
+            auto();
+        }
+        else
+        {
+            $("#nextBtn").attr("disabled", false);
+            $("#previousBtn").attr("disabled", false);
+            isAuto = false;
+        }
+    }
+</script>
