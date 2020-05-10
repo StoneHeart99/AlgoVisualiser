@@ -357,7 +357,7 @@ nav a:active {
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    margin-top: 15px;
+    margin-top: 16px;
     font-size: 0.9em;
 }
 
@@ -572,6 +572,14 @@ ul {
 }
 
 .modal-body {
-    padding-left: 30px;
+    margin-left: 30px;
     height: 500px;
+}
+
+.tutBtn {
+    max-width: 100px;
+}
+
+.tut-item {
+    margin-top: 10px;
 }

@@ -116,6 +116,13 @@
             color:white
         }
 
+        #tutIcon {
+            font-size: 1.3em;
+            color: white;
+            opacity: 1;
+            cursor: default;
+        }
+
         #sigma-container {
             width: 100%;
             height: 100%;
@@ -135,82 +142,234 @@
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="nav">
-    <div id="nav-placeholder" ></div>
-    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
-        Genetic Algorithm
-    </div>
-</nav>
-
-<div class="rightContainer">
-    <div id="showDistanceGraph" class="circle icon" >
-        <i class="fas fa-sync-alt"></i>
-    </div>
-
-    <div class="chart-container" id="c1">
-        <canvas id="distanceChart"></canvas>
-    </div>
-    <div class="chart-container" id="c2">
-        <canvas id="fitnessChart"></canvas>
-    </div>
-</div>
-
-<div class="leftContainer">
-    <!--        <div id="editIcon" class="circle icon">-->
-    <!--            <i class="fas fa-edit" style="font-size: 0.9em;"></i>-->
-    <!--        </div>-->
-    <!--        <div id="viewIcon" class="circle icon">-->
-    <!--            <i  class="fas fa-eye" style="font-size: 0.9em;"></i>-->
-    <!--        </div>-->
-    <div id='sigma-container'></div>
-</div>
-
-<!--<div class="content-container">-->
-<div class="result-container">
-    <div class="panel-item" style=""><h3>Result</h3></div>
-    <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
-    <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
-    <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
-    <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
-    <div class="solutionHeader"><b>Tour:</b></div>
-    <div id="tour" style="padding-bottom: 10px;"></div>
-</div>
-
-<div class="setting-container">
-    <div style="width: 75%;">
-        <div class="panel-item" style=""><h3>Settings</h3></div>
-        <div class="slideContainer panel-item">
-            <div class="sliderTitle disableAble">Number of Cities:</div>
-            <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
-            <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+    <!-- Navbar -->
+    <nav class="nav">
+        <div class="d-flex">
+            <div id="nav-placeholder" ></div>
+            <div class="nav-item" id="tutorial">Tutorial</div>
         </div>
-        <div class="slideContainer panel-item">
-            <div class="sliderTitle disableAble">Generations:</div>
-            <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
-            <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Genetic Algorithm
         </div>
-        <div class="slideContainer panel-item">
-            <div class="sliderTitle disableAble">Population Size:</div>
-            <input type="range" min="30" max="1000" value="50" step="10" class=" slider disableAble" id="popSize">
-            <input type="number" id="popSizeVal" class="sliderValue disableAble" value="50">
+    </nav>
+
+    <div class="rightContainer">
+        <div id="showDistanceGraph" class="circle icon" >
+            <i class="fas fa-sync-alt"></i>
         </div>
-        <div class="slideContainer panel-item">
-            <div class="sliderTitle disableAble">Mutation Rate:</div>
-            <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
-            <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
+
+        <div class="chart-container" id="c1">
+            <canvas id="distanceChart"></canvas>
         </div>
-        <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
-            <button id="runBtn" class="button" onclick="run()">Run</button>
-            <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
-            <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+        <div class="chart-container" id="c2">
+            <canvas id="fitnessChart"></canvas>
         </div>
     </div>
 
-</div>
-<!--</div>-->
+    <div class="leftContainer">
+        <div id='sigma-container'></div>
+    </div>
 
-<div id="toast"></div>
+    <div class="result-container">
+        <div class="panel-item" style=""><h3>Result</h3></div>
+        <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
+        <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
+        <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
+        <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div id="tour" style="padding-bottom: 10px;"></div>
+    </div>
+
+    <div class="setting-container">
+        <div style="width: 75%;">
+            <div class="panel-item" style=""><h3>Settings</h3></div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Number of Cities:</div>
+                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+                <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Generations:</div>
+                <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
+                <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Population Size:</div>
+                <input type="range" min="30" max="1000" value="50" step="10" class=" slider disableAble" id="popSize">
+                <input type="number" id="popSizeVal" class="sliderValue disableAble" value="50">
+            </div>
+            <div class="slideContainer panel-item">
+                <div class="sliderTitle disableAble">Mutation Rate:</div>
+                <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
+                <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
+            </div>
+            <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
+                <button id="runBtn" class="button" onclick="run()">Run</button>
+                <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+                <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="tut1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <h6>Dragging city nodes</h6>
+                    <div>Drag city nodes to relocate them</div>
+                    <video autoplay loop muted class="video">
+                        <source src="assets/drag.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    </p>
+                    <h6>Legend</h6>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                            <div>Start City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);"></div>
+                            <div>Destination City</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="button tutBtn" id="nextTutBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Charts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h6>Switch charts</h6>
+                        <div>Click on the switch icon to switch the chart</div>
+                        <video autoplay loop muted class="video">
+                            <source src="assets/switch chart.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="nextTutBtn2" class="button tutBtn" style="margin-left: 20px">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Charts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h6>Hide/Show result</h6>
+                        <div>Click on legend to hide or show corresponding result</div>
+                        <video autoplay loop muted class="video">
+                            <source src="assets/toggle line.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn2" class="button tutBtn">Previous</button>
+                    <button id="nextTutBtn3" class="button tutBtn" style="margin-left: 20px">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Charts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6>Show best/worst solution of the generation</h6>
+                    <div>Click the points in the charts to show either best or worse solution in that generation</div>
+                    <video autoplay loop muted class="video" style="width: 710px">
+                        <source src="assets/chg info.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn3" class="button tutBtn">Previous</button>
+                    <button id="nextTutBtn4" class="button tutBtn" style="margin-left: 20px">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class=" tut-item">
+                        <span class="light-bold">Number of Cities:</span> set number of city for TSP
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Generations:</span>  set number of generation for evolution
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Population Size:</span> set number of individuals in population
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Mutation Rate:</span> set probability of mutation
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Run:</span> start the algorithm
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Randomise Cities:</span> randomise the cities location
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn4" class="button tutBtn">Previous</button>
+                    <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
 </body>
 </html>
 <script>
@@ -351,6 +510,57 @@
             $("#editIcon").className = "fas fa-edit";
         }
     })
+
+    // Modal
+    $("#tutorial").click(function () {
+        $("#tut1").modal("show");
+    })
+
+    $("#nextTutBtn").click(function () {
+        $("#tut1").modal("hide");
+        $("#tut2").modal("show");
+    })
+
+    $("#previousTutBtn").click(function () {
+        $("#tut1").modal("show");
+        $("#tut2").modal("hide");
+    })
+
+    $("#nextTutBtn2").click(function () {
+        $("#tut2").modal("hide");
+        $("#tut3").modal("show");
+    })
+
+    $("#previousTutBtn2").click(function () {
+        $("#tut2").modal("show");
+        $("#tut3").modal("hide");
+    })
+
+    $("#nextTutBtn3").click(function () {
+        $("#tut3").modal("hide");
+        $("#tut4").modal("show");
+    })
+
+    $("#previousTutBtn3").click(function () {
+        $("#tut3").modal("show");
+        $("#tut4").modal("hide");
+    })
+
+    $("#nextTutBtn4").click(function () {
+        $("#tut4").modal("hide");
+        $("#tut5").modal("show");
+    })
+
+    $("#previousTutBtn4").click(function () {
+        $("#tut4").modal("show");
+        $("#tut5").modal("hide");
+    })
+
+    $("#finishTutBtn").click(function () {
+        $("#tut5").modal("hide");
+    })
+
+    $("#tut1").modal("show");
 
     // let editMode = false;
     // $("#viewIcon").hide();

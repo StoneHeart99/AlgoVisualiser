@@ -49,100 +49,176 @@
         .button {
             width: 30%;
         }
-        /*.content-container {*/
-        /*    overflow: hidden;*/
-        /*}*/
 
-        /*.content-container:hover {*/
-        /*    overflow: auto;*/
-        /*}*/
 
     </style>
 
 
 </head>
 <body>
-<!-- Navbar -->
-<nav class="nav">
-    <div id="nav-placeholder" ></div>
-    <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
-        Hill Climbing
-    </div>
-</nav>
+    <!-- Navbar -->
+    <nav class="nav">
+        <div class="d-flex">
+            <div id="nav-placeholder" ></div>
+            <div class="nav-item" id="tutorial">Tutorial</div>
+        </div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Hill Climbing
+        </div>
+    </nav>
 
-<div class="content-container ">
-    <br>
-    <div class="panel-item" style=""><h3>Settings</h3></div>
-    <div class="row" style="margin-top: 20px;">
-        <div class="slideContainer panel-item col">
-            <div class="sliderTitle disableAble">Number of Cities:</div>
-            <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
-            <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+    <div class="content-container ">
+        <br>
+        <div class="panel-item" style=""><h3>Settings</h3></div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble">Number of Cities:</div>
+                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+                <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle">Speed:</div>
+                <input type="range" min="1" max="5" value="3" class=" slider" id="speed">
+                <input type="number" id="speedVal" class="sliderValue" value="3">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
+                <input type="range" min="100" max="10000" value="1000" class=" slider disableAble" id="initIteration" >
+                <input type="number" id="iterationVal" class="sliderValue disableAble" value="1000">
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
+            <button id="runBtn" class="button" onclick="restart()">Run</button>
+            <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+            <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+        </div>
+
+        <br><br>
+
+        <div><h3>Result</h3></div>
+        <div><h5><b>Initial Solution</b></h5></div>
+        <div class="solutionHeader">
+            <b>Total Distance:</b> <span id="initDistance"></span>
+        </div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div id="initTour"></div>
+
+        <br>
+        <div><h5><b>Current Solution</b></h5></div>
+        <div class="solutionHeader" >
+            <b>Total Distance:</b> <span id="currentDistance" ></span>
+        </div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div id="currentTour"></div>
+
+        <br>
+
+        <div><h5><b>New Solution</b></h5></div>
+        <div class="solutionHeader">
+            <b>Cities Swapped: </b> <span id="swapped"></span>
+        </div>
+        <div class="solutionHeader">
+            <b>Total Distance:</b> <span id="newDistance"></span>
+        </div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div id="newTour" style="padding-bottom: 30px;"></div>
+
+    </div>
+
+    <div class="leftContainer">
+        <div class="displayInfo">
+            <span id="iteration" >Iteration: </span>
+        </div>
+        <div id='sigma-container'></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <div class="modal fade" id="tut1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <h6>Dragging city nodes</h6>
+                    <div>Drag city nodes to relocate them</div>
+                    <video autoplay loop muted class="video">
+                        <source src="assets/drag.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    </p>
+                    <h6>Legend</h6>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                            <div>Start City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);"></div>
+                            <div>Destination City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);  background: #a95aec"></div>
+                            <div>Swapped City</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="button tutBtn" id="nextTutBtn">Next</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row" >
-        <div class="slideContainer panel-item col">
-            <div class="sliderTitle">Speed:</div>
-            <input type="range" min="1" max="5" value="3" class=" slider" id="speed">
-            <input type="number" id="speedVal" class="sliderValue" value="3">
+    <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tut-item">
+                        <span class="light-bold">Number of Cities:</span> set number of city for TSP
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Speed:</span> set speed of algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Iteration:</span> set number of iteration to be executed
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Run:</span> start the algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Randomise Cities:</span> randomise the cities location
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row" >
-        <div class="slideContainer panel-item col">
-            <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
-            <input type="range" min="100" max="10000" value="1000" class=" slider disableAble" id="initIteration" >
-            <input type="number" id="iterationVal" class="sliderValue disableAble" value="1000">
-        </div>
-    </div>
-
-    <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
-        <button id="runBtn" class="button" onclick="restart()">Run</button>
-        <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
-        <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
-    </div>
-
-    <br><br>
-
-    <div><h3>Result</h3></div>
-    <div><h5><b>Initial Solution</b></h5></div>
-    <div class="solutionHeader">
-        <b>Total Distance:</b> <span id="initDistance"></span>
-    </div>
-    <div class="solutionHeader"><b>Tour:</b></div>
-    <div id="initTour"></div>
-
-    <br>
-    <div><h5><b>Current Solution</b></h5></div>
-    <div class="solutionHeader" >
-        <b>Total Distance:</b> <span id="currentDistance" ></span>
-    </div>
-    <div class="solutionHeader"><b>Tour:</b></div>
-    <div id="currentTour"></div>
-
-    <br>
-
-    <div><h5><b>New Solution</b></h5></div>
-    <div class="solutionHeader">
-        <b>Cities Swapped: </b> <span id="swapped"></span>
-    </div>
-    <div class="solutionHeader">
-        <b>Total Distance:</b> <span id="newDistance"></span>
-    </div>
-    <div class="solutionHeader"><b>Tour:</b></div>
-    <div id="newTour" style="padding-bottom: 30px;"></div>
-
-</div>
-
-<div class="leftContainer">
-    <div class="displayInfo">
-        <span id="iteration" >Iteration: </span>
-    </div>
-    <div id='sigma-container'></div>
-</div>
-
-<div id="toast"></div>
 </body>
 </html>
 
@@ -239,6 +315,28 @@
             iterationNum = parseInt(this.value);
         }
     });
+
+    // Modal
+    $("#tutorial").click(function () {
+        $("#tut1").modal("show");
+    })
+
+    $("#nextTutBtn").click(function () {
+        $("#tut1").modal("hide");
+        $("#tut2").modal("show");
+    })
+
+    $("#previousTutBtn").click(function () {
+        $("#tut1").modal("show");
+        $("#tut2").modal("hide");
+    })
+
+    $("#finishTutBtn").click(function () {
+        $("#tut2").modal("hide");
+    })
+
+    $("#tut1").modal("show");
+
 
     //Initialise sigma:
     let s = new sigma(

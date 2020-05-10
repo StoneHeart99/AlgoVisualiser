@@ -64,7 +64,10 @@
 <body>
     <!-- Navbar -->
     <nav class="nav">
-        <div id="nav-placeholder" ></div>
+        <div class="d-flex">
+            <div id="nav-placeholder" ></div>
+            <div class="nav-item" id="tutorial">Tutorial</div>
+        </div>
         <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
             Simulated Annealing
         </div>
@@ -171,6 +174,95 @@
             <span id="threshold" >Max Threshold:</span>
         </div>
         <div id='sigma-container'></div>
+    </div>
+
+    <div class="modal fade" id="tut1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <h6>Dragging city nodes</h6>
+                    <div>Drag city nodes to relocate them</div>
+                    <video autoplay loop muted class="video">
+                        <source src="assets/drag.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    </p>
+                    <h6>Legend</h6>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                            <div>Start City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);"></div>
+                            <div>Destination City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);  background: #a95aec"></div>
+                            <div>Swapped City</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="button tutBtn" id="nextTutBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tut-item">
+                        <span class="light-bold">Number of Cities:</span> set number of city for TSP
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Speed:</span> set speed of algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Initial Temperature:</span>
+                        set the initial temperature of simulated annealing algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Cooling Rate:</span>
+                        set the speed of temperature to cool down
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Iteration:</span> set number of iteration to be executed
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Reheat:</span> enable or disable reheat in simulated annealing
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Run:</span> start the algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Randomise Cities:</span> randomise the cities location
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="toast"></div>
@@ -328,6 +420,27 @@
             iterationNum = parseInt(this.value);
         }
     });
+
+    // Modal
+    $("#tutorial").click(function () {
+        $("#tut1").modal("show");
+    })
+
+    $("#nextTutBtn").click(function () {
+        $("#tut1").modal("hide");
+        $("#tut2").modal("show");
+    })
+
+    $("#previousTutBtn").click(function () {
+        $("#tut1").modal("show");
+        $("#tut2").modal("hide");
+    })
+
+    $("#finishTutBtn").click(function () {
+        $("#tut2").modal("hide");
+    })
+
+    $("#tut1").modal("show");
 
     //Initialise sigma:
     let s = new sigma(

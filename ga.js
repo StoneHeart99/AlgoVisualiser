@@ -272,9 +272,10 @@ class GA
             startPos = endPos;
             endPos = temp;
         }
-        if(endPos == p1.size()-1)
+
+        if(startPos ==0 && endPos > p1.size()-1)
         {
-            endPos -= 2;
+            endPos--;
         }
 
         // child 1
@@ -284,6 +285,11 @@ class GA
                 child1.setCity(i+1, p1.getCity(i));
             }
         }
+
+        console.log({startPos, endPos});
+        console.log(parent1.cities)
+        console.log(parent2.cities)
+        console.log(child1.cities)
 
         for(let i=0;i<p2.size();i++)
         {
