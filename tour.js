@@ -6,6 +6,7 @@ class Tour{
     {
         this.distance = 0;
         this.fitness = 0;
+        this.graph = null
 
         if(arguments.length == 1)
         {
@@ -14,6 +15,10 @@ class Tour{
                 this.cities[i] = arrayCities[i];
             }
         }
+    }
+
+    addGraph(graph) {
+        this.graph = graph;
     }
 
     getTour()
@@ -171,7 +176,7 @@ class Tour{
     }
 
 
-    containsCity(city)  // return boolean
+    contains(city)  // return boolean
     {
         return this.cities.includes(city);
     }

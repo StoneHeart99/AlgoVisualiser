@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="functions.js"></script>
+    <script src="city.js"></script>
+    <script src="tour-manager.js"></script>
+    <script src="tour.js"></script>
+    <script src="antColony.js"></script>
+    <script src="default-data.js"></script>
+    <title>Ant Colony System</title>
+
+    <style>
+        .leftContainer {
+            position: absolute;
+            width: 60%;
+            height: calc(100vh - (60px));
+            max-height: calc(100vh - (60px));
+        }
+
+        #sigma-container {
+            width: 100%;
+            max-height: inherit;
+        }
+
+        .displayInfo {
+            position: absolute;
+            top:15px;
+            width: 100%;
+            margin: auto;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .button {
+            width: 30%;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="nav">
+        <div class="d-flex">
+            <div id="nav-placeholder" ></div>
+            <div class="nav-item" id="tutorial">Tutorial</div>
+        </div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Ant Colony System
+        </div>
+    </nav>
+
+    <div class="content-container ">
+        <br>
+        <div class="panel-item" style=""><h3>Settings</h3></div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble">Number of Cities:</div>
+                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+                <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle">Speed:</div>
+                <input type="range" min="1" max="5" value="3" class=" slider" id="speed">
+                <input type="number" id="speedVal" class="sliderValue" value="3">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
+                <input type="range" min="100" max="10000" value="1000" class=" slider disableAble" id="initIteration" >
+                <input type="number" id="iterationVal" class="sliderValue disableAble" value="1000">
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
+            <button id="runBtn" class="button" onclick="restart()">Run</button>
+            <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+            <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+        </div>
+
+        <br><br>
+
+        <div><h3>Result</h3></div>
+        <div><h5><b>Initial Solution</b></h5></div>
+        <div class="solutionHeader">
+            <b>Total Distance:</b> <span id="initDistance"></span>
+        </div>
+        <div class="solutionHeader"><b>Tour:</b></div>
+        <div id="initTour"></div>
+    </div>
+
+    <div class="leftContainer">
+        <div class="displayInfo">
+            <span id="iteration" >Iteration: </span>
+        </div>
+        <div id='sigma-container'></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <div class="modal fade" id="tut1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <h6>Dragging city nodes</h6>
+                    <div>Drag city nodes to relocate them</div>
+                    <video autoplay loop muted class="video">
+                        <source src="assets/drag.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    </p>
+                    <h6>Legend</h6>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                            <div>Start City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);"></div>
+                            <div>Destination City</div>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 30px;">
+                            <div class="legend-node" style="transform: scale(0.6);  background: #a95aec"></div>
+                            <div>Swapped City</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="button tutBtn" id="nextTutBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tut-item">
+                        <span class="light-bold">Number of Cities:</span> set number of city for TSP
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Speed:</span> set speed of algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Iteration:</span> set number of iteration to be executed
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Run:</span> start the algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Randomise Cities:</span> randomise the cities location
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+    // HTML Related
+    let algoSpeed = [1600, 1200, 800, 400, 1];
+    let algoSpeedIndex = 2;
+    let iterationNum = 999999;
+    let count = 1;
+
+    let speedSlider = document.getElementById("speed");
+    let speedVal = document.getElementById("speedVal");
+
+    speedSlider.oninput = function() {
+        speedVal.value = this.value;
+        algoSpeedIndex = this.value - 1;
+    }
+
+    $("#speedVal").focusout(function () {
+        let temp = speedSlider.value;
+        let value = $("#speedVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 1 )
+                this.value = 1;
+            else if (value > 5)
+                this.value = 5;
+            $("#speed").val(value);
+            algoSpeedIndex = value - 1;
+        }
+    });
+
+    let nodeSlider = document.getElementById("nodeNum");
+    let nodeVal = document.getElementById("nodeNumVal");
+
+    nodeSlider.oninput = function() {
+        nodeVal.value = this.value;
+        randomiseCities();
+    }
+
+    $("#nodeNumVal").focusout(function () {
+        let temp = nodeSlider.value;
+        let value = $("#nodeNumVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 5 )
+                this.value = 5;
+            else if (value > 100)
+                this.value = 100;
+            $("#nodeNum").val(this.value);
+            randomiseCities();
+        }
+    });
+
+    let initIterationSlider = document.getElementById("initIteration");
+    let iterationVal = document.getElementById("iterationVal");
+
+    initIterationSlider.oninput = function() {
+        iterationVal.value = this.value;
+        iterationNum = parseInt(this.value);
+    }
+
+    $("#iterationVal").focusout(function () {
+        let temp = initIterationSlider.value;
+        let value = $("#iterationVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 100 )
+                this.value = 100;
+            else if (value > 10000)
+                this.value = 10000;
+            $("#initIteration").val(this.value);
+            iterationNum = parseInt(this.value);
+        }
+    });
+
+    // Modal
+    // $("#tutorial").click(function () {
+    //     $("#tut1").modal("show");
+    // })
+    //
+    // $("#nextTutBtn").click(function () {
+    //     $("#tut1").modal("hide");
+    //     $("#tut2").modal("show");
+    // })
+    //
+    // $("#previousTutBtn").click(function () {
+    //     $("#tut1").modal("show");
+    //     $("#tut2").modal("hide");
+    // })
+    //
+    // $("#finishTutBtn").click(function () {
+    //     $("#tut2").modal("hide");
+    // })
+    //
+    // $("#tut1").modal("show");
+
+
+    //Initialise sigma:
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minEdgeSize: 1,
+                maxEdgeSize: 3,
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                sideMargin: 30,
+            }
+        }
+    );
+
+    let graph = {
+        nodes: [],
+        edges: []
+    };
+
+    let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+    dragListener.bind('dragend', function(event) {
+        allowDrag(event);
+    });
+
+    // Set cursor to pointer (hand) when hovering over a node
+    s.bind('overNode', function(e) {
+        showPointerCursor();
+    });
+
+    // Make sure to revert to default cursor again when moving out of nodes
+    s.bind('outNode', function(e) {
+        showDefaultCursor()
+    });
+
+    // Ant Colony Program
+    let matrixGraph = new Graph();
+    matrixGraph.addCity(city1);
+    matrixGraph.addCity(city2);
+    matrixGraph.addCity(city3);
+    matrixGraph.addCity(city4);
+    matrixGraph.addCity(city5);
+    matrixGraph.addCity(city6);
+    matrixGraph.addCity(city7);
+    matrixGraph.addCity(city8);
+    matrixGraph.addCity(city9);
+    matrixGraph.addCity(city10);
+    matrixGraph.addCity(city11);
+    matrixGraph.addCity(city12);
+    matrixGraph.addCity(city13);
+    matrixGraph.addCity(city14);
+    matrixGraph.addCity(city15)
+
+
+
+
+    function allowDrag(event)
+    {
+        // replace city with new coordinates
+        let node = event.data.node;
+        let cityIndex = simulatedTM.findIndexByName(node.label);
+        let newCity = new City(node.label, node.x, node.y);
+        simulatedTM.destinationCities.splice(cityIndex,1, newCity);
+        currentSolution = new Tour(simulatedTM.getTour());
+
+        convertCityToNodes(simulatedTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+        resetInfo();
+    }
+
+    function showPointerCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'pointer';
+    }
+
+    function showDefaultCursor()
+    {
+        document.getElementById('sigma-container').style.cursor = 'default';
+    }
+
+</script>

@@ -84,17 +84,6 @@ TM.addCity(city15);
 // TM.addCity(city19);
 // TM.addCity(city20);
 
-// let alp = 65;
-// for(let i =65; i < alp + 20;i++)
-// {
-//     TM.addCity(new City(String.fromCharCode(i)));
-//     // console.log(String.fromCharCode(i));
-// }
-
-// $( document ).ready(function() {
-//     $("#nav-placeholder").load("nav.html");
-// });
-
 console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")
 
 

@@ -59,6 +59,13 @@ class City {
         return cityIndex;
     }
 
+    isEqual(city) {
+        if (this.x == city.x && this.y == city.y) {
+            return true;
+        }
+        return false;
+    };
+
 }
 
 
