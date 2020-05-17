@@ -190,7 +190,7 @@
             </div>
             <div class="slideContainer panel-item">
                 <div class="sliderTitle disableAble">Generations:</div>
-                <input type="range" min="50" max="1000" value="100" step="5" class=" slider disableAble" id="genNum">
+                <input type="range" min="50" max="1000" value="100" step="10" class=" slider disableAble" id="genNum">
                 <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
             </div>
             <div class="slideContainer panel-item">
@@ -421,7 +421,7 @@
         }
         else
         {
-            this.value = value;
+            this.value = Math.round(value / 10) * 10;
             if (value < 50 )
                 this.value = 50;
             else if (value > 1000)
@@ -450,7 +450,7 @@
         }
         else
         {
-            this.value = value;
+            this.value = Math.round(value / 10) * 10;
             if (value < 30 )
                 this.value = 30;
             else if (value > 1000)
@@ -500,7 +500,6 @@
             $("#c1").hide();
             $("#c2").fadeIn();
             showDefaultChart = false;
-            // $("#editIcon").className = "fas fa-eye";
         }
         else
         {
@@ -561,37 +560,6 @@
     })
 
     $("#tut1").modal("show");
-
-    // let editMode = false;
-    // $("#viewIcon").hide();
-    // function edit()
-    // {
-    //     $("#viewIcon").show();
-    //     $("#editIcon").hide();
-    //     editMode = true;
-    //     dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
-    //     dragListener.bind('dragend', function(event) {
-    //         allowDrag(event);
-    //     });
-    //
-    //     $("#runBtn").attr("disabled", true);
-    //     $("#runBtn").className += " disabled";
-    //     toast("Edit Mode", 800);
-    // }
-    // $("#editIcon").on("click", edit);
-    //
-    // $("#viewIcon").click(function () {
-    //     toast("View Mode", 800);
-    //
-    //     editMode = false;
-    //     sigma.plugins.killDragNodes(s);
-    //     $("#editIcon").show();
-    //     $("#viewIcon").hide();
-    //
-    //     $("#runBtn").attr("disabled", false);
-    //     $("#runBtn").className = "button"
-    // })
-
 
 
     //Initialise sigma:

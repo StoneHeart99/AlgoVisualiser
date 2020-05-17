@@ -90,8 +90,32 @@
         <div class="row" >
             <div class="slideContainer panel-item col">
                 <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
-                <input type="range" min="100" max="10000" value="1000" class=" slider disableAble" id="initIteration" >
-                <input type="number" id="iterationVal" class="sliderValue disableAble" value="1000">
+                <input type="range" min="100" max="10000" value="100" class=" slider disableAble" id="initIteration" >
+                <input type="number" id="iterationVal" class="sliderValue disableAble" value="100">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble" id="colonyID">Colony Size:</div>
+                <input type="range" min="10" max="100" value="30" step="5" class=" slider disableAble" id="initColony" >
+                <input type="number" id="colonyVal" class="sliderValue disableAble" value="30">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble" id="alphaID">Alpha:</div>
+                <input type="range" min="0" max="3" value="1" class=" slider disableAble" id="initAlpha" >
+                <input type="number" id="alphaVal" class="sliderValue disableAble" value="1">
+            </div>
+        </div>
+
+        <div class="row" >
+            <div class="slideContainer panel-item col">
+                <div class="sliderTitle disableAble" id="betaID">Beta:</div>
+                <input type="range" min="1" max="3" value="1" class=" slider disableAble" id="initBeta" >
+                <input type="number" id="betaVal" class="sliderValue disableAble" value="1">
             </div>
         </div>
 
@@ -104,12 +128,12 @@
         <br><br>
 
         <div><h3>Result</h3></div>
-        <div><h5><b>Initial Solution</b></h5></div>
+        <div><h5><b>Best Solution</b></h5></div>
         <div class="solutionHeader">
-            <b>Total Distance:</b> <span id="initDistance"></span>
+            <b>Total Distance:</b> <span id="bestDistance"></span>
         </div>
         <div class="solutionHeader"><b>Tour:</b></div>
-        <div id="initTour"></div>
+        <div id="bestTour"></div>
     </div>
 
     <div class="leftContainer">
@@ -206,7 +230,7 @@
     // HTML Related
     let algoSpeed = [1600, 1200, 800, 400, 1];
     let algoSpeedIndex = 2;
-    let iterationNum = 999999;
+    let iterationNum = 100;
     let count = 1;
 
     let speedSlider = document.getElementById("speed");
@@ -293,6 +317,98 @@
         }
     });
 
+    let colonySlider = document.getElementById("initColony");
+    let colonyVal = document.getElementById("colonyVal");
+
+    colonySlider.oninput = function() {
+        colonyVal.value = this.value;
+        params.colonySize = parseInt(this.value);
+        ac.setParams(params);
+    }
+
+    $("#colonyVal").focusout(function () {
+        let temp = initIterationSlider.value;
+        let value = $("#colonyVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 10 )
+                this.value = 10;
+            else if (value > 100)
+                this.value = 100;
+            $("#initColony").val(this.value);
+            params.colonySize = parseInt(this.value);
+            ac.setParams(params);
+        }
+    });
+
+    let alphaSlider = document.getElementById("initAlpha");
+    let alphaVal = document.getElementById("alphaVal");
+
+    alphaSlider.oninput = function() {
+        alphaVal.value = this.value;
+        params.alpha = parseInt(this.value);
+        ac.setParams(params);
+    }
+
+    $("#alphaVal").focusout(function () {
+        let temp = alphaSlider.value;
+        let value = $("#alphaVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 0 )
+                this.value = 0;
+            else if (value > 3)
+                this.value = 3;
+            $("#initAlpha").val(this.value);
+            params.alpha = parseInt(this.value);
+            ac.setParams(params);
+        }
+    });
+
+    let betaSlider = document.getElementById("initBeta");
+    let betaVal = document.getElementById("betaVal");
+
+    betaSlider.oninput = function() {
+        betaVal.value = this.value;
+        params.beta = parseInt(this.value);
+        ac.setParams(params);
+    }
+
+    $("#betaVal").focusout(function () {
+        let temp = betaSlider.value;
+        let value = $("#betaVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 0 )
+                this.value = 0;
+            else if (value > 3)
+                this.value = 3;
+            $("#initBeta").val(this.value);
+            params.beta = parseInt(this.value);
+            ac.setParams(params);
+        }
+    });
+
+
+
     // Modal
     // $("#tutorial").click(function () {
     //     $("#tut1").modal("show");
@@ -323,13 +439,14 @@
                 type: 'canvas'
             },
             settings: {
-                minEdgeSize: 1,
-                maxEdgeSize: 3,
                 minNodeSize: 1,
                 maxNodeSize: 10,
+                minEdgeSize: 1,
+                maxEdgeSize: 20,
                 enableCamera: false,
                 defaultEdgeLabelSize: 15,
                 sideMargin: 30,
+                autoRescale: ['nodePosition', 'nodeSize'],
             }
         }
     );
@@ -354,7 +471,9 @@
         showDefaultCursor()
     });
 
+
     // Ant Colony Program
+    let antTM = new TourManager();
     let matrixGraph = new Graph();
     matrixGraph.addCity(city1);
     matrixGraph.addCity(city2);
@@ -370,21 +489,63 @@
     matrixGraph.addCity(city12);
     matrixGraph.addCity(city13);
     matrixGraph.addCity(city14);
-    matrixGraph.addCity(city15)
+    matrixGraph.addCity(city15);
 
+    antTM.clone(TM);
 
+    let ac = new AntColony();
+    let params = {
+        'colonySize': 30,
+        'alpha': 1,
+        'beta': 3,
+        'rho': 0.1,
+        'iterations': 100,
+        'initPheromone': 1,
+        'q': 1,
+    };
+    ac.setParams(params);
+    ac.setGraph(matrixGraph);
+    ac.getGraph().createEdges();
 
+    convertCityToNodes(antTM, graph);
+    updateSigma(s, graph);
+
+    async function antColony()
+    {
+        disableAll();
+
+        params.alpha = alphaVal.value;
+        params.beta = betaVal.value;
+        params.colonySize = colonyVal.value;
+        params.iterations = iterationVal.value;
+
+        ac.reset();
+        ac.setParams(params);
+        for(let i=0; i<iterationNum; i++)
+        {
+            ac.step()
+            let best = ac.getGlobalBest().getTour();
+            $("#iteration").text("Iteration: " + (i+1));
+            $("#bestDistance").text(best.getDistance().toFixed(2));
+            $("#bestTour").text(best.printTour());
+            drawPheromone();
+            await sleep([algoSpeed[algoSpeedIndex]]);
+        }
+        console.log(ac.getGlobalBest().getTour().getDistance())
+
+        enableAll();
+    }
 
     function allowDrag(event)
     {
         // replace city with new coordinates
         let node = event.data.node;
-        let cityIndex = simulatedTM.findIndexByName(node.label);
+        let cityIndex = antTM.findIndexByName(node.label);
         let newCity = new City(node.label, node.x, node.y);
-        simulatedTM.destinationCities.splice(cityIndex,1, newCity);
-        currentSolution = new Tour(simulatedTM.getTour());
+        antTM.destinationCities.splice(cityIndex,1, newCity);
+        updateMatrixGraph(matrixGraph, antTM);
 
-        convertCityToNodes(simulatedTM, graph);
+        convertCityToNodes(antTM, graph);
         clearArray(graph.edges);
         updateSigma(s,graph);
         resetInfo();
@@ -399,5 +560,231 @@
     {
         document.getElementById('sigma-container').style.cursor = 'default';
     }
+
+    function restart(){
+        resetInfo();
+        updateMatrixGraph(matrixGraph, antTM);
+        ac.reset();
+        antColony();
+
+    }
+
+    function randomiseCities()
+    {
+
+        let num = $("#nodeNum").val();
+        num = parseInt(num);
+        antTM.clear();
+        ac.getGraph().clear();
+
+        for(let i=1;i<=num;i++)
+        {
+            antTM.addCity(new City( "c" + i));
+            ac.getGraph().addCity(new City( "c" + i));
+        }
+
+        ac.getGraph().createEdges();
+        convertCityToNodes(antTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+
+        resetInfo();
+    }
+
+    function resetInfo() {
+        $("#iteration").text("Iteration: ");
+        $("#bestTour").text("");
+        $("#bestDistance").text("");
+
+    }
+
+    function resetDefault() {
+        // restore default node
+        antTM.clear();
+        antTM.clone(TM);
+        updateMatrixGraph(matrixGraph, antTM);
+        ac.reset();
+        ac.setParams(params);
+        ac.setGraph(matrixGraph);
+        ac.getGraph().createEdges();
+        convertCityToNodes(antTM, graph);
+        clearArray(graph.edges);
+        updateSigma(s,graph);
+
+
+        // restore default setting
+        speedSlider.value = 3;
+        speedVal.value = 3;
+        algoSpeedIndex = 2;
+        nodeSlider.value = 15;
+        nodeVal.value = 15;
+        initIterationSlider.value = 100;
+        iterationVal.value = 100;
+        iterationNum = 100;
+        colonySlider.value = 30;
+        colonyVal.value = 30;
+        alphaSlider.value = 1;
+        alphaVal.value = 1;
+        betaSlider.value = 1;
+        betaVal.value = 1;
+        resetInfo();
+    }
+
+    function disableAll()
+    {
+        $("#runBtn").attr("disabled", true);
+        $("#randomBtn").attr("disabled", true);
+        $("#resetBtn").attr("disabled", true);
+        $(".slider").attr("disabled", true);
+
+        $('.disableAble').each(function() {
+            this.className = this.className.replace(" disableAble", " disabled");
+        });
+
+        $('.slider').each(function() {
+            this.className = this.className.replace(" slider", " slider2");
+        });
+
+        $("#speed").attr("disabled", false);
+        document.getElementById("speed").className = "slider";
+
+        sigma.plugins.killDragNodes(s);
+        s.bind('overNode', function(e) {
+            showDefaultCursor();
+        });
+    }
+
+    function enableAll()
+    {
+        $("#runBtn").attr("disabled", false);
+        $("#randomBtn").attr("disabled", false);
+        $("#resetBtn").attr("disabled", false);
+        $("#reheat").attr("disabled", false);
+        $(".toggle").css("cursor", "pointer");
+        $(".slider2").attr("disabled", false);
+
+        $('.disabled').each(function() {
+            this.className = this.className.replace(" disabled", " disableAble");
+        });
+
+        $('.slider2').each(function() {
+            this.className = this.className.replace(" slider2", " slider");
+        });
+
+        dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+        dragListener.bind('dragend', function(event) {
+            allowDrag(event);
+        });
+        s.bind('overNode', function(e) {
+            showPointerCursor();
+        });
+    }
+
+    function updateMatrixGraph(graph, TM)
+    {
+        graph.clear();
+        for(let i=0;i<TM.size();i++)
+        {
+            graph.addCity(TM.getCity(i));
+        }
+        graph.createEdges();
+        ac.setGraph(graph);
+    }
+
+    function drawPheromone()
+    {
+        let edges = ac.getGraph().getEdges();
+        let totalPheromone = 0;
+        clearArray(graph.edges);
+        updateSigma(s, graph);
+
+        for(let edgeIndex in edges)
+        {
+            totalPheromone += edges[edgeIndex].getPheromone();
+        }
+
+        for (let edgeIndex in edges) {
+            let alpha = 0.2;
+            let width = 0;
+            if (ac.currentIteration() > 0) {
+                // width = Math.ceil((edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) * 6);
+                width = ((edges[edgeIndex].getPheromone() / totalPheromone) * 90 );
+                alpha = (edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) + 0.03;
+                if (alpha > 1) {
+                    alpha = 1;
+                }
+            }
+
+            console.log("width: " + width)
+
+            graph.edges.push(
+                {
+                    id: edges[edgeIndex].pointA() + "-" + edges[edgeIndex].pointB(),
+                    source: edges[edgeIndex].pointA(),
+                    target: edges[edgeIndex].pointB(),
+                    color: '#A5A5A5',
+                    type:'line',
+                    size: width,
+                    label: "",
+                }
+            )
+        }
+
+        let best = ac.getGlobalBest().getTour();
+
+        for (let tourIndex = 0; tourIndex < best.size(); tourIndex++) {
+            let id;
+            let source;
+            let destination;
+            let index;
+
+            if (tourIndex < best.size()-1) {
+                source = best.getCity(tourIndex).getName();
+                destination = best.getCity(tourIndex+1).getName();
+            } else {
+                source = best.getCity(tourIndex).getName();
+                destination = best.getCity(0).getName();
+            }
+
+            id = source + "-" + destination;
+            index = graph.edges.findIndex(edge => edge.id == id);
+            if(index == -1)
+            {
+                id = destination + "-" + source;
+                index = graph.edges.findIndex(edge => edge.id == id);
+            }
+
+            // graph.edges[index].color = '#a95aec';
+            graph.edges[index].color = 'black';
+            graph.edges[index].size = '5';
+
+        }
+
+        updateSigma(s, graph);
+    }
+
+    // ACArtist.prototype._drawEdges = function() {
+    //     var edges = this._ac.getGraph().getEdges();
+    //
+    //     var totalPheromone = 0;
+    //     for (var edgeIndex in edges) {
+    //         totalPheromone += edges[edgeIndex].getPheromone();
+    //     }
+    //
+    //     for (var edgeIndex in edges) {
+    //         var alpha = 0.2;
+    //         if (this._ac.currentIteration() > 0) {
+    //             var width = Math.ceil((edges[edgeIndex].getPheromone() / totalPheromone) * (this._ac.getGraph().size()) * 6);
+    //             alpha = (edges[edgeIndex].getPheromone() / totalPheromone) * (this._ac.getGraph().size()) + 0.03;
+    //             if (alpha > 1) {
+    //                 alpha = 1;
+    //             }
+    //         }
+    //
+    //         this._canvas.drawLine(edges[edge#06fIndex].pointA().x, edges[edgeIndex].pointA().y,
+    //             edges[edgeIndex].pointB().x, edges[edgeIndex].pointB().y,
+    //             { 'alpha': alpha, 'color': '#06f', 'width': width });
+    //     }
+    // };
 
 </script>

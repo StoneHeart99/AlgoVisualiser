@@ -28,19 +28,22 @@ class Graph {
     };
 
     getEdge(cityA, cityB) {
+        let edge;
         if (this.edges[cityA.getName() + '-' + cityB.getName()] != undefined) {
-            return this.edges[cityA.getName() + '-' + cityB.getName()];
+            edge = this.edges[cityA.getName() + '-' + cityB.getName()];
         }
-        if (this.edges[cityB.toString() + '-' + cityA.getName()] != undefined) {
-            return this.edges[cityB.getName() + '-' + cityA.getName()];
+        else
+        {
+            edge = this.edges[cityB.getName() + '-' + cityA.getName()];
         }
+        return edge;
     };
 
     createEdges() {
         this.edges = {};
 
         for (let cityIndex = 0; cityIndex < this.cities.length; cityIndex++) {
-            for (let connectionIndex = 0; connectionIndex < this.cities.length; connectionIndex++) {
+            for (let connectionIndex = cityIndex; connectionIndex < this.cities.length; connectionIndex++) {
                 this.addEdge(this.cities[cityIndex], this.cities[connectionIndex]);
             }
         }
@@ -74,11 +77,11 @@ class Edge {
     }
 
     pointA() {
-        return { 'x': this.cityA.getX(), 'y': this.cityA.getY() };
+        return this.cityA.getName();
     }
 
     pointB() {
-        return { 'x': this.cityB.getX(), 'y': this.cityB.getY() };
+        return this.cityB.getName();
     }
 
     getPheromone() { return this.pheromone; };
@@ -143,25 +146,18 @@ class Ant {
         let finalPheromoneWeight;
         let cityProbabilities = [];
 
-        // console.log("make next move");
-        // console.log(this.graph);
-        // let e = this.graph.getEdge(this.currentCity, cities[12]);
-        // console.log(e);
-
         for (let cityIndex in cities) {
             if (!this.tour.contains(cities[cityIndex])) {
                 let edge = this.graph.getEdge(this.currentCity, cities[cityIndex]);
-                // console.log(edge);
                 if (this.alpha == 1) {
                     finalPheromoneWeight = edge.getPheromone();
                 } else {
                     finalPheromoneWeight = Math.pow(edge.getPheromone(), this.alpha);
                 }
-                // cityProbabilities[cityIndex] = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
+                cityProbabilities[cityIndex] = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
                 let probability = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
                 cityProbabilities[cityIndex] = probability;
                 rouletteWheel += probability;
-                // rouletteWheel =  rouletteWheel + probability;
             }
         }
 
@@ -195,12 +191,8 @@ class Ant {
         }
     };
 
-    addPheromone(weight) {
-        if (weight == undefined) {
-            weight = 1;
-        }
-
-        let extraPheromone = (this.q * weight) / this.tour.getDistance();
+    addPheromone() {
+        let extraPheromone = (this.q) / this.tour.getDistance();
         for (let tourIndex = 0; tourIndex < this.tour.size(); tourIndex++) {
             if (tourIndex >= this.tour.size()-1) {
                 let fromCity = this.tour.getCity(tourIndex);
@@ -232,17 +224,11 @@ class AntColony {
         this.rho = 0.1;
         this.q = 1;
         this.initPheromone = this.q;
-        this.type = 'acs';
-        this.elitistWeight = 0;
         this.maxIterations = 250;
-        this.minScalingFactor = 0.001;
 
         this.setParams();
 
         this.iteration = 0;
-        this.minPheromone = null;
-        this.maxPheromone = null;
-
         this.iterationBest = null;
         this.globalBest = null;
 
@@ -290,18 +276,7 @@ class AntColony {
             if (params.initPheromone != undefined) {
                 this.initPheromone = params.initPheromone;
             }
-            if (params.type != undefined) {
-                if (params.type == 'elitist') {
-                    if (params.elitistWeight != undefined) {
-                        this.elitistWeight = params.elitistWeight;
-                        this.type = 'elitist';
-                    }
-                } else if (params.type == 'maxmin') {
-                    this.type = 'maxmin';
-                } else {
-                    this.type = 'acs';
-                }
-            }
+
         }
     };
 
@@ -367,38 +342,11 @@ class AntColony {
             edges[edgeIndex].setPheromone(pheromone * (1 - this.rho));
         }
 
-        if (this.type == 'maxmin') {
-            if ((this.iteration / this.maxIterations) > 0.75) {
-                let best = this.getGlobalBest();
-            } else {
-                let best = this.getIterationBest();
-            }
 
-            // Set maxmin
-            this.maxPheromone = this.q / best.getTour().distance();
-            this.minPheromone = this.maxPheromone * this.minScalingFactor;
-
-            best.addPheromone();
-        } else {
-            for (let antIndex in this.colony) {
-                this.colony[antIndex].addPheromone();
-            }
+        for (let antIndex in this.colony) {
+            this.colony[antIndex].addPheromone();
         }
 
-        if (this.type == 'elitist') {
-            this.getGlobalBest().addPheromone(this.elitistWeight);
-        }
-
-        if (this.type == 'maxmin') {
-            for (let edgeIndex in edges) {
-                let pheromone = edges[edgeIndex].getPheromone();
-                if (pheromone > this.maxPheromone) {
-                    edges[edgeIndex].setPheromone(this.maxPheromone);
-                } else if (pheromone < this.minPheromone) {
-                    edges[edgeIndex].setPheromone(this.minPheromone);
-                }
-            }
-        }
     };
 
     getIterationBest() {
