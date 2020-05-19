@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Ant Colony System Program</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -17,13 +18,10 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="antColony.js"></script>
-    <script src="default-data.js"></script>
-    <title>Ant Colony System</title>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/antColony.js"></script>
+    <script src="js/default-data.js"></script>
 
     <style>
         .leftContainer {
@@ -90,8 +88,8 @@
         <div class="row" >
             <div class="slideContainer panel-item col">
                 <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
-                <input type="range" min="100" max="10000" value="100" class=" slider disableAble" id="initIteration" >
-                <input type="number" id="iterationVal" class="sliderValue disableAble" value="100">
+                <input type="range" min="100" max="10000" value="300" class=" slider disableAble" id="initIteration" >
+                <input type="number" id="iterationVal" class="sliderValue disableAble" value="300">
             </div>
         </div>
 
@@ -227,10 +225,10 @@
 </html>
 
 <script>
-    // HTML Related
+    // HTML Settings
     let algoSpeed = [1600, 1200, 800, 400, 1];
     let algoSpeedIndex = 2;
-    let iterationNum = 100;
+    let iterationNum = 300;
     let count = 1;
 
     let speedSlider = document.getElementById("speed");
@@ -461,12 +459,10 @@
         allowDrag(event);
     });
 
-    // Set cursor to pointer (hand) when hovering over a node
     s.bind('overNode', function(e) {
         showPointerCursor();
     });
 
-    // Make sure to revert to default cursor again when moving out of nodes
     s.bind('outNode', function(e) {
         showDefaultCursor()
     });
@@ -510,6 +506,7 @@
     convertCityToNodes(antTM, graph);
     updateSigma(s, graph);
 
+    // Functions
     async function antColony()
     {
         disableAll();
@@ -534,6 +531,7 @@
         console.log(ac.getGlobalBest().getTour().getDistance())
 
         enableAll();
+        toast("The algorithm has completed!");
     }
 
     function allowDrag(event)
@@ -611,16 +609,15 @@
         clearArray(graph.edges);
         updateSigma(s,graph);
 
-
         // restore default setting
         speedSlider.value = 3;
         speedVal.value = 3;
         algoSpeedIndex = 2;
         nodeSlider.value = 15;
         nodeVal.value = 15;
-        initIterationSlider.value = 100;
-        iterationVal.value = 100;
-        iterationNum = 100;
+        initIterationSlider.value = 300;
+        iterationVal.value = 300;
+        iterationNum = 300;
         colonySlider.value = 30;
         colonyVal.value = 30;
         alphaSlider.value = 1;
@@ -763,28 +760,5 @@
         updateSigma(s, graph);
     }
 
-    // ACArtist.prototype._drawEdges = function() {
-    //     var edges = this._ac.getGraph().getEdges();
-    //
-    //     var totalPheromone = 0;
-    //     for (var edgeIndex in edges) {
-    //         totalPheromone += edges[edgeIndex].getPheromone();
-    //     }
-    //
-    //     for (var edgeIndex in edges) {
-    //         var alpha = 0.2;
-    //         if (this._ac.currentIteration() > 0) {
-    //             var width = Math.ceil((edges[edgeIndex].getPheromone() / totalPheromone) * (this._ac.getGraph().size()) * 6);
-    //             alpha = (edges[edgeIndex].getPheromone() / totalPheromone) * (this._ac.getGraph().size()) + 0.03;
-    //             if (alpha > 1) {
-    //                 alpha = 1;
-    //             }
-    //         }
-    //
-    //         this._canvas.drawLine(edges[edge#06fIndex].pointA().x, edges[edgeIndex].pointA().y,
-    //             edges[edgeIndex].pointB().x, edges[edgeIndex].pointB().y,
-    //             { 'alpha': alpha, 'color': '#06f', 'width': width });
-    //     }
-    // };
 
 </script>

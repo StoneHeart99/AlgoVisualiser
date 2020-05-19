@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Algorithm Visualiser</title>
     <link rel="icon" href="assets/logo.png">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -19,33 +19,15 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
     <script src="Sigma/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
 
     <style>
         body {
             color: white;
             font-size: 1.05em;
             background-color: #292e34;
-        }
-
-        .overview-container {
-            width: 80%;
-            display: flex;
-            justify-content: space-around;
-            margin: auto;
-            margin-top: 5%;
-
-        }
-
-        .item {
-            height: 300px;
-            width: 25%;
-            background: white;
-            padding: 20px;
         }
 
         p {
@@ -70,7 +52,6 @@
             align-items: center;
 
         }
-
 
         .button {
             width: auto;
@@ -129,51 +110,11 @@
     <div class="left-container">
         <div id="sigma-container"></div>
     </div>
-
-
-
-
-
-
-<!--    <div class="overview-container">-->
-<!--        <div class="item">-->
-<!--            <h3>Optimisation Algorithm</h3>-->
-<!--            <p>Optimisation algorithm is an algorithm that attempts to obtain best possible solution for a certain problem.-->
-<!--                However, the optimal results are often not guaranteed. Optimisation algorithm also often involves maximising-->
-<!--                or minimising a value.</p>-->
-<!--        </div>-->
-<!--        <div class="item">-->
-<!--            <h3>Travelling Salesman Problem</h3>-->
-<!--            <p>The travelling salesman problem (TSP) is an algorithmic problem tasked with finding the-->
-<!--                shortest route between a set of cities that must be visited. </p>-->
-<!--        </div>-->
-<!--    </div>-->
-
-
-
-
 </body>
 </html>
 <script>
 
-    // Animation 
-    cityA1 = new City("a1", 80, 180);
-    cityA2 = new City("a2", 140, 120);
-    cityA3 = new City("a3", 60, 110);
-    cityA4 = new City("a4", 20, 40);
-    cityA5 = new City("a5", 180, 200);
-    cityA6 = new City("a6", 180, 60);
-    cityA7 = new City("a7", 20, 160);
-
-    animateTM = new TourManager();
-    animateTM.addCity(cityA1);
-    animateTM.addCity(cityA2);
-    animateTM.addCity(cityA3);
-    animateTM.addCity(cityA4);
-    animateTM.addCity(cityA5);
-    animateTM.addCity(cityA6);
-    animateTM.addCity(cityA7);
-
+    // Initialise sigma
     let s = new sigma(
         {
             renderer: {
@@ -199,12 +140,32 @@
         edges: []
     };
 
+
+    // Animation program
+    cityA1 = new City("a1", 80, 180);
+    cityA2 = new City("a2", 140, 120);
+    cityA3 = new City("a3", 60, 110);
+    cityA4 = new City("a4", 20, 40);
+    cityA5 = new City("a5", 180, 200);
+    cityA6 = new City("a6", 180, 60);
+    cityA7 = new City("a7", 20, 160);
+
+    animateTM = new TourManager();
+    animateTM.addCity(cityA1);
+    animateTM.addCity(cityA2);
+    animateTM.addCity(cityA3);
+    animateTM.addCity(cityA4);
+    animateTM.addCity(cityA5);
+    animateTM.addCity(cityA6);
+    animateTM.addCity(cityA7);
+
     let tour = new Tour(animateTM.getTour());
     convertCityToNodes(animateTM, graph);
     convertTourToEdges(tour, graph);
     updateSigma(s, graph);
+    setInterval(redraw, 1500);
 
-
+    // Functions
     function convertCityToNodes(TM, graph)
     {
         clearArray(graph.nodes);
@@ -267,41 +228,6 @@
         tour.generateIndividual();
         convertTourToEdges(tour, graph);
         updateSigma(s, graph);
-        // console.log("gg");
     }
 
-    setInterval(redraw, 1500);
-
-
-
-    // function animate() {
-    //     sigma.plugins.animate(s,
-    //         {
-    //             x: 'target_x',
-    //             y: 'target_y'
-    //         },
-    //         {
-    //             onComplete: function() {
-    //                 // s.graph.nodes('n0').hidden = !(s.graph.nodes('n0').hidden);
-    //                 animate();
-    //                 // console.log("hi");
-    //             }
-    //         }
-    //     );
-    // }
-    // // animate();
-
-
-    // setInterval(function() {
-    //     // var prefix = ['grid_', 'circular_'][step = +!step];
-    //     sigma.plugins.animate(
-    //         s,
-    //         {
-    //             x:   10,
-    //             y:  20,
-    //             // size: 'size',
-    //             // color: 'color'
-    //         }
-    //     );
-    // }, 2000);
 </script>

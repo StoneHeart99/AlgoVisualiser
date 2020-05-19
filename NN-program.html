@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Nearest Neighbour Program</title>
 
     <link rel="icon" href="assets/logo.png">
 
@@ -19,20 +20,16 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
 
-    <title>Nearest Neighbour</title>
+
 
     <style>
         .button {
             width: 30%;
         }
-
-
     </style>
 
 </head>
@@ -202,7 +199,7 @@
 </html>
 <script>
 
-    // HTML Related
+    // HTML Settings
     let speedSlider = document.getElementById("speed");
     let speedVal = document.getElementById("speedVal");
 
@@ -313,7 +310,7 @@
         tour = new Tour(greedyTM.getTour());
 
         // recalculate route and update graph
-        simpleGreedy(tour,greedyTM);
+        nearestNeighbour(tour,greedyTM);
         convertCityToNodes(greedyTM, graph);
         clearArray(graph.edges);
         // index = 0;  //  reset index
@@ -340,17 +337,15 @@
         updateSigma(s,graph);
     });
 
-    // Set cursor to pointer (hand) when hovering over a node
     s.bind('overNode', function(e) {
         document.getElementById('sigma-container').style.cursor = 'pointer';
     });
 
-    // Make sure to revert to default cursor again when moving out of nodes
     s.bind('outNode', function(e) {
         document.getElementById('sigma-container').style.cursor = 'default';
     });
 
-    // Greedy program
+    // NN program
     let greedyTM = new TourManager();
     greedyTM.clone(TM);
     let tour = new Tour(greedyTM.getTour());
@@ -364,7 +359,7 @@
     let unvisited = new Tour(greedyTM.getTour());
     visited.clear();
 
-    simpleGreedy(tour, greedyTM);
+    nearestNeighbour(tour, greedyTM);
     convertCityToNodes(greedyTM, graph);
     updateSigma(s, graph);
 
@@ -373,7 +368,7 @@
     function run()
     {
         isRunning = true;
-        simpleGreedy(tour, greedyTM);
+        nearestNeighbour(tour, greedyTM);
         if(isfinal)
             final();
         else
@@ -512,7 +507,7 @@
 
         index++;
         if(index==greedyTM.size()*2)
-            simpleGreedy(tour, greedyTM);
+            nearestNeighbour(tour, greedyTM);
         updateSigma(s, graph);
     }
 
@@ -594,7 +589,7 @@
         speedSlider.value = 3;
         speedVal.value = 3;
         algoSpeedIndex = 2;
-        simpleGreedy(tour, greedyTM);
+        nearestNeighbour(tour, greedyTM);
         if(isfinal)
         {
             document.getElementById("final").checked = false;
@@ -631,14 +626,6 @@
         num = parseInt(num);
         greedyTM.clear();
 
-        // let alp = 65;
-        // console.log((alp + num));
-        // for(let i =65; i < (alp + num);i++)
-        // {
-        //     greedyTM.addCity(new City(String.fromCharCode(i)));
-        // }
-        // tour = new Tour(greedyTM.getTour());
-
         for(let i=1;i<=num;i++)
         {
             greedyTM.addCity(new City( "c" + i));
@@ -647,7 +634,7 @@
 
 
         // recalculate route and update graph
-        simpleGreedy(tour,greedyTM);
+        nearestNeighbour(tour,greedyTM);
         convertCityToNodes(greedyTM, graph);
         clearArray(graph.edges);
 

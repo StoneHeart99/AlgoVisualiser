@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Simulated Annealing Program</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -17,12 +18,10 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
-    <title>Simulated Annealing</title>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
+
 
     <style>
         .leftContainer {
@@ -49,14 +48,6 @@
         .button {
             width: 30%;
         }
-        /*.content-container {*/
-        /*    overflow: hidden;*/
-        /*}*/
-
-        /*.content-container:hover {*/
-        /*    overflow: auto;*/
-        /*}*/
-
     </style>
 
 
@@ -342,7 +333,6 @@
         initCoolingRate = parseFloat(this.value);
     }
 
-
     $("#coolingRateVal").focusout(function () {
         let temp = coolingRateSlider.value;
         let value = $("#coolingRateVal").val();
@@ -471,12 +461,10 @@
         allowDrag(event);
     });
 
-    // Set cursor to pointer (hand) when hovering over a node
     s.bind('overNode', function(e) {
         showPointerCursor();
     });
 
-    // Make sure to revert to default cursor again when moving out of nodes
     s.bind('outNode', function(e) {
         showDefaultCursor()
     });
@@ -494,8 +482,6 @@
     updateSigma(s, graph);
 
     // Section for functions
-
-
     async function SA_TSP()
     {
         disableAll();

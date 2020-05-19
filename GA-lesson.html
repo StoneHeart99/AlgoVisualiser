@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Genetic Algorithm</title>
+    <title>Genetic Algorithm Lesson</title>
+
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
@@ -19,13 +20,11 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="population.js"></script>
-    <script src="ga.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/ga.js"></script>
+    <script src="js/default-data.js"></script>
+
     <style>
         #sigma-container, #sigma-container2, #sigma-container3, #sigma-container4{
             /*margin: auto auto 50px;*/
@@ -540,6 +539,7 @@
 </body>
 </html>
 <script>
+    // Initialise chart
     let ctx = document.getElementById('mutateChart').getContext('2d');
     let mutateChart = new Chart(ctx, {
         type: 'bar',
@@ -601,25 +601,7 @@
         }
     });
 
-    let c1 = new City("c1", 10, 0);
-    let c2 = new City("c2", 20, 0);
-    let c3 = new City("c3", 30, 0);
-    let c4 = new City("c4", 40, 0);
-    let c5 = new City("c5", 50, 0);
-    let c6 = new City("c6", 60, 0);
-    let c7 = new City("c7", 70, 0);
-    let c8 = new City("c8", 80, 0);
-    let c9 = new City("c9", 90, 0);
-    let city1 = new City("c1", 120, 80);
-    let city2 = new City("c2", 180, 200);
-    let city3 = new City("c3", 80, 180);
-    let city4 = new City("c4", 140, 180);
-    let city5 = new City("c5", 20, 160);
-    let city6 = new City("c6", 100, 160);
-    let city7 = new City("c7", 200, 160);
-    let city8 = new City("c8", 140, 140);
-    let city9 = new City("c9", 40, 120);
-
+    // Initialise sigma
     let s = new sigma(
         {
             renderer: {
@@ -696,6 +678,26 @@
         edges: []
     };
 
+    // Program
+    let c1 = new City("c1", 10, 0);
+    let c2 = new City("c2", 20, 0);
+    let c3 = new City("c3", 30, 0);
+    let c4 = new City("c4", 40, 0);
+    let c5 = new City("c5", 50, 0);
+    let c6 = new City("c6", 60, 0);
+    let c7 = new City("c7", 70, 0);
+    let c8 = new City("c8", 80, 0);
+    let c9 = new City("c9", 90, 0);
+    let city1 = new City("c1", 120, 80);
+    let city2 = new City("c2", 180, 200);
+    let city3 = new City("c3", 80, 180);
+    let city4 = new City("c4", 140, 180);
+    let city5 = new City("c5", 20, 160);
+    let city6 = new City("c6", 100, 160);
+    let city7 = new City("c7", 200, 160);
+    let city8 = new City("c8", 140, 140);
+    let city9 = new City("c9", 40, 120);
+
     let geneticTM = new TourManager();
     geneticTM.addCity(city1);
     geneticTM.addCity(city2);
@@ -737,12 +739,9 @@
 
     convertCityToNodes_black(displayTM, graph);
     updateSigma(s, graph);
-    // updateSigma(s2, graph);
-    // updateSigma(s3, graph);
-    // updateSigma(s4, graph);
+
 
     $("#mutateChart").hide();
-    // $("#display").hide();
     $("#display2").hide();
     $("#s3-details").hide();
     $("#s4-details").hide();
@@ -751,34 +750,18 @@
     $("#child1").hide();
     $("#child2").hide();
 
-    // for(let i=0;i<pop.populationSize();i++){
-    //     addData(mutateChart, i+1, 0);
-    // }
-
-    // step1();
-    // step2();
-    // step3();
-
-    // auto();
-    // let tournament = tournamentSelection(pop);
-
-
     animateCrossover();
     setInterval(animateCrossover, 10000);
-
     animateMutation();
     setInterval(animateMutation, 16000);
 
-
+    // Functions
     function addData(chart, label, data) {
         let index = parseInt(label);
         chart.data.labels[index] = label;
         chart.data.datasets[0].data[index] = data;
         chart.update();
     }
-
-
-
 
     async function step1()
     {
@@ -930,7 +913,6 @@
         stepIndex++;
     }
 
-
     async function auto()
     {
         step1().then(step2).then(step3).then(step4)
@@ -939,11 +921,9 @@
 
     async function tournamentSelection(pop) // Population
     {
-
         // 3a
         stepIndex--;
         updateStep('a');
-
 
         pop.sort();
         for(let i=0;i<pop.populationSize();i++){
@@ -952,7 +932,6 @@
         }
         await sleep(stepInterval);
 
-
         // 3b
         stepIndex--;
         updateStep('b');
@@ -960,7 +939,6 @@
         // Create a tournament population
         let tournament = new Population(5, geneticTM, false);
         let randoms = []
-
 
         // For each place in the tournament get a random candidate tour and add it
         for (let i = 0; i < tournament.populationSize(); i++) {
@@ -1030,17 +1008,6 @@
         let startPos = Math.floor(Math.random() * parent1.size());
         let endPos = Math.floor(Math.random() * parent1.size());
 
-        // if(startPos == endPos)
-        // {
-        //     if(startPos == p1.size()-1)
-        //     {
-        //         startPos--;
-        //     }
-        //     else
-        //     {
-        //         startPos++;
-        //     }
-        // }
         if(startPos > endPos)
         {
             let temp = 0;
@@ -1069,7 +1036,6 @@
         updateCrossoverNode(s, parents[0]);
         updateSigma(s, graph);
         await sleep(stepInterval);
-
 
         // child 1
         for(let i=0;i<p1.size();i++)
@@ -1149,7 +1115,6 @@
         children[1] = child2;
     }
 
-
     async function child1() {
 
         let fillSpd = 800;
@@ -1199,7 +1164,6 @@
         await sleep(fillSpd);
         $("#c2-8").text("c6");
         $("#c2-8").css({background:  '#b6b6b6'});
-
     }
 
     async function animateCrossover() {

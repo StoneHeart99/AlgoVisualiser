@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Hill Climbing Program</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -17,12 +18,10 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
-    <title>Hill Climbing</title>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
+
 
     <style>
         .leftContainer {
@@ -49,11 +48,7 @@
         .button {
             width: 30%;
         }
-
-
     </style>
-
-
 </head>
 <body>
     <!-- Navbar -->
@@ -223,7 +218,7 @@
 </html>
 
 <script>
-    // HTML Related
+    // HTML Settings
     let algoSpeed = [1600, 1200, 800, 400, 1];
     let algoSpeedIndex = 2;
     let initTemp = 1000;
@@ -337,7 +332,6 @@
 
     $("#tut1").modal("show");
 
-
     //Initialise sigma:
     let s = new sigma(
         {
@@ -367,12 +361,10 @@
         allowDrag(event);
     });
 
-    // Set cursor to pointer (hand) when hovering over a node
     s.bind('overNode', function(e) {
         showPointerCursor();
     });
 
-    // Make sure to revert to default cursor again when moving out of nodes
     s.bind('outNode', function(e) {
         showDefaultCursor()
     });
@@ -388,8 +380,6 @@
     updateSigma(s, graph);
 
     // Section for functions
-
-
     async function SA_TSP()
     {
         disableAll();
@@ -399,24 +389,18 @@
         let newSolution = new Tour();
         let tourPos1, tourPos2;
         count = 0;
-
-
         iterationNum = initIterationSlider.value;
 
         currentSolution.generateIndividual();
         initialSolution.clone(currentSolution);
-
 
         $("#initTour").text(initialSolution.printTour());
         $("#initDistance").text(initialSolution.getDistance().toFixed(2));
         $("#currentTour").text(initialSolution.printTour());
         $("#currentDistance").text(initialSolution.getDistance().toFixed(2));
 
-
         // Loop until system has cooled
         while (count<=iterationNum) {
-
-
             newSolution.clone(currentSolution);
             // newSolution = new Tour(currentSolution.getTour());
 
@@ -467,7 +451,6 @@
             await sleep(algoSpeed[algoSpeedIndex]);
             count++;
         }
-
 
         convertCityToNodes(simulatedTM, graph);
         convertTourToEdges(currentSolution, graph);

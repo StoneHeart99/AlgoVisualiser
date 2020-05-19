@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hill Climbing</title>
+    <title>Hill Climbing Lesson</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -21,11 +21,9 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
     <style>
 
         #sigma-container{
@@ -38,7 +36,6 @@
             width: 50%;
             background-color: #D6D6D6;
         }
-
 
         #hillChart {
             background: #E1E1E1;
@@ -61,8 +58,6 @@
             width: 100%;
             background: #c6c6c6;
         }
-
-
 
     </style>
 </head>
@@ -176,9 +171,6 @@
                     </div>
                 </div>
 
-<!--                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">-->
-<!--                    Start-->
-<!--                </button>-->
             </div>
 
             <div class="button-container">
@@ -369,16 +361,9 @@
     let step = "s1";
     let counter = 0;
 
-
-
-    // convertCityToNodes_black(graphTM, graph);
     updateSigma(s, graph);
 
-    // step1();
-    // step3();
-    // // step4();
-    // step5();
-
+    // Functions
     async function auto()
     {
         while(stepIndex <= 6)
@@ -388,8 +373,6 @@
                 stepIndex = 6;
                 step6();
             }
-
-
 
             if(stepIndex==1)
                 step1();
@@ -401,8 +384,6 @@
                 step4();
             else if(stepIndex==5)
                 step5();
-            // else if(stepIndex==6)
-            //     step6();
             await sleep(1500);
         }
         let x = document.getElementsByClassName("highlight");
@@ -432,7 +413,6 @@
         updateStep();
 
         newSolution.clone(currentSolution);
-
 
         let tourPos1 = -1;
         let tourPos2 = -1;
@@ -473,7 +453,6 @@
         }
         else
             stepIndex = 5;
-
     }
 
     function step4() {
@@ -507,10 +486,6 @@
         stepIndex++;
     }
 
-
-
-
-
     function start() {
         disableDemo();
         resetDemo();
@@ -539,7 +514,4 @@
         convertCityToNodes_black(graphTM, graph);
         updateSigma(s, graph);
     }
-
-
-
 </script>

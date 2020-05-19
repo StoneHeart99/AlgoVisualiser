@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TSP</title>
+    <title>TSP Lesson</title>
+
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
@@ -17,11 +18,9 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
     <style>
 
 
@@ -29,7 +28,6 @@
             margin: auto auto 50px;
             height: 350px;
             width: 350px;
-            /*border: 1px solid #555;*/
         }
 
         .img-container {
@@ -40,14 +38,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /*border: 1px solid #555;*/
-        }
-
-        .img {
-            height: 350px;
-            width: 350px;
-            padding: 30px;
-            background-color: #E1E1E1;
         }
 
         .matrix {
@@ -159,7 +149,6 @@
                             <td>0</td>
                         </tr>
                     </table>
-<!--                    <img class="img" src="assets/matrix.png">-->
                 </div>
             </div>
 
@@ -178,7 +167,6 @@
             </div>
 
             <div class="button-container" style="justify-content: flex-end">
-<!--                <a href="NN-program.html"><button class="button purple">Demo Program</button></a>-->
                 <a href="NN-lesson.html"><button class="button lesson-button">Next</button></a>
             </div>
         </div>
@@ -189,17 +177,7 @@
 </body>
 </html>
 <script>
-    // city1 = new City("c1", 20, 20);
-    // city2 = new City("c2", 40, 20);
-    // city3 = new City("c3", 40, 40);
-    // city4 = new City("c4", 20, 40);
-    //
-    // graphTM = new TourManager();
-    // graphTM.addCity(city1);
-    // graphTM.addCity(city2);
-    // graphTM.addCity(city3);
-    // graphTM.addCity(city4);
-
+    // initialise sigma
     let s = new sigma(
         {
             renderer: {
@@ -237,8 +215,6 @@
 
         ]
     }
-
-    // let tour = new Tour(graphTM.getTour());
     updateSigma(s, graph);
 
 </script>

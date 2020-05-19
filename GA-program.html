@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Genetic Algorithm Program</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -20,25 +21,12 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="population.js"></script>
-    <script src="ga.js"></script>
-    <script src="default-data.js"></script>
-    <title>Genetic Algorithm</title>
-    <style>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/ga.js"></script>
+    <script src="js/default-data.js"></script>
 
-        .content-container {
-            width: 100%;
-            height: calc(40vh);
-            background-color:#f1f1f1;
-            position: absolute;
-            bottom: 0;
-            z-index: 1;
-            padding-bottom: 10px;
-        }
+    <style>
 
         .rightContainer {
             position: absolute;
@@ -116,22 +104,10 @@
             color:white
         }
 
-        #tutIcon {
-            font-size: 1.3em;
-            color: white;
-            opacity: 1;
-            cursor: default;
-        }
-
         #sigma-container {
             width: 100%;
             height: 100%;
             max-height: inherit;
-        }
-
-        #editIcon.disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
         }
 
         .button {
@@ -374,7 +350,7 @@
 </html>
 <script>
 
-    // HTML sliders
+    // HTML Settings
     let nodeSlider = document.getElementById("nodeNum");
     let nodeVal = document.getElementById("nodeNumVal");
 
@@ -587,23 +563,19 @@
     };
 
     let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
-    // sigma.plugins.killDragNodes(s);
     dragListener.bind('dragend', function(event) {
         allowDrag(event);
     });
 
-    // Set cursor to pointer (hand) when hovering over a node
     s.bind('overNode', function(e) {
         showPointerCursor();
     });
 
-    // Make sure to revert to default cursor again when moving out of nodes
     s.bind('outNode', function(e) {
         showDefaultCursor()
     });
 
     // HTML chart
-
     let ctx = document.getElementById('fitnessChart').getContext('2d');
     let fitnessChart = new Chart(ctx, {
         // The type of chart we want to create
@@ -818,29 +790,24 @@
                         autoSkip: false,
                         min:0,
                         fontColor: 'black',
-
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Generation',
                         fontStyle: 'bold',
                         fontColor: 'black',
-
                     },
-
                 }],
                 yAxes: [{
                     ticks: {
                         min:0,
                         fontColor: 'black',
-
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Distance',
                         fontStyle: 'bold',
                         fontColor: 'black',
-
                     },
                 }]
             },
@@ -906,41 +873,19 @@
     let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
     pop = ga.evolvePopulation2(pop, geneticTM);
 
-    // for(let i=0;i<2;i++)
-    // {
-    //     pop = ga.evolvePopulation2(pop, geneticTM);
-    // }
-
     // get initial solution
     let best = pop.getFittest();
     let current = new Tour();
-
-    // console.log("Initial distance: " + pop.getFittest().getDistance());
-    // console.log("Tour: " + pop.getFittest().printTour());
 
     best = new Tour(pop.getFittest().getTour());
 
     convertCityToNodes(geneticTM, graph);
     updateSigma(s,graph);
 
-    // Evolve population for 100 generations
-    // evolve();
-    // for (let i = 0; i < 100; i++) {
-    //     pop = ga.evolvePopulation(pop, geneticTM);
-    // }
-    // Print final results
-    // console.log("Final distance: " + pop.getFittest().getDistance());
-    // console.log("Tour: " + pop.getFittest().printTour());
-    // console.log("best distance: " + pop.getFittest().getDistance());
-    // console.log("Tour: " + best.printTour());
-
     // Section for functions
     async function evolve()
     {
         tempTM.clone(geneticTM);
-
-        // console.log("Initial distance: " + pop.getFittest().getDistance());
-        // console.log("Tour: " + pop.getFittest().printTour());
 
         addData(fitnessChart, 0, pop.getFittest().getFitness().toFixed(2),
             pop.getMeanFitness().toFixed(2), pop.getWorst().getFitness().toFixed(2));
@@ -958,10 +903,6 @@
             $("#tour").text(pop.getFittest().printTour());
             $("#distance").text(pop.getFittest().getDistance().toFixed(2));
             $("#fitness").text(pop.getFittest().getFitness().toFixed(2));
-
-            // pop.sort();
-            // console.log("gen: " + (i));
-            // console.log(pop);
 
             fittestTours.push(pop.getFittest());
             worstTours.push(pop.getWorst());
@@ -982,11 +923,8 @@
             else
                 await sleep(1);
         }
-        // console.log("Final distance: " + pop.getFittest().getDistance());
-        // console.log("Tour: " + pop.getFittest().printTour());
 
         enableAll();
-
     }
 
     function run()

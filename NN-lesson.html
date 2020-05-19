@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nearest Neighbour</title>
+    <title>Nearest Neighbour Lesson</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -19,24 +19,14 @@
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
     <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
     <style>
-
         #sigma-container{
-            /*margin: auto auto 50px;*/
-            /*height: 330px;*/
             height: inherit;
-            /*width: 400px;*/
             width: 50%;
-            /*border: 1px solid #555;*/
         }
-
-
-
     </style>
 </head>
 <body>
@@ -131,16 +121,10 @@
                             <div><b>Unvisited list:</b> <span id="unvisited"></span> </div>
                             <div><b>Visited list:</b> <span id="visited"></span> </div>
                             <div><b>Tour:</b> <span id="tour"></span> </div>
-                            <!--                        <div style="position: absolute; bottom:10px; right: 10px;">-->
-                            <!--                            <button id="startBtn" class="button" onclick="start()">Start</button>-->
-                            <!--                        </div>-->
                         </div>
 
                     </div>
                 </div>
-<!--                <button style="float: right; margin-top: 10px;" id="startBtn" class="button" onclick="start()">-->
-<!--                    Start-->
-<!--                </button>-->
             </div>
 
             <div class="button-container">
@@ -153,26 +137,8 @@
 </body>
 </html>
 <script>
-    city1 = new City("c1", 40, 20);
-    city2 = new City("c2", 55, 36);
-    city3 = new City("c3", 38, 38);
-    city4 = new City("c4", 26, 26);
 
-    graphTM = new TourManager();
-    graphTM.addCity(city1);
-    graphTM.addCity(city2);
-    graphTM.addCity(city3);
-    graphTM.addCity(city4);
-    tour = new Tour(graphTM);
-
-    simpleGreedy(tour, graphTM);
-
-    let visited = [];
-    let unvisited = ["c1", "c2", "c3", "c4"];
-    let stepIndex = 1;
-    let step = "s1";
-    let currentCity = "c1";
-
+    // initialise sigma
     let s = new sigma(
         {
             renderer: {
@@ -210,12 +176,30 @@
         ]
     }
 
+
+    // Nearest neigbour program
+    let visited = [];
+    let unvisited = ["c1", "c2", "c3", "c4"];
+    let stepIndex = 1;
+    let step = "s1";
+    let currentCity = "c1";
+
+    city1 = new City("c1", 40, 20);
+    city2 = new City("c2", 55, 36);
+    city3 = new City("c3", 38, 38);
+    city4 = new City("c4", 26, 26);
+
+    graphTM = new TourManager();
+    graphTM.addCity(city1);
+    graphTM.addCity(city2);
+    graphTM.addCity(city3);
+    graphTM.addCity(city4);
+    tour = new Tour(graphTM);
+
+    nearestNeighbour(tour, graphTM);
     updateSigma(s, graph);
 
-
-
-    // auto();
-
+    // Functions
     function step1()
     {
         $("#unvisited").text(printArray(unvisited));
@@ -282,12 +266,9 @@
                 graph.nodes[i].color = '#2196F3';
         }
 
-
         visited.push(nextCity);
         unvisited.splice(unvisited.indexOf(nextCity),1);
         currentCity = nextCity;
-
-
     }
 
     function step5()
@@ -296,7 +277,6 @@
         $("#current").text(currentCity);
         $("#visited").text(printArray(visited));
         $("#unvisited").text(printArray(unvisited));
-
     }
 
     function step6()
@@ -392,8 +372,4 @@
         document.getElementById("startBtn"). className =
             document.getElementById("startBtn"). className.replace(" disabled", "");
     }
-
-
-
-
 </script>

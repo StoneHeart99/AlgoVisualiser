@@ -84,6 +84,5 @@ TM.addCity(city15);
 // TM.addCity(city19);
 // TM.addCity(city20);
 
-console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")
 
 

@@ -46,7 +46,7 @@ function updateSigma(sigma, graph) {
 }
 
 
-function simpleGreedy(tour, TM)
+function nearestNeighbour(tour, TM)
 {
     let unvisited = new Tour(TM.getTour());
     let startIndex = 0;
@@ -252,3 +252,4 @@ function convertSwapCityToNodes_black(tour, graph, pos1, pos2)
     }
 }
 
+console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")

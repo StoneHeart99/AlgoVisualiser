@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simulated Annealing With Reheat</title>
+    <title>Simulated Annealing With Reheat Lesson</title>
+
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="generalCss.css">
@@ -21,23 +22,10 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <script src="functions.js"></script>
-    <script src="city.js"></script>
-    <script src="tour-manager.js"></script>
-    <script src="tour.js"></script>
-    <script src="default-data.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
     <style>
-        .content-container {
-            width: 100%;
-        }
-
-        .container {
-            width: 60%;
-            margin: 50px auto;
-            padding-bottom: 50px;
-            height: calc(100vh - (60px));
-
-        }
 
         .article {
             text-align: justify;
@@ -47,12 +35,6 @@
             margin-bottom: 80px;
         }
 
-        /*#sigma-container{*/
-        /*    margin: auto auto 50px;*/
-        /*    height: 400px;*/
-        /*    width: 400px;*/
-        /*    border: 1px solid #555;*/
-        /*}*/
 
         #sigma-container{
             height: 250px;
@@ -289,8 +271,6 @@
 </body>
 </html>
 <script>
-    let demoTemp = 100;
-
     // sigma  node
     let s = new sigma(
         {
@@ -382,24 +362,13 @@
     let avgDistance = 0;
     let threshold = 0.5;
     let thresholdDistance = 0;
+    let demoTemp = 100;
 
-    // convertCityToNodes_black(graphTM, graph);
     updateSigma(s, graph);
 
     DivElmnt = document.getElementById('pseudocode');
-    // DivElmnt.scrollTop = 220;
 
-    // step1();
-    // step2();
-    // step3();
-    // step4();
-    // step5();
-    // step6();
-    // step7();
-    // step8();
-    // step9();
-    // step10();
-
+    // Functions
     function step1()
     {
 
