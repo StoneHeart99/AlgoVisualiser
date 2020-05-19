@@ -46,6 +46,7 @@ class Population
 
         // Loop through individuals to find fittest
         for (let i = 0; i < this.populationSize(); i++) {
+            // console.log(this.getTour(i))
             if (fittest.getFitness() <= this.getTour(i).getFitness()) {
                 fittest = this.getTour(i);
             }

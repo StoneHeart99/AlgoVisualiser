@@ -1030,17 +1030,17 @@
         let startPos = Math.floor(Math.random() * parent1.size());
         let endPos = Math.floor(Math.random() * parent1.size());
 
-        if(startPos == endPos)
-        {
-            if(startPos == p1.size()-1)
-            {
-                startPos--;
-            }
-            else
-            {
-                startPos++;
-            }
-        }
+        // if(startPos == endPos)
+        // {
+        //     if(startPos == p1.size()-1)
+        //     {
+        //         startPos--;
+        //     }
+        //     else
+        //     {
+        //         startPos++;
+        //     }
+        // }
         if(startPos > endPos)
         {
             let temp = 0;
@@ -1048,7 +1048,7 @@
             startPos = endPos;
             endPos = temp;
         }
-        if(startPos ==0 && endPos == p1.size()-1)
+        if((endPos - startPos) >= p1.size()-2)
         {
             endPos--;
         }
