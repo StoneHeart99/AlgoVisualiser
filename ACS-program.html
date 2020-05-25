@@ -153,7 +153,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>
                     <h6>Dragging city nodes</h6>
                     <div>Drag city nodes to relocate them</div>
                     <video autoplay loop muted class="video">
@@ -161,21 +160,7 @@
                         Your browser does not support the video tag.
                     </video>
                     </p>
-                    <h6>Legend</h6>
-                    <div class="d-flex">
-                        <div class="d-flex align-items-center">
-                            <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
-                            <div>Start City</div>
-                        </div>
-                        <div class="d-flex align-items-center" style="margin-left: 30px;">
-                            <div class="legend-node" style="transform: scale(0.6);"></div>
-                            <div>Destination City</div>
-                        </div>
-                        <div class="d-flex align-items-center" style="margin-left: 30px;">
-                            <div class="legend-node" style="transform: scale(0.6);  background: #a95aec"></div>
-                            <div>Swapped City</div>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="button tutBtn" id="nextTutBtn">Next</button>
@@ -185,6 +170,44 @@
     </div>
 
     <div class="modal fade" id="tut2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial - City Node</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6>Legend</h6>
+                    <div class="d-flex align-items-center">
+                        <div class="legend-node" style="transform: scale(0.6); background: #50c878"></div>
+                        <div>Start City</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="legend-node" style="transform: scale(0.6);"></div>
+                        <div>Destination City</div>
+                    </div>
+                    <div class="d-flex align-items-center" style="height: 40px; margin-left: 5px;">
+                        <img src="assets/blackEdge.png" style="width: 95px;">
+                        <div style="margin-left: 8px;">Best Solution's Edge</div>
+                    </div>
+                    <div class="d-flex align-items-center" style="height: 40px; margin-left: 5px;">
+                        <img src="assets/grayEdge.png" style="width: 95px;">
+                        <div style="margin-left: 8px;">Pheromone Edge</div>
+                    </div>
+                    <br>
+                    <div> * the thicker the pheromone edge, the higher the pheromone level between two cities</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button class="button tutBtn" id="nextTutBtn2">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tut3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -214,7 +237,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="previousTutBtn" class="button tutBtn">Previous</button>
+                    <button id="previousTutBtn2" class="button tutBtn">Previous</button>
                     <button id="finishTutBtn" class="button tutBtn" style="margin-left: 20px">Finish</button>
                 </div>
             </div>
@@ -408,25 +431,35 @@
 
 
     // Modal
-    // $("#tutorial").click(function () {
-    //     $("#tut1").modal("show");
-    // })
-    //
-    // $("#nextTutBtn").click(function () {
-    //     $("#tut1").modal("hide");
-    //     $("#tut2").modal("show");
-    // })
-    //
-    // $("#previousTutBtn").click(function () {
-    //     $("#tut1").modal("show");
-    //     $("#tut2").modal("hide");
-    // })
-    //
-    // $("#finishTutBtn").click(function () {
-    //     $("#tut2").modal("hide");
-    // })
-    //
-    // $("#tut1").modal("show");
+    $("#tutorial").click(function () {
+        $("#tut1").modal("show");
+    })
+
+    $("#nextTutBtn").click(function () {
+        $("#tut1").modal("hide");
+        $("#tut2").modal("show");
+    })
+
+    $("#previousTutBtn").click(function () {
+        $("#tut1").modal("show");
+        $("#tut2").modal("hide");
+    })
+
+    $("#nextTutBtn2").click(function () {
+        $("#tut2").modal("hide");
+        $("#tut3").modal("show");
+    })
+
+    $("#previousTutBtn2").click(function () {
+        $("#tut2").modal("show");
+        $("#tut3").modal("hide");
+    })
+
+    $("#finishTutBtn").click(function () {
+        $("#tut3").modal("hide");
+    })
+
+    $("#tut1").modal("show");
 
 
     //Initialise sigma:
