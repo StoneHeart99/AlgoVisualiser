@@ -137,6 +137,21 @@ class Tour{
         return citiesName;
     }
 
+    printTourToIndex(index)
+    {
+        if(this.size()==0)
+            return "";
+
+        let citiesName = "";
+        for(let i=0;i<=index;i++)
+        {
+            citiesName = citiesName + this.cities[i].getName();
+            if(i != (index))
+                citiesName += " → ";
+        }
+        return citiesName;
+    }
+
     printVisited()
     {
         if(this.size()==0)

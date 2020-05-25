@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ant Colony System Lesson</title>
+
+    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/antColony.js"></script>
+    <script src="js/default-data.js"></script>
+    <style>
+        #sigma-container{
+            height: 300px;
+            width: 50%;
+        }
+
+        #sigma-container2{
+            height: 300px;
+            width: 50%;
+            background-color: #D6D6D6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pseudocode {
+            background: #c6c6c6;
+            width: 100%;
+            height: 250px;
+            overflow: auto;
+        }
+
+        .antDisplay {
+            padding: 10px;
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div id="nav-placeholder" ></div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Ant Colony System
+        </div>
+    </nav>
+
+    <div class="lesson-content-container">
+        <div class="lesson-container">
+            <h2>Lesson - Ant Colony System</h2>
+
+            <div class="section">
+                <h3>Overview</h3>
+                <p class="article">
+                    Ant colony system is inspired by how real ants search for food. When searching for food, the
+                    ants randomly walk around their nest and explore the surrounding area. Once the food is found,
+                    the ant then returns to the colony and left a pheromone trail along the path between the food
+                    and the colony. This trial act as a guide for other ants to follow and reach the food source.
+                    The path lead to food will eventually be highly concentrated with the pheromone, and thus attracts
+                    more ants to the path.
+                </p>
+                <p class="article">
+                    The ant colony system algorithm is iterated over 2 main stages, which are constructing the ant
+                    solutions and updating the pheromones. While the ants are trying to find a tour or solution, they
+                    will select the next destination city based on pheromone level. Cities with higher pheromone has a
+                    higher chance to be selected compared to those with lower pheromone level. After that, the pheromone
+                    levels between cities are either increased or decreased to filter out 'good' and 'bad' solutions.
+                </p>
+                <p class="d-flex justify-content-center" style="min-width: 100%">
+                    <video autoplay loop muted class="video">
+                        <source src="assets/ACS-animation.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </p>
+            </div>
+
+            <div class="section">
+                <h3>Pheromone</h3>
+                <h5>a) City Selection</h5>
+                <p class="article">
+                    The probability of <i>k</i>th ant travel from city <i>x</i> to city <i>y</i> can be calculated with
+                    the formula below:
+                </p>
+                <p>  \[ p_{xy}^k = { (\tau_{xy}^\alpha)(\eta_{xy}^\beta) \over
+                    \Sigma_{z&#8713;allowed_{x}} (\tau_{xz}^\alpha)(\eta_{xz}^\beta)  } \]</p>
+                <div class="article">where</div>
+                <div class="article"> \(\tau_{xy}\) is the pheromone level between city <i>x</i> and city <i>y</i>, </div>
+                <div class="article"> \(\alpha \ge 0\) is a parameter to control amount of \(\tau_{xy}\), </div>
+                <div class="article"> \(\eta_{xy}\) is the desirability to travel from city <i>x</i> to city <i>y</i>, </div>
+                <div class="article"> \(\beta \ge 1\) is a parameter to control amount of \(\eta_{xy}\), </div>
+                <div class="article"> \(\tau_{xz}\) is the pheromone level between other possible cities, </div>
+                <div class="article"> \(\eta_{xz}\) is the desirability level between other possible cities </div>
+
+                <br>
+                <br>
+
+                <h5>b) Pheromone Update</h5>
+                <p class="article">
+                    The pheromone update are divided into 2 parts, pheromone evaporation and pheromone deposition.
+                    Pheromone evaporation will decrease the pheromone level while the pheromone deposition will increase
+                    the pheromone level. The new pheromone level can be calculated with the formula below:
+                </p>
+                <p>  \[ \tau_{xy} &#8592; (1 - \rho)\tau_{xy} + \displaystyle \sum_{k} \Delta \tau_{xy}^k \]</p>
+                <div class="article">where</div>
+                <div class="article"> \(\tau_{xy}\) is the pheromone level between city <i>x</i> and city <i>y</i>, </div>
+                <div class="article"> \(\rho\) is the pheromone evaporation coefficient, </div>
+                <div class="article"> \(\Delta \tau_{xy}^k\) is the amount of pheromone deposited by <i>k</i>th ant </div>
+
+
+            </div>
+
+            <div class="section">
+                <h3>Pros and Cons</h3>
+                <div class="d-flex">
+                    <div class="pros">
+                        <h5>Pros</h5>
+                        <div>- Able to search solution in parallel </div>
+                        <div>- Able to discover 'good' solution quickly</div>
+                    </div>
+                    <div class="cons">
+                        <h5>Cons</h5>
+                        <div>- Have dependent sequences of random decisions</div>
+                        <div>- Probability distribution varies in each iteration</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="d-flex align-items-center" style="margin-bottom: 10px;">
+                    <h3 style="margin-right: 15px">Concept Visualiser</h3>
+                    <div id="startBtn" class="circle icon" onclick="start()">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="d-flex justify-content-end" style=" background: #E1E1E1">
+                        <div id="sigma-container"></div>
+                        <div id="sigma-container2">
+                            <div class="antDisplay">
+                                <div class="light-bold">Ant 1</div>
+                                <div id="ant1"></div>
+                            </div>
+                            <div class="antDisplay">
+                                <div class="light-bold">Ant 2</div>
+                                <div id="ant2"></div>
+                            </div>
+                            <div class="antDisplay">
+                                <div class="light-bold">Ant 3</div>
+                                <div id="ant3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pseudocode" id="pseudocode">
+                        <h6 style="font-size: 1.5em">Steps</h6>
+                        <div id="s1" class="d-flex">
+                            <div class="num">1. </div>
+                            <div><b>Repeat</b></div>
+                        </div>
+                        <div id="s2" class="d-flex">
+                            <div class="num">2. </div>
+                            <div class="tab">Place every ants at starting city</div>
+                        </div>
+                        <div id="s3" class="d-flex">
+                            <div class="num">3. </div>
+                            <div class="tab"><b>Repeat</b></div>
+                        </div>
+                        <div id="s4" class="d-flex">
+                            <div class="num">4. </div>
+                            <div class="tab2"> Choose next city based on city selection rule and
+                                update pheromone locally</div>
+                        </div>
+                        <div id="s5" class="d-flex">
+                            <div class="num">5. </div>
+                            <div class="tab"><b>Until</b> all ants found solution</div>
+                        </div>
+                        <div id="s6" class="d-flex">
+                            <div class="num">6. </div>
+                            <div class="tab">Update best solution</div>
+                        </div>
+                        <div id="s7" class="d-flex">
+                            <div class="num">7. </div>
+                            <div class="tab">Update pheromone globally</div>
+                        </div>
+                        <div id="s8" class="d-flex">
+                            <div class="num">8. </div>
+                            <div><b>Until</b> the number of iterations executed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="GA-lesson.html"><button class="button lesson-button">Previous</button></a>
+                <a href="ACS-program.html"><button class="button lesson-button purple">ACS Program</button></a>
+                <div class="lesson-button"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+
+    // initialise sigma
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: {
+                minNodeSize: 1,
+                maxNodeSize: 10,
+                minEdgeSize: 1,
+                maxEdgeSize: 20,
+                enableCamera: false,
+                defaultEdgeLabelSize: 15,
+                defaultNodeColor: 'black',
+                sideMargin: 4,
+                autoRescale: ['nodePosition', 'nodeSize'],
+            }
+        }
+    );
+
+    let graph = {
+        nodes: [],
+        edges: []
+    }
+
+
+    // ACS program
+    city1 = new City("c1", 40, 20);
+    city2 = new City("c2", 55, 36);
+    city3 = new City("c3", 38, 38);
+    city4 = new City("c4", 26, 26);
+    city5 = new City("c5", 26, 49);
+
+    let graphTM = new TourManager();
+    let antTM = new TourManager();
+    let matrixGraph = new Graph();
+    graphTM.addCity(city1);
+    graphTM.addCity(city2);
+    graphTM.addCity(city3);
+    graphTM.addCity(city4);
+    graphTM.addCity(city5);
+    antTM.clone(graphTM);
+    matrixGraph.addCity(city1);
+    matrixGraph.addCity(city2);
+    matrixGraph.addCity(city3);
+    matrixGraph.addCity(city4);
+    matrixGraph.addCity(city5);
+
+
+    let stepIndex = 1;
+    let antIndex = 0;
+    let iterationNum = 0;
+    let best = new Tour();
+    let tempBest = new Tour();
+
+    let ac = new AntColony();
+    let params = {
+        'colonySize': 3,
+        'alpha': 0.5,
+        'beta': 0.5,
+        'rho': 0.1,
+        'iterations': 100,
+        'initPheromone': 1,
+        'q': 1,
+    };
+
+    ac.setParams(params);
+    ac.setGraph(matrixGraph);
+    ac.getGraph().createEdges();
+    DivElmnt = document.getElementById('pseudocode');
+
+    $(".antDisplay").hide();
+    $("#sigma-container").hide();
+
+    // Functions
+    function step1()
+    {
+
+        if(iterationNum > 0)
+        {
+            updateStep();
+            stepIndex--;
+        }
+        else
+        {
+            step = "s" + stepIndex.toString();
+            document.getElementById(step).className += " highlight";
+        }
+
+        if(iterationNum < 3)
+            stepIndex++;
+        else
+            stepIndex = 8;
+
+        DivElmnt.scrollTop = 0;
+    }
+
+    function step2()
+    {
+        updateStep();
+        convertCityToNodes_black(antTM, graph);
+        updateSigma(s, graph);
+        $(".antDisplay").show();
+        $("#sigma-container").show();
+        ac.step();
+        $("#ant1").text(ac.getAnt(0).getTour().printTourToIndex(antIndex));
+        $("#ant2").text(ac.getAnt(1).getTour().printTourToIndex(antIndex));
+        $("#ant3").text(ac.getAnt(2).getTour().printTourToIndex(antIndex));
+        drawPheromone();
+
+        if(iterationNum>0)
+        {
+            best = ac.getGlobalBest().getTour();
+            drawBestPheromone(tempBest);
+        }
+
+        antIndex++;
+    }
+
+    function step3()
+    {
+        updateStep();
+        if(antIndex > 4)
+            stepIndex = 5;
+        else
+            stepIndex = 4;
+    }
+
+    function step4()
+    {
+        updateStep();
+
+        if(antIndex == 4)
+        {
+            $("#ant1").text(ac.getAnt(0).getTour().printTour());
+            $("#ant2").text(ac.getAnt(1).getTour().printTour());
+            $("#ant3").text(ac.getAnt(2).getTour().printTour());
+        }
+        else
+        {
+            $("#ant1").text(ac.getAnt(0).getTour().printTourToIndex(antIndex));
+            $("#ant2").text(ac.getAnt(1).getTour().printTourToIndex(antIndex));
+            $("#ant3").text(ac.getAnt(2).getTour().printTourToIndex(antIndex));
+        }
+
+
+        antIndex++;
+        stepIndex = 3;
+    }
+
+    function step5()
+    {
+        updateStep();
+        DivElmnt.scrollTop = 100;
+    }
+
+    function step6()
+    {
+        updateStep();
+        best = ac.getGlobalBest().getTour();
+        tempBest = best;
+        drawPheromone();
+        drawBestPheromone(best);
+    }
+
+    function step7()
+    {
+        updateStep();
+        drawPheromone();
+        drawBestPheromone(tempBest);
+        ac.step();
+
+        iterationNum++;
+        antIndex = 0;
+        stepIndex = 1;
+    }
+
+
+
+    function step8()
+    {
+        updateStep();
+        DivElmnt.scrollTop = 100;
+    }
+
+    async function auto()
+    {
+        while(stepIndex <= 8)
+        {
+            if(stepIndex==1)
+                step1();
+            else if(stepIndex==2)
+                step2();
+            else if(stepIndex==3)
+                step3();
+            else if(stepIndex==4)
+                step4();
+            else if(stepIndex==5)
+                step5();
+            else if(stepIndex==6)
+                step6();
+            else if(stepIndex==7)
+                step7();
+            else if(stepIndex==8)
+                step8();
+
+
+            updateSigma(s, graph);
+            await sleep(1500);
+
+        }
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = x[0].className.replace(" highlight", "");
+        stepIndex = 1;
+        enableDemo();
+
+    }
+
+    function updateStep()
+    {
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = x[0].className.replace(" highlight", "");
+        step = "s" + stepIndex.toString();
+        document.getElementById(step).className += " highlight"
+        stepIndex++;
+    }
+
+    function resetDemo()
+    {
+        antIndex = 0;
+        iterationNum = 0;
+        stepIndex = 1;
+        step = "s1";
+
+        //Reset ant colony
+        antTM.clear();
+        antTM.clone(graphTM);
+        updateMatrixGraph(matrixGraph, antTM);
+        ac.reset();
+        ac.setParams(params);
+        ac.setGraph(matrixGraph);
+        ac.getGraph().createEdges();
+
+        clearSigma(s);
+        $("#ant1").text("");
+        $("#ant2").text("");
+        $("#ant3").text("");
+        $(".antDisplay").hide();
+        $("#sigma-container").hide();
+
+    }
+
+    function start() {
+        disableDemo();
+        resetDemo();
+        auto();
+    }
+
+    function disableDemo() {
+        $("#startBtn").attr("disabled", true);
+        document.getElementById("startBtn"). className += " disabled";
+    }
+
+    function enableDemo() {
+        $("#startBtn").attr("disabled", false);
+        document.getElementById("startBtn"). className =
+            document.getElementById("startBtn"). className.replace(" disabled", "");
+    }
+
+    function drawPheromone()
+    {
+        let edges = ac.getGraph().getEdges();
+        let totalPheromone = 0;
+        clearArray(graph.edges);
+        updateSigma(s, graph);
+
+        for(let edgeIndex in edges)
+        {
+            totalPheromone += edges[edgeIndex].getPheromone();
+        }
+
+        for (let edgeIndex in edges) {
+            let alpha = 0.2;
+            let width = 0;
+            if (ac.currentIteration() > 0) {
+                // width = Math.ceil((edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) * 6);
+                width = ((edges[edgeIndex].getPheromone() / totalPheromone) * 15 );
+                alpha = (edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) + 0.03;
+                if (alpha > 1) {
+                    alpha = 1;
+                }
+            }
+
+            // console.log("width: " + width)
+
+            graph.edges.push(
+                {
+                    id: edges[edgeIndex].pointA() + "-" + edges[edgeIndex].pointB(),
+                    source: edges[edgeIndex].pointA(),
+                    target: edges[edgeIndex].pointB(),
+                    color: '#A5A5A5',
+                    type:'line',
+                    size: width,
+                    label: "",
+                }
+            )
+        }
+
+        updateSigma(s, graph);
+    }
+
+    function drawBestPheromone(best)
+    {
+
+        for (let tourIndex = 0; tourIndex < best.size(); tourIndex++) {
+            let id;
+            let source;
+            let destination;
+            let index;
+
+            if (tourIndex < best.size()-1) {
+                source = best.getCity(tourIndex).getName();
+                destination = best.getCity(tourIndex+1).getName();
+            } else {
+                source = best.getCity(tourIndex).getName();
+                destination = best.getCity(0).getName();
+            }
+
+            id = source + "-" + destination;
+            index = graph.edges.findIndex(edge => edge.id == id);
+            if(index == -1)
+            {
+                id = destination + "-" + source;
+                index = graph.edges.findIndex(edge => edge.id == id);
+            }
+
+            // graph.edges[index].color = '#a95aec';
+            graph.edges[index].color = 'black';
+            graph.edges[index].size = '3';
+
+        }
+
+        updateSigma(s, graph);
+    }
+</script>

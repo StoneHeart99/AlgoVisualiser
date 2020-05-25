@@ -154,7 +154,7 @@ class Ant {
                 } else {
                     finalPheromoneWeight = Math.pow(edge.getPheromone(), this.alpha);
                 }
-                cityProbabilities[cityIndex] = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
+                // cityProbabilities[cityIndex] = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
                 let probability = finalPheromoneWeight * Math.pow(1.0 / edge.getDistance(), this.beta);
                 cityProbabilities[cityIndex] = probability;
                 rouletteWheel += probability;
@@ -238,9 +238,11 @@ class AntColony {
     getGraph() { return this.graph; };
     setGraph(graph) { this.graph = graph };
     getAnts() { return this.colony; };
+    getAnt(index){ return this.colony[index]; };
     size() { return this.colony.length; };
     currentIteration() { return this.iteration; };
     maxIterations() { return this.maxIterations; };
+    getAnt(index){ return this.colony[index]; }
 
     createAnts() {
         this.colony = [];

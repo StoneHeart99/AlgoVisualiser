@@ -118,7 +118,7 @@
         </div>
 
         <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
-            <button id="runBtn" class="button" onclick="restart()">Run</button>
+            <button id="runBtn" class="button" onclick="run()">Run</button>
             <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
             <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
         </div>
@@ -520,7 +520,7 @@
         ac.setParams(params);
         for(let i=0; i<iterationNum; i++)
         {
-            ac.step()
+            ac.step();
             let best = ac.getGlobalBest().getTour();
             $("#iteration").text("Iteration: " + (i+1));
             $("#bestDistance").text(best.getDistance().toFixed(2));
@@ -528,7 +528,7 @@
             drawPheromone();
             await sleep([algoSpeed[algoSpeedIndex]]);
         }
-        console.log(ac.getGlobalBest().getTour().getDistance())
+        // console.log(ac.getGlobalBest().getTour().getDistance())
 
         enableAll();
         toast("The algorithm has completed!");
@@ -559,7 +559,7 @@
         document.getElementById('sigma-container').style.cursor = 'default';
     }
 
-    function restart(){
+    function run(){
         resetInfo();
         updateMatrixGraph(matrixGraph, antTM);
         ac.reset();
@@ -677,16 +677,7 @@
         });
     }
 
-    function updateMatrixGraph(graph, TM)
-    {
-        graph.clear();
-        for(let i=0;i<TM.size();i++)
-        {
-            graph.addCity(TM.getCity(i));
-        }
-        graph.createEdges();
-        ac.setGraph(graph);
-    }
+
 
     function drawPheromone()
     {
@@ -712,7 +703,7 @@
                 }
             }
 
-            console.log("width: " + width)
+            // console.log("width: " + width)
 
             graph.edges.push(
                 {

@@ -45,6 +45,11 @@ function updateSigma(sigma, graph) {
     sigma.refresh();
 }
 
+function clearSigma(sigma) {
+    sigma.graph.clear();
+    sigma.refresh();
+}
+
 
 function nearestNeighbour(tour, TM)
 {
@@ -250,6 +255,17 @@ function convertSwapCityToNodes_black(tour, graph, pos1, pos2)
             }
         )
     }
+}
+
+function updateMatrixGraph(graph, TM)
+{
+    graph.clear();
+    for(let i=0;i<TM.size();i++)
+    {
+        graph.addCity(TM.getCity(i));
+    }
+    graph.createEdges();
+    ac.setGraph(graph);
 }
 
 console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")

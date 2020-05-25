@@ -90,7 +90,7 @@
         </div>
 
         <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px;">
-            <button id="runBtn" class="button" onclick="restart()">Run</button>
+            <button id="runBtn" class="button" onclick="run()">Run</button>
             <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
             <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
         </div>
@@ -472,7 +472,7 @@
 
     }
 
-    function restart(){
+    function run(){
         currentSolution.generateIndividual();
         resetInfo();
         SA_TSP();
