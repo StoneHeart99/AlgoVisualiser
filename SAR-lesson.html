@@ -367,6 +367,8 @@
     updateSigma(s, graph);
 
     DivElmnt = document.getElementById('pseudocode');
+    scrollId = '#pseudocode'
+    scrollHeight = $(scrollId).height() / 14;
 
     // Functions
     function step1()
@@ -386,7 +388,8 @@
         // $("#pseudoProb").text("Acceptance Probability: " + 0.00);
 
         stepIndex = 2;
-        DivElmnt.scrollTop = 16;
+        // DivElmnt.scrollTop = 16;
+        scroll(scrollId, (0 * scrollHeight));
     }
     
     function step2() {
@@ -405,7 +408,8 @@
         $("#threshold").text(threshold);
         $("#maxThreshold").text(thresholdDistance.toFixed(2));
 
-        DivElmnt.scrollTop = 32;
+        // DivElmnt.scrollTop = 32;
+        scroll(scrollId, (0 * scrollHeight));
     }
 
     function step3(){
@@ -414,7 +418,8 @@
         if(bestSolution.getDistance()< thresholdDistance)
             stepIndex = 14;
 
-        DivElmnt.scrollTop = 48;
+        // DivElmnt.scrollTop = 48;
+        scroll(scrollId, (4 * scrollHeight));
     }
 
     function step4() {
@@ -462,8 +467,8 @@
         // }
         // else
         //     stepIndex = 5;
-        DivElmnt.scrollTop = 64;
-
+        // DivElmnt.scrollTop = 64;
+        scroll(scrollId, (6 * scrollHeight));
     }
 
     function step5(){
@@ -478,13 +483,15 @@
         else
             stepIndex = 6;
 
-        DivElmnt.scrollTop = 80;
+        // DivElmnt.scrollTop = 80;
+        scroll(scrollId, (6 * scrollHeight));
     }
 
     function step6() {
         updateStep();
         // stepIndex++;
-        DivElmnt.scrollTop = 96;
+        // DivElmnt.scrollTop = 96;
+        scroll(scrollId, (6 * scrollHeight));
     }
 
     function step7() {
@@ -493,7 +500,8 @@
         $("#pseudoRand").text(random.toFixed(2));
         probability = acceptanceProbability(currentSolution.getDistance(), newSolution.getDistance(), demoTemp);
         $("#pseudoProb").text(probability.toFixed(2));
-        DivElmnt.scrollTop = 112;
+        // DivElmnt.scrollTop = 112;
+        scroll(scrollId, (9 * scrollHeight));
     }
 
 
@@ -507,7 +515,8 @@
             $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
 
-        DivElmnt.scrollTop = 128;
+        // DivElmnt.scrollTop = 128;
+        scroll(scrollId, (9 * scrollHeight));
     }
 
     function step9(){
@@ -519,7 +528,8 @@
             updateSigma(s3, graph);
             $("#d3").text("Distance: " + bestSolution.getDistance().toFixed(2));
         }
-        DivElmnt.scrollTop = 144;
+        // DivElmnt.scrollTop = 144;
+        scroll(scrollId, (13 * scrollHeight));
     }
     
     function step10() {
@@ -527,7 +537,8 @@
         pseudoTemp -= 10;
         $("#pseudoTemp").text(pseudoTemp + "℃");
         // stepIndex = 2;
-        DivElmnt.scrollTop = 160;
+        // DivElmnt.scrollTop = 160;
+        scroll(scrollId, (13 * scrollHeight));
     }
 
     function step11() {
@@ -536,14 +547,16 @@
             stepIndex = 12;
         else
             stepIndex = 3;
-        DivElmnt.scrollTop = 208;
+        // DivElmnt.scrollTop = 208;
+        scroll(scrollId, (14 * scrollHeight));
     }
 
     function step12() {
         updateStep();
         pseudoTemp = 20;
         $("#pseudoTemp").text(pseudoTemp);
-        DivElmnt.scrollTop = 208;
+        // DivElmnt.scrollTop = 208;
+        scroll(scrollId, (14 * scrollHeight));
     }
     
     function step13() {
@@ -558,14 +571,16 @@
 
         stepIndex = 3;
 
-        DivElmnt.scrollTop = 208;
+        // DivElmnt.scrollTop = 208;
+        scroll(scrollId, (14 * scrollHeight));
     }
 
 
     function step14() {
         updateStep();
         stepIndex++;
-        DivElmnt.scrollTop = 224;
+        // DivElmnt.scrollTop = 224;
+        scroll(scrollId, (13 * scrollHeight));
     }
 
 
@@ -641,7 +656,7 @@
                 step13();
             else if(stepIndex==14)
                 step14();
-            await sleep(1500);
+            await sleep(2000);
         }
         let x = document.getElementsByClassName("highlight");
         x[0].className = x[0].className.replace(" highlight", "");

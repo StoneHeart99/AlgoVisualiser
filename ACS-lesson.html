@@ -43,8 +43,8 @@
         .pseudocode {
             background: #c6c6c6;
             width: 100%;
-            height: 250px;
-            overflow: auto;
+            /*overflow: auto;*/
+            min-height: fit-content;
         }
 
         .antDisplay {
@@ -208,7 +208,7 @@
             </div>
 
             <div class="button-container">
-                <a href="GA-lesson.html"><button class="button lesson-button">Previous</button></a>
+                <a href="hybrid-GA-SA-lesson.html"><button class="button lesson-button">Previous</button></a>
                 <a href="ACS-program.html"><button class="button lesson-button purple">ACS Program</button></a>
                 <div class="lesson-button"></div>
             </div>
@@ -288,7 +288,9 @@
     ac.setParams(params);
     ac.setGraph(matrixGraph);
     ac.getGraph().createEdges();
-    DivElmnt = document.getElementById('pseudocode');
+    // DivElmnt = document.getElementById('pseudocode');
+    // scrollId = '#pseudocode'
+    // scrollHeight = $(scrollId).height() / 8;
 
     $(".antDisplay").hide();
     $("#sigma-container").hide();
@@ -313,7 +315,7 @@
         else
             stepIndex = 8;
 
-        DivElmnt.scrollTop = 0;
+        // DivElmnt.scrollTop = 0;
     }
 
     function step2()
@@ -372,7 +374,7 @@
     function step5()
     {
         updateStep();
-        DivElmnt.scrollTop = 100;
+        // DivElmnt.scrollTop = 100;
     }
 
     function step6()
@@ -427,7 +429,7 @@
 
 
             updateSigma(s, graph);
-            await sleep(1500);
+            await sleep(2000);
 
         }
         let x = document.getElementsByClassName("highlight");

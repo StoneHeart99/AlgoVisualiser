@@ -358,6 +358,8 @@
     updateSigma(s, graph);
     setInterval(animateProb, 1500)
     DivElmnt = document.getElementById('pseudocode');
+    scrollId = '#pseudocode'
+    scrollHeight = $(scrollId).height() / 10;
 
     // Functions
     function step1()
@@ -376,13 +378,15 @@
         // $("#pseudoProb").text("Acceptance Probability: " + 0.00);
 
         stepIndex = 2;
-        DivElmnt.scrollTop = 5;
+        // DivElmnt.scrollTop = 5;
+        scroll(scrollId, 0);
     }
 
     function step2(){
         counter++;
         updateStep();
-        DivElmnt.scrollTop = 20;
+        // DivElmnt.scrollTop = 20;
+        scroll(scrollId, (0 * scrollHeight));
     }
 
     function step3() {
@@ -430,8 +434,9 @@
         // }
         // else
         //     stepIndex = 5;
-        DivElmnt.scrollTop = 30;
+        // DivElmnt.scrollTop = 30;
 
+        scroll(scrollId, (2 * scrollHeight));
     }
 
     function step4(){
@@ -446,13 +451,15 @@
         else
             stepIndex = 5;
 
-        DivElmnt.scrollTop = 40;
+        // DivElmnt.scrollTop = 40;
+        scroll(scrollId, (2 * scrollHeight));
     }
 
     function step5() {
         updateStep();
         // stepIndex++;
-        DivElmnt.scrollTop = 50;
+        // DivElmnt.scrollTop = 50;
+        scroll(scrollId, (4 * scrollHeight));
     }
 
     function step6() {
@@ -461,7 +468,8 @@
         $("#pseudoRand").text(random.toFixed(2));
         probability = acceptanceProbability(currentSolution.getDistance(), newSolution.getDistance(), demoTemp);
         $("#pseudoProb").text(probability.toFixed(2));
-        DivElmnt.scrollTop = 60;
+        // DivElmnt.scrollTop = 60;
+        // scroll(scrollId, (5 * scrollHeight));
     }
 
 
@@ -475,7 +483,8 @@
             $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
 
-        DivElmnt.scrollTop = 70;
+        // DivElmnt.scrollTop = 70;
+        scroll(scrollId, (8 * scrollHeight));
     }
 
     function step8(){
@@ -487,7 +496,8 @@
             updateSigma(s3, graph);
             $("#d3").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
-        DivElmnt.scrollTop = 80;
+        // DivElmnt.scrollTop = 80;
+        scroll(scrollId, (8 * scrollHeight));
     }
     
     function step9() {
@@ -495,13 +505,15 @@
         pseudoTemp -= 5;
         $("#pseudoTemp").text(pseudoTemp + "℃");
         stepIndex = 2;
-        DivElmnt.scrollTop = 90;
+        // DivElmnt.scrollTop = 90;
+        scroll(scrollId, (8 * scrollHeight));
     }
 
     function step10() {
         updateStep();
         stepIndex++;
-        DivElmnt.scrollTop = 100;
+        // DivElmnt.scrollTop = 100;
+        scroll(scrollId, (8 * scrollHeight));
     }
 
 
@@ -578,7 +590,7 @@
                 step8();
             else if(stepIndex==9)
                 step9();
-            await sleep(1500);
+            await sleep(2000);
         }
         let x = document.getElementsByClassName("highlight");
         x[0].className = x[0].className.replace(" highlight", "");

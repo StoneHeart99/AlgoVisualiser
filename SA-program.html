@@ -514,10 +514,10 @@
         initialSolution.clone(currentSolution);
         bestSolution.clone(initialSolution); // Set best as initial
 
-        console.log("Initial solution distance: " + initialSolution.getDistance());
-        console.log("cooling rate: " + coolingRate);
-        console.log("Initial solution distance: " + currentSolution.getDistance());
-        console.log("Tour: " + currentSolution.printTour());
+        // console.log("Initial solution distance: " + initialSolution.getDistance());
+        // console.log("cooling rate: " + coolingRate);
+        // console.log("Initial solution distance: " + currentSolution.getDistance());
+        // console.log("Tour: " + currentSolution.printTour());
 
         $("#initTour").text(initialSolution.printTour());
         $("#initDistance").text(initialSolution.getDistance().toFixed(2));
@@ -605,7 +605,7 @@
                     if(threshold > 1)
                         threshold = 1;
                     thresholdDistance = avgDistance * threshold;
-                    console.log("thresholdDistance:" + thresholdDistance);
+                    // console.log("thresholdDistance:" + thresholdDistance);
                     $("#threshold").text("Max Threhold: " + thresholdDistance.toFixed(2));
                     toast("Reheated");
                 }
@@ -623,7 +623,7 @@
             }
         }
 
-        console.log("count: " + count);
+        // console.log("count: " + count);
 
         convertCityToNodes(simulatedTM, graph);
         convertTourToEdges(bestSolution, graph);
@@ -631,8 +631,8 @@
         $("#temperature").text("Temperature: " + temp.toFixed(2) + "℃");
         $("#bestTour").text(bestSolution.printTour());
         $("#bestDistance").text(bestSolution.getDistance().toFixed(2));
-        console.log("Final solution distance: " + bestSolution.getDistance());
-        console.log("Tour: " + bestSolution.printTour());
+        // console.log("Final solution distance: " + bestSolution.getDistance());
+        // console.log("Tour: " + bestSolution.printTour());
 
         enableAll();
         toast("The algorithm has completed!");
@@ -654,8 +654,8 @@
     function run(){
         currentSolution.generateIndividual();
         bestSolution = new Tour(currentSolution);
-        console.log(currentSolution.getDistance());
-        console.log("outside: " + bestSolution.getDistance());
+        // console.log(currentSolution.getDistance());
+        // console.log("outside: " + bestSolution.getDistance());
         resetInfo();
         SA_TSP();
     }

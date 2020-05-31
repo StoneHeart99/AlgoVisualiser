@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Genetic Algorithm Program</title>
+    <title>Hybrid GA-SA Program</title>
 
     <link rel="icon" href="assets/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -54,13 +54,14 @@
             /*background-color:#f1f1f1;*/
         }
 
-        .setting-container {
+        .botContainer {
             position: absolute;
-            width: 50%;
+            width: 100%;
             height: 40vh;
             background-color:#f1f1f1;
             bottom: 0;
-            padding: 20px 20px 20px 50px;
+            padding: 20px 50px 20px 50px;
+            overflow: auto;
         }
 
         .result-container {
@@ -111,7 +112,8 @@
         }
 
         .button {
-            width: 30%;
+            width: 100%;
+            min-width: 157px;
         }
 
     </style>
@@ -125,7 +127,7 @@
             <div class="nav-item" id="tutorial">Tutorial</div>
         </div>
         <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
-            Genetic Algorithm
+            Hybrid GA-SA
         </div>
     </nav>
 
@@ -146,44 +148,77 @@
         <div id='sigma-container'></div>
     </div>
 
-    <div class="result-container">
-        <div class="panel-item" style=""><h3>Result</h3></div>
-        <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
-        <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
-        <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
-        <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
-        <div class="solutionHeader"><b>Tour:</b></div>
-        <div id="tour" style="padding-bottom: 10px;"></div>
-    </div>
+    <div class="botContainer" id="setting-result">
+        <div style="width: 100%;">
+            <div class="panel-item"><h3>Settings</h3></div>
+            <div class="d-flex justify-content-between">
+                <div style="width: 40%; margin-right: 50px;">
+                    <div class="panel-item"><h5>Genetic Algorithm</h5></div>
+                    <div class="slideContainer panel-item">
+                        <div class="sliderTitle disableAble">Number of Cities:</div>
+                        <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
+                        <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+                    </div>
+                    <div class="slideContainer panel-item">
+                        <div class="sliderTitle disableAble">Generations:</div>
+                        <input type="range" min="50" max="1000" value="100" step="10" class=" slider disableAble" id="genNum">
+                        <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
+                    </div>
+                    <div class="slideContainer panel-item">
+                        <div class="sliderTitle disableAble">Population Size:</div>
+                        <input type="range" min="100" max="1000" value="150" step="10" class=" slider disableAble" id="popSize">
+                        <input type="number" id="popSizeVal" class="sliderValue disableAble" value="150">
+                    </div>
+                    <div class="slideContainer panel-item">
+                        <div class="sliderTitle disableAble">Mutation Rate:</div>
+                        <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
+                        <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
+                    </div>
+                </div>
 
-    <div class="setting-container">
-        <div style="width: 75%;">
-            <div class="panel-item" style=""><h3>Settings</h3></div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Number of Cities:</div>
-                <input type="range" min="5" max="100" value="15" class=" slider disableAble" id="nodeNum">
-                <input type="number" id="nodeNumVal" class="sliderValue disableAble" value="15">
+                <div style="width: 40%; margin-right: 50px;">
+                    <div class="panel-item"><h5>Simulated Annealing</h5></div>
+                    <div class="row" >
+                        <div class="slideContainer panel-item col">
+                            <div class="sliderTitle disableAble">Initial Temperature:</div>
+                            <input type="range" min="100" max="5000" value="1000" class=" slider disableAble" id="initTemp">
+                            <input type="number"id="initTempVal" class="sliderValue disableAble" value="1000">
+                        </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="slideContainer panel-item col">
+                            <div class="sliderTitle disableAble">Cooling Rate:</div>
+                            <input type="range" min="0.001" max="1" value="0.003" class=" slider disableAble" id="coolingRate" step="0.001">
+                            <input type="number" id="coolingRateVal" class="sliderValue disableAble" value="0.003">
+                        </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="slideContainer panel-item col">
+                            <div class="sliderTitle disableAble" id="iterationID">Iterations:</div>
+                            <input type="range" min="100" max="10000" value="1000" class=" slider disableAble" id="initIteration" >
+                            <input type="number" id="iterationVal" class="sliderValue disableAble" value="1000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex flex-column justify-content-between panel-item" style="padding-top: 15px;">
+                    <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
+                    <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
+                    <button id="runBtn" class="button" onclick="run()">Run</button>
+                </div>
             </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Generations:</div>
-                <input type="range" min="50" max="1000" value="100" step="10" class=" slider disableAble" id="genNum">
-                <input type="number" id="genNumVal" class="sliderValue disableAble" value="100">
-            </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Population Size:</div>
-                <input type="range" min="100" max="1000" value="150" step="10" class=" slider disableAble" id="popSize">
-                <input type="number" id="popSizeVal" class="sliderValue disableAble" value="150">
-            </div>
-            <div class="slideContainer panel-item">
-                <div class="sliderTitle disableAble">Mutation Rate:</div>
-                <input type="range" min="0" max="1" value="0.015" step="0.001" class=" slider disableAble" id="mutationRate">
-                <input type="number" id="mutationRateVal" class="sliderValue disableAble" value="0.015">
-            </div>
-            <div class="row d-flex justify-content-between panel-item" style="padding-left: 15px; padding-top: 15px;">
-                <button id="runBtn" class="button" onclick="run()">Run</button>
-                <button id="randomBtn" class="button" onclick="randomiseCities()">Randomise Cities</button>
-                <button id="resetBtn" class="button" onclick="resetDefault()">Reset Default</button>
-            </div>
+
+            <br><br>
+
+            <div class="panel-item" style=""><h3>Result</h3></div>
+            <div class="solutionHeader"><b>Generation:</b> <span id="gen"></span> </div>
+            <div class="solutionHeader"><b>Category:</b>  <span id="category"></span></div>
+            <div class="solutionHeader"><b>Total Distance:</b> <span id="distance"></span></div>
+            <div class="solutionHeader"><b>Fitness:</b> <span id="fitness"></span></div>
+            <div class="solutionHeader"><b>Tour:</b></div>
+            <div id="tour" style="padding-bottom: 10px;"></div>
         </div>
 
     </div>
@@ -327,14 +362,25 @@
                     <div class=" tut-item">
                         <span class="light-bold">Mutation Rate:</span> set probability of mutation
                     </div>
-                    <div class=" tut-item">
-                        <span class="light-bold">Run:</span> start the algorithm
+                    <div class="tut-item">
+                        <span class="light-bold">Initial Temperature:</span>
+                        set the initial temperature of simulated annealing algorithm
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Cooling Rate:</span>
+                        set the speed of temperature to cool down
+                    </div>
+                    <div class="tut-item">
+                        <span class="light-bold">Iteration:</span> set number of iteration to be executed
                     </div>
                     <div class=" tut-item">
                         <span class="light-bold">Randomise Cities:</span> randomise the cities location
                     </div>
                     <div class=" tut-item">
                         <span class="light-bold">Reset Default:</span> reset all settings to default
+                    </div>
+                    <div class=" tut-item">
+                        <span class="light-bold">Run:</span> start the algorithm
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -443,6 +489,92 @@
         mutationRateVal.value = this.value;
         mutationRate = this.value;
     }
+
+    let coolingRateSlider = document.getElementById("coolingRate");
+    let coolingRateVal = document.getElementById("coolingRateVal");
+
+    coolingRateSlider.oninput = function() {
+        coolingRateVal.value = this.value;
+        initCoolingRate = parseFloat(this.value);
+    }
+
+    $("#coolingRateVal").focusout(function () {
+        let temp = coolingRateSlider.value;
+        let value = $("#coolingRateVal").val();
+        value = parseFloat(value);
+
+        if(Number.isFinite(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            value = parseFloat(value.toFixed(3));
+            this.value = value;
+            if (value < 0.001 )
+                this.value = 0.001;
+            else if (value > 1)
+                this.value = 1;
+            $("#coolingRate").val(value);
+            initCoolingRate = parseFloat(this.value);
+        }
+    });
+
+    let initTempSlider = document.getElementById("initTemp");
+    let initTempVal = document.getElementById("initTempVal");
+
+    initTempSlider.oninput = function() {
+        initTempVal.value = this.value;
+        initTemp = parseInt(this.value);
+    }
+
+    $("#initTempVal").focusout(function () {
+        let temp = initTempSlider.value;
+        let value = $("#initTempVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 100 )
+                this.value = 100;
+            else if (value > 5000)
+                this.value = 5000;
+            $("#initTemp").val(this.value);
+            initTemp = this.value;
+        }
+    });
+
+    let initIterationSlider = document.getElementById("initIteration");
+    let iterationVal = document.getElementById("iterationVal");
+
+    initIterationSlider.oninput = function() {
+        iterationVal.value = this.value;
+        iterationNum = parseInt(this.value);
+    }
+
+    $("#iterationVal").focusout(function () {
+        let temp = initIterationSlider.value;
+        let value = $("#iterationVal").val();
+        value = parseInt(value);
+        if(Number.isInteger(value)==false)
+        {
+            this.value = temp;
+        }
+        else
+        {
+            this.value = value;
+            if (value < 100 )
+                this.value = 100;
+            else if (value > 10000)
+                this.value = 10000;
+            $("#initIteration").val(this.value);
+            iterationNum = parseInt(this.value);
+        }
+    });
 
     $("#mutationRateVal").focusout(function () {
         let temp = mutationRateSlider.value;
@@ -867,11 +999,14 @@
     let populationSize = 100;
     let genNumber = 100;
     let xAxisInterval = 5;
+    let initTemp = 1000;
+    let initCoolingRate =0.003;
+    let iterationNum = 1000;
 
     // Initialize population
     let pop = new Population(populationSize, geneticTM, true);
     let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
-    pop = ga.evolvePopulation2(pop, geneticTM);
+    // pop = ga.evolvePopulation2(pop, geneticTM);
 
     // get initial solution
     let best = pop.getFittest();
@@ -881,6 +1016,9 @@
 
     convertCityToNodes(geneticTM, graph);
     updateSigma(s,graph);
+
+    // DivElmnt = document.getElementsByClassName('botContainer');
+    DivElmnt = document.getElementById('setting-result');
 
     // Section for functions
     async function evolve()
@@ -894,10 +1032,28 @@
         fittestTours.push(pop.getFittest());
         worstTours.push(pop.getWorst());
 
-
+        ga = new GA(pop, geneticTM, mutationRate, eliteSize);
         // Evolve population for 100 generations
         for (let i = 1; i <= genNumber; i++) {
-            pop = ga.evolvePopulation2(pop, geneticTM);
+            // pop = ga.evolvePopulation2(pop, geneticTM);
+            pop.sort();
+            // console.log(pop)
+
+            let parents = ga.tournamentSelection2(pop);
+
+            let children = new Array(2);
+            children = ga.crossover2(parents[0],parents[1])
+
+            for(let i=0;i<children.length;i++)
+                ga.mutate(children[i]);
+
+            children[0] = SA(children[0]);
+            children[1] = SA(children[1]);
+
+
+            pop.saveTour(pop.populationSize()-1, children[0]);
+            pop.saveTour(pop.populationSize()-2, children[1]);
+
 
             $("#gen").text(i);
             $("#category").text("Best");
@@ -928,6 +1084,86 @@
         enableAll();
     }
 
+    function SA(tour)
+    {
+        let iterationNum = initIterationSlider.value;
+
+        // Set initial temp and cooling rate, etc
+        let temp = initTemp;
+        let coolingRate = initCoolingRate;
+        let currentSolution = new Tour();
+        let newSolution = new Tour();
+        let bestSolution = new Tour();
+        let tourPos1, tourPos2, currentEnergy, neighbourEnergy;
+        let count = 1;
+
+        currentSolution.clone(tour);
+        bestSolution.clone(currentSolution); // Set best as initial
+
+        // Loop until system has cooled
+        while (temp >= 1 && count<= iterationNum) {
+
+            // Create new neighbour tour
+            newSolution.clone(currentSolution);
+            // newSolution = new Tour(currentSolution.getTour());
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == geneticTM.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            let swap1 = newSolution.getCity(tourPos1).getName();
+            let swap2 = newSolution.getCity(tourPos2).getName();
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            // Get energy of solutions
+            currentEnergy = currentSolution.getDistance();
+            neighbourEnergy = newSolution.getDistance();
+
+            // Decide if we should accept the neighbour
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+
+            // Keep track of the best solution found
+            if (currentSolution.getDistance() < bestSolution.getDistance()) {
+                bestSolution = new Tour(currentSolution.getTour());
+                $("#bestTour").text(bestSolution.printTour());
+                $("#bestDistance").text(bestSolution.getDistance().toFixed(2));
+            }
+
+            // Cool system
+            temp *= 1 - coolingRate;
+            count++;
+
+            if(temp<1)
+            {
+                temp = 1;
+            }
+        }
+
+        return bestSolution;
+    }
+
     function run()
     {
         populationSize = parseInt(popSizeSlider.value);
@@ -939,6 +1175,8 @@
         clearArray(worstTours);
         pop = new Population(populationSize, geneticTM, true);
         ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+        // DivElmnt.scrollTop = $("#setting-result").height();
+        scroll();
         evolve();
     }
 
@@ -968,12 +1206,6 @@
 
         geneticTM.clear();
 
-        // let alp = 65;
-        //
-        // for(let i =65; i < (alp + num);i++)
-        // {
-        //     geneticTM.addCity(new City(String.fromCharCode(i)));
-        // }
         for(let i=1;i<=num;i++)
         {
             geneticTM.addCity(new City( "c" + i));
@@ -1008,6 +1240,15 @@
         mutationRateSlider.value = 0.015;
         mutationRateVal.value = 0.015;
         mutationRate = 0.015;
+        initTempSlider.value = 1000;
+        initTempVal.value = 1000;
+        initTemp = 1000;
+        coolingRateSlider.value = 0.003;
+        coolingRateVal.value = 0.003;
+        initCoolingRate = 0.003;
+        initIterationSlider.value = 1000;
+        iterationVal.value = 1000;
+        iterationNum = 1000;
 
         $("#gen").text("");
         $("#category").text("");
@@ -1123,6 +1364,13 @@
     {
         document.getElementById('sigma-container').style.cursor = 'default';
     }
+
+    function scroll()
+    {
+        $('#setting-result').animate({scrollTop:$("#setting-result").height()}, 'fast');
+    }
+
+
 
 
 </script>

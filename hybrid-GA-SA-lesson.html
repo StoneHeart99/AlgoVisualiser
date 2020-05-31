@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hybrid GA-SA Lesson</title>
+
+    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="Sigma/sigma.min.js"></script>
+    <script src="Sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+    <script src="Sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/ga.js"></script>
+    <script src="js/default-data.js"></script>
+
+    <style>
+        #sigma-container, #sigma-container2, #sigma-container3, #sigma-container4{
+            /*margin: auto auto 50px;*/
+            height: 20%;
+            width: 100%;
+        }
+
+        #sigma-container5, #sigma-container6 {
+            height: 90%;
+            width: 90%;
+        }
+
+        #mutateChart {
+            width: 100%;
+            height: auto;
+        }
+
+        .display-container {
+            position: relative;
+            left: 0;
+            background: #E1E1E1;
+            width: 70%;
+            height: inherit;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pseudocode {
+            width: 30%;
+            position: absolute;
+            right: 0;
+            top: 0;
+            overflow: auto;
+            height: inherit;
+        }
+
+        .matrix {
+            text-align: center;
+            height: 250px;
+            width: 250px;
+        }
+
+        .matrix td {
+            height: 30px;
+            width: 30px;
+            border: 1px solid black;
+        }
+
+        .matrix .noBorder {
+            border: none;
+            /*font-weight: 500;*/
+        }
+
+        .crossTable {
+            text-align: center;
+            /*height: 50px;*/
+        }
+
+        .crossTable td {
+            height: 50px;
+            width: 50px;
+            border: 1px solid black;
+            /*padding: 1px;*/
+        }
+
+        .crossTable .noBorder {
+            border: none;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div id="nav-placeholder" ></div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Hybrid GA-SA
+        </div>
+    </nav>
+
+    <div class="lesson-content-container">
+        <div class="lesson-container">
+            <h2>Lesson - Hybrid Genetic Algorithm & Simulated Annealing</h2>
+
+            <div class="section">
+                <h3>Overview</h3>
+                <p class="article">
+                    <a href="GA-lesson.html" class="reference">Genetic algorithm</a> and
+                    <a href="SA-lesson.html" class="reference">simulated annealing</a> are two of the most well-known
+                    optimisation algorithms. Genetic algorithm is good at looking solution in the broad search space
+                    while simulated annealing focuses on the narrow search space. Hence, by combining these two algorithms,
+                    the chances of finding a higher quality solutions are higher because both broad and narrow search spaces
+                    are covered. The implementation of this hybrid algorithm are generally similar to genetic algorithm,
+                    with simulated annealing is performed on the children solution after the mutation and before the
+                    survival stages.
+                </p>
+
+            </div>
+
+
+            <div class="section">
+                <h3>Pros and Cons</h3>
+                <div class="d-flex">
+                    <div class="pros">
+                        <h5>Pros</h5>
+                        <div>- Search solutions in both broad and narrow search space</div>
+                        <div>- Can escape local minimum</div>
+                    </div>
+                    <div class="cons">
+                        <h5>Cons</h5>
+                        <div>- Difficult to implement</div>
+                        <div>- More time consuming compared to other algorithms</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="d-flex align-items-center" style="margin-bottom: 10px;">
+                    <h3 style="margin-right: 15px">Concept Visualiser</h3>
+                    <div id="startBtn" class="circle icon" onclick="start()">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div style="width: 100%; height: 500px; position: relative">
+                    <div class="display-container" id="display">
+                        <canvas id="mutateChart"></canvas>
+                    </div>
+                    <div class="display-container" id="display2">
+                        <div id="parent1" style="align-self: flex-start; margin-left: 60px;">Parent 1</div>
+                        <div id="sigma-container"></div>
+                        <div id="parent2" style="align-self: flex-start; margin-left: 60px;">Parent 2</div>
+                        <div id="sigma-container2"></div>
+                        <div id="child1" style="align-self: flex-start; margin-left: 60px;">Child 1</div>
+                        <div id="sigma-container3"></div>
+                        <div id="child2" style="align-self: flex-start; margin-left: 60px;">Child 2</div>
+                        <div id="sigma-container4"></div>
+                    </div>
+                    <div class="display-container" id="display3">
+                            <div id="SA" style="align-self: flex-start; margin-left: 60px;">Child 1</div>
+                            <div id="sigma-container5"></div>
+                    </div>
+
+                    <div class="pseudocode">
+                        <h6 style="font-size: 1.5em">Steps</h6>
+                        <div id="main">
+                            <div id="s1" class="d-flex">
+                                <div class="num">1. </div>
+                                <div>Create population</div>
+                            </div>
+                            <div id="s2" class="d-flex">
+                                <div class="num">2. </div>
+                                <div>Determine fitness of population</div>
+                            </div>
+                            <div id="s3" class="d-flex">
+                                <div class="num">3. </div>
+                                <div>Tournament selection</div>
+                            </div>
+                            <div id="s4" class="d-flex">
+                                <div class="num">4. </div>
+                                <div>Crossover</div>
+                            </div>
+                            <div id="s5" class="d-flex">
+                                <div class="num">5. </div>
+                                <div>Mutation</div>
+                            </div>
+                            <div id="s6" class="d-flex">
+                                <div class="num">6. </div>
+                                <div>Simulated annealing</div>
+                            </div>
+                            <div id="s7" class="d-flex">
+                                <div class="num">7. </div>
+                                <div>Survival</div>
+                            </div>
+                        </div>
+                        <div id="s3-details">
+                            <div class="d-flex"><b>Tournament selection</b></div>
+                            <div id="s3a" class="d-flex">
+                                <div class="num">3a. </div> Sort the individuals based on fitness value
+                            </div>
+                            <div id="s3b" class="d-flex">
+                                <div class="num">3b. </div> Randomly select 5 individuals
+                            </div>
+                            <div id="s3c" class="d-flex">
+                                <div class="num">3c. </div> Keep 2 best individuals as parents
+                            </div>
+                        </div>
+                        <div id="s4-details">
+                            <div class="d-flex"><b>Crossover</b></div>
+                            <div id="s4a" class="d-flex">
+                                <div class="num">4a. </div> Randomly select subset from parent 1
+                            </div>
+                            <div id="s4b" class="d-flex">
+                                <div class="num">4b. </div> Create child 1
+                            </div>
+                            <div id="s4c" class="d-flex">
+                                <div class="num">4c. </div> Create child 2
+                            </div>
+                        </div>
+                        <div id="s5-details">
+                            <div class="d-flex"><b>Mutation</b></div>
+                            <div id="s5a" class="d-flex">
+                                <div class="num">5a. </div> Mutate first child
+                            </div>
+                            <div id="s5b" class="d-flex">
+                                <div class="num">5b. </div> Mutate second child
+                            </div>
+                        </div>
+                        <div id="s6-details">
+                            <div class="d-flex"><b>Simulated annealing</b></div>
+                            <div id="s6a" class="d-flex">
+                                <div class="num">6a. </div> Performed SA on first child
+                            </div>
+                            <div id="s6b" class="d-flex">
+                                <div class="num">6b. </div> Performed SA on second child
+                            </div>
+                        </div>
+                        <div id="s7-details">
+                            <div class="d-flex"><b>Survival</b></div>
+                            <div id="s7a" class="d-flex">
+                                <div class="num">7a. </div> Remove 2 worst solution
+                            </div>
+                            <div id="s7b" class="d-flex">
+                                <div class="num">7b. </div> Add children solution
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="GA-lesson.html"><button class="button lesson-button">Previous</button></a>
+                <a href="hybrid-GA-SA-program.html"><button class="button lesson-button purple">Hybrid GA-SA Program</button></a>
+                <a href="ACS-lesson.html"><button class="button lesson-button">Next</button></a>
+            </div>`
+        </div>
+
+    </div>
+</body>
+</html>
+<script>
+    // Initialise chart
+    let ctx = document.getElementById('mutateChart').getContext('2d');
+    let mutateChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Fitness Value',
+                data: [],
+                borderWidth: 1,
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+            }]
+        },
+        options: {
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                showTooltips: false,
+            },
+            responsive: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        maxRotation: 90,
+                        minRotation: 80,
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Individuals',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                    gridLines: {
+                        display: false,
+                        color: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        // max:10,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fitness Value',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                    gridLines: {
+                        display: false,
+                        color: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    // Initialise sigma
+    let settings = {
+        minEdgeSize: 1,
+        maxEdgeSize: 3,
+        minNodeSize: 1,
+        maxNodeSize: 10,
+        enableCamera: false,
+        defaultEdgeLabelSize: 15,
+        sideMargin: 6,
+    }
+
+    let s = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container'),
+                type: 'canvas'
+            },
+            settings: settings,
+        }
+    );
+
+    let s2 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container2'),
+                type: 'canvas'
+            },
+            settings: settings,
+        }
+    );
+
+    let s3 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container3'),
+                type: 'canvas'
+            },
+            settings: settings,
+        }
+    );
+
+    let s4 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container4'),
+                type: 'canvas'
+            },
+            settings: settings,
+        }
+    );
+
+    let s5 = new sigma(
+        {
+            renderer: {
+                container: document.getElementById('sigma-container5'),
+                type: 'canvas'
+            },
+            settings: settings,
+        }
+    );
+
+    let graph = {
+        nodes: [],
+        edges: []
+    };
+
+    // Program
+    let c1 = new City("c1", 10, 0);
+    let c2 = new City("c2", 20, 0);
+    let c3 = new City("c3", 30, 0);
+    let c4 = new City("c4", 40, 0);
+    let c5 = new City("c5", 50, 0);
+    let c6 = new City("c6", 60, 0);
+    let c7 = new City("c7", 70, 0);
+    let c8 = new City("c8", 80, 0);
+    let c9 = new City("c9", 90, 0);
+    let city1 = new City("c1", 120, 80);
+    let city2 = new City("c2", 180, 200);
+    let city3 = new City("c3", 80, 180);
+    let city4 = new City("c4", 140, 180);
+    let city5 = new City("c5", 20, 160);
+    let city6 = new City("c6", 100, 160);
+    let city7 = new City("c7", 200, 160);
+    let city8 = new City("c8", 140, 140);
+    let city9 = new City("c9", 40, 120);
+
+    let geneticTM = new TourManager();
+    geneticTM.addCity(city1);
+    geneticTM.addCity(city2);
+    geneticTM.addCity(city3);
+    geneticTM.addCity(city4);
+    geneticTM.addCity(city5);
+    geneticTM.addCity(city6);
+    geneticTM.addCity(city7);
+    geneticTM.addCity(city8);
+    geneticTM.addCity(city9);
+    // geneticTM.clone(TM);
+    displayTM = new TourManager();
+    displayTM.addCity(c1);
+    displayTM.addCity(c2);
+    displayTM.addCity(c3);
+    displayTM.addCity(c4);
+    displayTM.addCity(c5);
+    displayTM.addCity(c6);
+    displayTM.addCity(c7);
+    displayTM.addCity(c8);
+    displayTM.addCity(c9);
+
+    let mutationRate = 0.015;
+    let eliteSize = 1;
+    let populationSize = 30;
+    let parents = [];
+    let children = [];
+
+    let stepIndex = 1;
+    let step = "s1";
+    let counter = 0;
+
+    let animateBarSpd = 25;
+    let stepInterval = 2000;
+    let mutateCount = 1;
+
+    let pop = new Population(populationSize, geneticTM, true);
+    let ga = new GA(pop, geneticTM, mutationRate, eliteSize);
+
+    convertCityToNodes_black(displayTM, graph);
+    updateSigma(s, graph);
+
+    $("#mutateChart").hide();
+    $("#display2").hide();
+    $("#display3").hide();
+    // $("#display4").hide();
+    $("#s3-details").hide();
+    $("#s4-details").hide();
+    $("#s5-details").hide();
+    $("#s6-details").hide();
+    $("#s7-details").hide();
+    $("#child1").hide();
+    $("#child2").hide();
+
+    // Functions
+    function addData(chart, label, data) {
+        let index = parseInt(label);
+        chart.data.labels[index] = label;
+        chart.data.datasets[0].data[index] = data;
+        chart.update();
+    }
+
+    async function step1()
+    {
+        step = "s" + stepIndex.toString();
+        document.getElementById(step).className += " highlight";
+        $("#mutateChart").show();
+        // $("#display").show();
+        pop = new Population(populationSize, geneticTM, true);
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, 0);
+            await sleep(animateBarSpd);
+        }
+        stepIndex++;
+    }
+
+    async function step2()
+    {
+        await sleep(stepInterval);
+        updateStep();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+            await sleep(animateBarSpd);
+        }
+    }
+
+    async function step3()
+    {
+        await sleep(stepInterval);
+        showMain();
+        updateStep();
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s3-details").show();
+
+        await tournamentSelection(pop);
+    }
+
+    async function step4()
+    {
+
+        await sleep(stepInterval);
+
+        convertCityToNodes_black(displayTM, graph);
+        showMain();
+        updateStep();
+        $("#display").hide();
+        $("#display2").show();
+        $("#sigma-container").show();
+        $("#sigma-container2").show();
+        $("#parent1").show();
+        $("#parent2").show();
+        $("#child1").hide();
+        $("#child2").hide();
+        $("#sigma-container3").hide();
+        $("#sigma-container4").hide();
+
+
+        updateCrossoverNode(s, parents[0]);
+        updateCrossoverNode(s2, parents[1]);
+
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s4-details").show();
+
+        await crossover2(parents[0], parents[1]);
+    }
+
+    async function step5()
+    {
+        await sleep(stepInterval);
+
+        $("#parent1").hide();
+        $("#parent2").hide();
+        $("#sigma-container").hide();
+        $("#sigma-container2").hide();
+
+        updateNodeBlack(s3, children[0]);
+        updateNodeBlack(s4, children[1]);
+
+        showMain();
+        updateStep();
+
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s5-details").show();
+
+        // 5a
+        stepIndex--;
+        updateStep('a');
+        await mutateVisual(s3, children[0]);
+        await sleep(stepInterval);
+
+        // 5b
+        stepIndex--;
+        updateStep('b');
+        await mutateVisual(s4, children[1]);
+    }
+
+    async function step6()
+    {
+
+
+        await sleep(stepInterval);
+        showMain();
+        $("#display2").hide();
+        $("#display3").show();
+        convertCityToNodes_black(geneticTM, graph);
+        updateSigma(s5, graph);
+        updateStep();
+
+        await sleep(stepInterval);
+        $("#main").hide();
+        $("#s6-details").show();
+
+        // 6a
+        stepIndex--;
+        updateStep('a');
+        $("#SA").text("Child 1");
+        await SA(children[0]);
+
+        await sleep(stepInterval);
+
+        // 6b
+        stepIndex--;
+        updateStep('b');
+        $("#SA").text("Child 2");
+        await SA(children[1]);
+    }
+
+    async function step7()
+    {
+
+
+        pop.sort();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+        }
+
+        await sleep(stepInterval);
+        updateStep();
+        showMain();
+        $("#display").show();
+        $("#display2").hide();
+        $("#display3").hide();
+
+        await sleep(stepInterval);
+
+        $("#main").hide();
+        $("#s7-details").show();
+
+        // 7a
+        stepIndex--;
+        updateStep('a');
+        for(let i=pop.populationSize();i>pop.populationSize()-2;i--)
+        {
+            addData(mutateChart, i, 0);
+        }
+
+        await sleep(stepInterval);
+
+        stepIndex--;
+        updateStep('b');
+
+        addData(mutateChart, 29, children[0].getFitness().toFixed(2));
+        addData(mutateChart, 30, children[1].getFitness().toFixed(2));
+
+        await sleep(stepInterval);
+        showMain();
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = x[0].className.replace(" highlight", "");
+
+        await sleep(stepInterval);
+    }
+
+    function updateStep(sub)
+    {
+        if(arguments.length == 0)
+            sub = '';
+
+        let x = document.getElementsByClassName("highlight");
+        x[0].className = x[0].className.replace(" highlight", "");
+        step = "s" + stepIndex.toString() + sub;
+        document.getElementById(step).className += " highlight";
+        stepIndex++;
+    }
+
+    async function auto()
+    {
+        step1().then(step2).then(step3).then(step4)
+            .then(step5).then(step6).then(step7).then(enableDemo);
+    }
+
+    async function tournamentSelection(pop) // Population
+    {
+        // 3a
+        stepIndex--;
+        updateStep('a');
+
+        pop.sort();
+        for(let i=0;i<pop.populationSize();i++){
+            addData(mutateChart, i+1, pop.getTour(i).getFitness().toFixed(2));
+            await sleep(animateBarSpd);
+        }
+        await sleep(stepInterval);
+
+        // 3b
+        stepIndex--;
+        updateStep('b');
+
+        // Create a tournament population
+        let tournament = new Population(5, geneticTM, false);
+        let randoms = []
+
+        // For each place in the tournament get a random candidate tour and add it
+        for (let i = 0; i < tournament.populationSize(); i++) {
+            let randomId = Math.floor(Math.random() * pop.populationSize());
+
+            while(randoms.includes(randomId))
+            {
+                randomId = Math.floor(Math.random() * pop.populationSize());
+            }
+            randoms.push(randomId);
+            tournament.saveTour(i, pop.getTour(randomId));
+        }
+
+        for(let i=0; i<pop.populationSize();i++)
+        {
+            if(randoms.includes(i))
+                continue
+
+            addData(mutateChart, i+1, 0);
+        }
+
+        await sleep(stepInterval);
+
+        // 3c
+        stepIndex--;
+        updateStep('c');
+
+        tournament.sort();
+
+        for(let i=0; i< tournament.populationSize();i++)
+        {
+            if( (pop.getTour(randoms[i]).getFitness() == tournament.getTour(0).getFitness()) ||
+                (pop.getTour(randoms[i]).getFitness() == tournament.getTour(1).getFitness())  )
+                continue;
+
+            addData(mutateChart, randoms[i]+1, 0);
+        }
+
+        parents[0] = tournament.getTour(0);
+        parents[1] = tournament.getTour(1);
+
+
+        await sleep(stepInterval);
+    }
+
+    async function crossover2(parent1,parent2) // tour, tour
+    {
+        // Create new child tour
+        let child1 = new Tour();
+        child1.cities = new Array(parent1.size());
+        let child2 = new Tour();
+        child2.cities = new Array(parent1.size());
+
+        let p1 = new Tour();
+        let p2 = new Tour();
+        p1.clone(parent1);
+        p2.clone(parent2);
+
+        // add start city to child solution and remove it from parents
+        child1.setCity(0, parent1.getCity(0));
+        child2.setCity(0, parent1.getCity(0));
+        p1.cities.shift();
+        p2.cities.shift();
+
+
+        // Get start and end sub tour positions for parent1's tour
+        let startPos = Math.floor(Math.random() * parent1.size());
+        let endPos = Math.floor(Math.random() * parent1.size());
+
+        if(startPos > endPos)
+        {
+            let temp = 0;
+            temp = startPos;
+            startPos = endPos;
+            endPos = temp;
+        }
+
+        if((endPos-startPos) >= p1.size()-2)
+        {
+            endPos--;
+        }
+
+        // child 1
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                child1.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+
+        stepIndex--;
+        updateStep('a');
+        updateCrossoverNode(s, parents[0]);
+        updateSigma(s, graph);
+        await sleep(stepInterval);
+
+        // child 1
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                child1.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child1.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child1.getCity(ii) == null) {
+                        child1.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        stepIndex--;
+        updateStep('b');
+        $("#child1").show();
+        $("#sigma-container3").show();
+        convertCityToNodes_black(displayTM, graph);
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i < startPos || i > endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+        updateCrossoverNode(s3, child1);
+
+        await sleep(stepInterval);
+
+        // child 2
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i < startPos || i > endPos) {
+                child2.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        for(let i=0;i<p2.size();i++)
+        {
+            // If child doesn't have the city add it
+            if (!child2.cities.includes(p2.getCity(i))) {
+                // Loop to find a spare position in the child's tour
+                for (let ii = 0; ii < p2.size() + 1; ii++) {
+                    // Spare position found, add city
+                    if (child2.getCity(ii) == null) {
+                        child2.setCity(ii, p2.getCity(i));
+                        break;
+                    }
+                }
+            }
+        }
+
+        stepIndex--;
+        updateStep('c');
+        $("#child2").show();
+        $("#sigma-container4").show();
+        convertCityToNodes_black(displayTM, graph);
+        for(let i=0;i<displayTM.size()-1;i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                graph.nodes[i+1].color = "#2196F3";
+            }
+        }
+        updateCrossoverNode(s4, child2);
+
+        children[0] = child1;
+        children[1] = child2;
+    }
+
+    function showMain() {
+        $("#s3-details").hide();
+        $("#s4-details").hide();
+        $("#s5-details").hide();
+        $("#s6-details").hide();
+        $("#s7-details").hide();
+        $("#main").show();
+    }
+
+    async function start() {
+        disableDemo();
+        resetDemo();
+        auto();
+    }
+
+    function updateCrossoverNode(sigma, tour)
+    {
+        for(let i=0;i<tour.size();i++)
+        {
+            graph.nodes[i].label = tour.getCity(i).getName();
+        }
+        updateSigma(sigma, graph);
+    }
+
+    function updateNodeBlack(sigma, tour)
+    {
+
+        for(let i=0;i<tour.size();i++)
+        {
+            graph.nodes[i].label = tour.getCity(i).getName();
+            graph.nodes[i].color = 'black';
+        }
+        updateSigma(sigma, graph);
+    }
+
+    function updateNodeHighlight(sigma, tour, pos)
+    {
+        let color = 'black';
+        for(let i=0;i<9;i++)
+        {
+            if(pos==i)
+                color = '#2196F3';
+            else
+                color = 'black'
+
+            graph.nodes[i].label = tour.getCity(i).getName();
+            graph.nodes[i].color = color;
+        }
+        updateSigma(sigma, graph);
+    }
+
+    async function SA(tour)
+    {
+        let iterationNum = 300;
+
+        // Set initial temp and cooling rate, etc
+        let temp = 100;
+        let coolingRate = 0.03;
+        let currentSolution = new Tour();
+        let newSolution = new Tour();
+        let bestSolution = new Tour();
+        let tourPos1, tourPos2, currentEnergy, neighbourEnergy;
+        let count = 1;
+
+        currentSolution.clone(tour);
+        bestSolution.clone(currentSolution); // Set best as initial
+
+        // Loop until system has cooled
+        while (temp >= 1 && count<= iterationNum) {
+            await sleep(5);
+
+            // Create new neighbour tour
+            newSolution.clone(currentSolution);
+            // newSolution = new Tour(currentSolution.getTour());
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == geneticTM.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            let swap1 = newSolution.getCity(tourPos1).getName();
+            let swap2 = newSolution.getCity(tourPos2).getName();
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            convertTourToEdges(newSolution, graph);
+            updateSigma(s5, graph);
+
+            // Get energy of solutions
+            currentEnergy = currentSolution.getDistance();
+            neighbourEnergy = newSolution.getDistance();
+
+            // Decide if we should accept the neighbour
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+
+            // Keep track of the best solution found
+            if (currentSolution.getDistance() < bestSolution.getDistance()) {
+                bestSolution = new Tour(currentSolution.getTour());
+                $("#bestTour").text(bestSolution.printTour());
+                $("#bestDistance").text(bestSolution.getDistance().toFixed(2));
+            }
+
+            // Cool system
+            temp *= 1 - coolingRate;
+            count++;
+
+            if(temp<1)
+            {
+                temp = 1;
+            }
+        }
+
+        convertTourToEdges(bestSolution, graph);
+        updateSigma(s5, graph);
+
+        tour = bestSolution;
+    }
+
+    async function mutateVisual(sigma, tour)
+    {
+        let tourPos1 = 1; // skip start city
+        let mutationRate = 0.5
+        for(tourPos1; tourPos1 < tour.size(); tourPos1++){
+            // Apply mutation rate
+            updateNodeBlack(sigma, tour);
+            updateNodeHighlight(sigma, tour, tourPos1);
+            if(Math.random() < mutationRate){
+                // Get a second random position in the tour
+                let tourPos2 = Math.floor(tour.size() * Math.random());
+                if( tourPos2 == 0)
+                    tourPos2++;
+                if(tourPos1 == tourPos2)
+                {
+                    if(tourPos2 == tour.size()-1)
+                    {
+                        tourPos2--;
+                    }
+                    else
+                    {
+                        tourPos2++;
+                    }
+                }
+                // Swap them around
+                tour.swapCities(tourPos1, tourPos2);
+            }
+
+            await sleep(200);
+        }
+        updateNodeBlack(sigma, tour);
+    }
+
+    function disableDemo() {
+        $("#startBtn").attr("disabled", true);
+        document.getElementById("startBtn"). className += " disabled";
+    }
+
+    function enableDemo() {
+        $("#startBtn").attr("disabled", false);
+        document.getElementById("startBtn"). className =
+            document.getElementById("startBtn"). className.replace(" disabled", "");
+    }
+
+    function resetDemo()
+    {
+        stepIndex = 1;
+
+        for(let i=0;i<pop.populationSize();i++)
+            removeData(mutateChart);
+
+        $("#mutateChart").hide();
+
+    }
+
+    function removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart.update();
+    }
+
+</script>

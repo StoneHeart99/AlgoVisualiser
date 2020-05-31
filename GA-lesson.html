@@ -419,7 +419,7 @@
                 <div class="cons">
                     <h5>Cons</h5>
                     <div>- Requires more computer memory</div>
-                    <div>- time consuming compared to other algorithms</div>
+                    <div>- More time consuming compared to other algorithms</div>
                 </div>
             </div>
         </div>
@@ -527,7 +527,7 @@
         <div class="button-container">
             <a href="SAR-lesson.html"><button class="button lesson-button">Previous</button></a>
             <a href="GA-program.html"><button class="button lesson-button purple">GA Program</button></a>
-            <a href="ACS-lesson.html"><button class="button lesson-button">Next</button></a>
+            <a href="hybrid-GA-SA-lesson.html"><button class="button lesson-button">Next</button></a>
         </div>
     </div>
 
@@ -731,7 +731,7 @@
     let counter = 0;
 
     let animateBarSpd = 25;
-    let stepInterval = 1500;
+    let stepInterval = 2000;
     let mutateCount = 1;
 
     let pop = new Population(populationSize, geneticTM, true);
@@ -1015,14 +1015,23 @@
             startPos = endPos;
             endPos = temp;
         }
-        if((endPos - startPos) >= p1.size()-2)
+
+        if((endPos-startPos) >= p1.size()-2)
         {
             endPos--;
         }
 
-        console.log({startPos, endPos});
-        console.log({parent1});
-        console.log({child1});
+        // child 1
+        for(let i=0;i<p1.size();i++)
+        {
+            if (i >= startPos && i <= endPos) {
+                child1.setCity(i+1, p1.getCity(i));
+            }
+        }
+
+        // console.log({startPos, endPos});
+        // console.log({parent1});
+        // console.log({child1});
 
         for(let i=0;i<displayTM.size()-1;i++)
         {
@@ -1208,7 +1217,7 @@
     function updateNodeBlack(sigma, tour)
     {
 
-        console.log({tour});
+        // console.log({tour});
         for(let i=0;i<tour.size();i++)
         {
             graph.nodes[i].label = tour.getCity(i).getName();

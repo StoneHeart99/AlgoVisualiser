@@ -268,4 +268,9 @@ function updateMatrixGraph(graph, TM)
     ac.setGraph(graph);
 }
 
+function scroll(id, height, option = 'fast')
+{
+    $(id).animate({scrollTop:height}, option);
+}
+
 console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")

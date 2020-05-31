@@ -191,6 +191,31 @@ class GA
         return fittest;
     }
 
+    tournamentSelection2(pop) // Population
+    {
+        // Create a tournament population
+        let tournament = new Population(this.tournamentSize, this.tourManager, false);
+        let randoms = []
+
+        // For each place in the tournament get a random candidate tour and add it
+        for (let i = 0; i <this.tournamentSize; i++) {
+            let randomId = Math.floor(Math.random() * pop.populationSize());
+            while(randoms.includes(randomId))
+            {
+                randomId = Math.floor(Math.random() * pop.populationSize());
+            }
+            randoms.push(randomId);
+            tournament.saveTour(i, pop.getTour(randomId));
+        }
+
+        tournament.sort();
+        let parents = new Array(2);
+        parents[0] = tournament.getTour(0);
+        parents[1] = tournament.getTour(1);
+
+        return parents;
+    }
+
     evolvePopulation2(pop, tourManager)
     {
         this.population = pop;
@@ -198,27 +223,26 @@ class GA
         let size = pop.populationSize();
 
 
-        let newPopulation = new Population(size, tourManager, true);
+        let newPopulation = new Population(size, tourManager, false);
+        newPopulation.clone(pop);
         newPopulation.sort();
 
-        let elitismOffset = 0;
-        if (this.elitism) {
-            newPopulation.saveTour(0, pop.getFittest());
-            elitismOffset = 1;
-        }
-
         // Select parents
-        let parent1 = this.tournamentSelection(pop);
-        let parent2 = this.tournamentSelection(pop);
+        // let parent1 = this.tournamentSelection(pop);
+        // let parent2 = this.tournamentSelection(pop);
+        //
+        // while(parent1.getDistance()==parent2.getDistance())
+        // {
+        //     parent2 = this.tournamentSelection(pop);
+        // }
 
-        while(parent1.getDistance()==parent2.getDistance())
-        {
-            parent2 = this.tournamentSelection(pop);
-        }
+        let parents = this.tournamentSelection2(pop);
+        // console.log(parents)
 
         // crossover
         let children = new Array(2);
-        children = this.crossover2(parent1,parent2)
+        children = this.crossover2(parents[0],parents[1])
+        // children = this.crossover2(parent1,parent2)
 
         // Mutation
         for(let i=0;i<children.length;i++)
@@ -276,10 +300,10 @@ class GA
             }
         }
 
-        console.log({startPos, endPos});
-        console.log(parent1.cities)
-        console.log(parent2.cities)
-        console.log(child1.cities)
+        // console.log({startPos, endPos});
+        // console.log(parent1.cities)
+        // console.log(parent2.cities)
+        // console.log(child1.cities)
 
         for(let i=0;i<p2.size();i++)
         {
