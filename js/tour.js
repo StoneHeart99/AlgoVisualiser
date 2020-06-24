@@ -68,12 +68,6 @@ class City {
 
 }
 
-
-
-
-
-
-
 class Tour{
 
     cities = new Array();

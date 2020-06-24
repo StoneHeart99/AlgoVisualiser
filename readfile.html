@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
+</head>
+<body>
+<!--<input type="file" id="file-selector" multiple>-->
+</body>
+</html>
+<script>
+
+    let compareTM = new TourManager();
+
+    function readFile(fileName) {
+
+        $.get('./dataset/' + fileName, function(txt) {
+            // console.log(txt)
+            let nodes = txt.split("\n");
+            for(let i=0; i<6; i++)
+            {
+                nodes.shift();
+            }
+            for(let i=0; i<2; i++)
+            {
+                nodes.pop();
+            }
+            for(let i=0; i<nodes.length; i++)
+            {
+                let info = nodes[i].split(" ");
+                let city = new City( 'c' + info[0], info[1], info[2]);
+                compareTM.addCity(city)
+                // console.log(city)
+            }
+
+            // console.log(nodes)
+        })
+    }
+
+    // compareTM = readFile('pr76.tsp.txt');
+    console.log(compareTM)
+    // console.log(TM)
+    // compareTM.clone(TM);
+
+    // console.log(compareTM)
+
+
+    // let tour = new Tour(compareTM.getTour())
+
+    // nearestNeighbour(tour, compareTM);
+
+
+    function nearestNeighbour(tour, TM)
+    {
+        let unvisited = new Tour(TM.getTour());
+        let startIndex = 0;
+        let nextIndex = -1;
+        let currentCity = TM.getTour()[startIndex];
+        let nextCity;
+        // let tour = new Tour(TM.getTour());
+        tour.clear();
+        tour.addCity(currentCity);
+        unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
+
+        console.log(TM)
+        console.log({unvisited})
+
+        for(let i=0;i<TM.size()-1;i++)
+        {
+
+            nextIndex = currentCity.nearestCity(unvisited.cities);
+            nextCity = unvisited.cities[nextIndex];
+            currentCity = nextCity;
+            tour.addCity(currentCity);
+            unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
+        }
+
+        console.log('NN');
+        console.log(tour.printTour());
+        console.log(tour.getDistance());
+    }
+</script>
