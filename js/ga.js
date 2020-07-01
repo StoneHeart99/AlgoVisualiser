@@ -343,6 +343,8 @@ class GA
             }
         }
 
+        // console.log(child2.cities)
+
         children[0] = child1;
         children[1] = child2;
 

@@ -591,6 +591,14 @@
                 $("#bestDistance").text(bestSolution.getDistance().toFixed(2));
             }
 
+            // Cool system
+            temp *= 1 - coolingRate;
+            count++;
+
+            if(temp<1)
+            {
+                temp = 1;
+            }
 
             // Reheat
             // let enableReheat = false;
@@ -612,15 +620,6 @@
             }
 
             await sleep(algoSpeed[algoSpeedIndex]);
-
-            // Cool system
-            temp *= 1 - coolingRate;
-            count++;
-
-            if(temp<1)
-            {
-                temp = 1;
-            }
         }
 
         // console.log("count: " + count);

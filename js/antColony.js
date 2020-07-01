@@ -127,7 +127,7 @@ class Ant {
 
     init() {
         this.tour = new Tour();
-        this.tour.addGraph(graph);
+        this.tour.addGraph(this.graph);
         this.currentCity = this.graph.getCity(0);
         this.tour.addCity(this.currentCity);
     }
@@ -334,7 +334,11 @@ class AntColony {
         this.getGlobalBest();
         this.updatePheromone();
 
+        // console.log(this.iteration + " : " + this.getGlobalBest().getTour().getDistance().toFixed(2));
+
         this.iteration++;
+
+
     };
 
     updatePheromone() {

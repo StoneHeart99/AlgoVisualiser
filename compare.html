@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compare</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/ga.js"></script>
+    <script src="js/antColony.js"></script>
+    <script src="js/default-data.js"></script>
+</head>
+<body>
+<!--<button onclick="test()">test</button>-->
+<!--<br><br>-->
+<!--<button onclick="NN(TM)">NN</button>-->
+<!--<br><br>-->
+<!--<button onclick="HC(TM)">HC</button>-->
+<!--<br><br>-->
+<!--<button onclick="SA(TM)">SA</button>-->
+<!--<br><br>-->
+<!--<button onclick="SAR(TM)">SAR</button>-->
+<!--<br><br>-->
+<!--<button onclick="GenAlgo(TM)">GA</button>-->
+<!--<br><br>-->
+<!--<button onclick="GASA(TM)">GASA</button>-->
+<!--<br><br>-->
+<!--<button onclick="ACS(TM)">ACS</button>-->
+
+<!--<br><br><br><br>-->
+<button onclick="NN(compareTM)">NN</button>
+<br><br>
+<button onclick="HC(compareTM)">HC</button>
+<br><br>
+<button onclick="SA(compareTM)">SA</button>
+<br><br>
+<button onclick="SAR(compareTM)">SAR</button>
+<br><br>
+<button onclick="GenAlgo(compareTM)">GA</button>
+<br><br>
+<button onclick="GASA(compareTM)">GASA</button>
+<br><br>
+<button onclick="ACS(compareTM)">ACS</button>
+
+</body>
+</html>
+<script>
+
+    let compareTM = new TourManager();
+    let dataset = ['pr76.tsp.txt', 'pr107.tsp.txt', 'pr136.tsp.txt', 'pr226.tsp.txt', 'pr439.tsp.txt', 'pr1002.tsp.txt']
+    let file = loadFile('./Dataset/' + dataset[4]);
+    let nodes = file.split("\n");
+
+    for(let i=0; i<6; i++)
+    {
+        nodes.shift();
+    }
+    for(let i=0; i<2; i++)
+    {
+        nodes.pop();
+    }
+    for(let i=0; i<nodes.length; i++)
+    {
+        let info = nodes[i].split(" ");
+        let city = new City( 'c' + info[0], info[1], info[2]);
+        compareTM.addCity(city)
+    }
+
+    console.log(compareTM);
+    // NN(compareTM);
+    // HC(compareTM);
+    // SA(compareTM);
+
+
+    // NN(TM);
+    // HC(TM);
+    // SA(TM);
+
+    function test()
+    {
+        console.time('test time')
+        let total = 0
+        for(let i=0;i<100;i++)
+        {
+            total = total + i;
+        }
+        console.log(total)
+        console.timeEnd('test time')
+    }
+
+    function NN(TM)
+    {
+        console.log('Nearest Neighbour');
+        console.time('NN time')
+        let unvisited = new Tour(TM.getTour());
+        let startIndex = 0;
+        let nextIndex = -1;
+        let currentCity = TM.getTour()[startIndex];
+        let nextCity;
+        let tour = new Tour(TM.getTour());
+        tour.clear();
+        tour.addCity(currentCity);
+        unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
+
+        for(let i=0;i<TM.size()-1;i++)
+        {
+            nextIndex = currentCity.nearestCity(unvisited.cities);
+            nextCity = unvisited.cities[nextIndex];
+            currentCity = nextCity;
+            tour.addCity(currentCity);
+            unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
+        }
+
+
+        console.log('Distance: ' + tour.getDistance().toFixed(2));
+        console.timeEnd('NN time');
+    }
+
+    function HC(TM)
+    {
+        console.log('Hill Climbing');
+        console.time('HC time');
+
+        // Set initial temp and cooling rate, etc
+        let currentSolution = new Tour(TM.getTour());
+        let newSolution = new Tour();
+        let tourPos1, tourPos2;
+
+        currentSolution.generateIndividual();
+
+        // Loop until system has cooled
+        for (let i=0; i<150000; i++) {
+            newSolution.clone(currentSolution);
+            // newSolution = new Tour(currentSolution.getTour());
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == TM.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            // console.log(currentSolution.getDistance())
+            // console.log(newSolution.getDistance())
+
+            // Decide if we should accept the neighbour
+            if (newSolution.getDistance() < currentSolution.getDistance()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+        }
+
+
+        console.log('Distance: ' + currentSolution.getDistance().toFixed(2));
+        console.timeEnd('HC time');
+    }
+
+    function SA(TM)
+    {
+        console.log('Simulated Annealing');
+        console.time('SA time');
+
+        // Set initial temp and cooling rate, etc
+        let currentSolution = new Tour(TM.getTour());
+        let newSolution = new Tour();
+        let bestSolution = new Tour();
+        let temp = 30000;
+        let coolingRate = 0.003;
+        let tourPos1, tourPos2, currentEnergy, neighbourEnergy;
+
+        currentSolution.generateIndividual();
+        bestSolution.clone(currentSolution)
+
+        for (let i=0; i<150000; i++) {
+
+            // Create new neighbour tour
+            newSolution.clone(currentSolution);
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == TM.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            // Get energy of solutions
+            currentEnergy = currentSolution.getDistance();
+            neighbourEnergy = newSolution.getDistance();
+
+            // Decide if we should accept the neighbour
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+
+            // Keep track of the best solution found
+            if (currentSolution.getDistance() < bestSolution.getDistance()) {
+                bestSolution = new Tour(currentSolution.getTour());
+            }
+
+            // Cool system
+            temp *= 1 - coolingRate;
+            if(temp<1)
+            {
+                temp = 1;
+            }
+        }
+
+
+        console.log('Distance: ' + bestSolution.getDistance().toFixed(2));
+        console.timeEnd('SA time');
+
+    }
+
+    function SAR(TM)
+    {
+        console.log('Simulated Annealing with Reheat');
+        console.time('SAR time');
+
+        // Set initial temp and cooling rate, etc
+        let currentSolution = new Tour(TM.getTour());
+        let newSolution = new Tour();
+        let bestSolution = new Tour();
+        let initTemp = 500;
+        let temp = initTemp;
+        let coolingRate = 0.003;
+        let tourPos1, tourPos2, currentEnergy, neighbourEnergy;
+        let avgDistance = 0;
+        let reheatCtr = 0;
+        let threshold = 0.20;
+        let thresholdDistance = 0;
+
+        for(let i=0;i<10;i++)
+        {
+            currentSolution.generateIndividual();
+            avgDistance += currentSolution.getDistance();
+        }
+
+        avgDistance = avgDistance / 10;
+        thresholdDistance = avgDistance * threshold;
+
+        // console.log(thresholdDistance)
+
+        bestSolution.clone(currentSolution)
+
+        while (bestSolution.getDistance() > thresholdDistance) {
+
+            // Create new neighbour tour
+            newSolution.clone(currentSolution);
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == TM.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            // Get energy of solutions
+            currentEnergy = currentSolution.getDistance();
+            neighbourEnergy = newSolution.getDistance();
+
+            // Decide if we should accept the neighbour
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+
+            // Keep track of the best solution found
+            if (currentSolution.getDistance() < bestSolution.getDistance()) {
+                bestSolution = new Tour(currentSolution.getTour());
+            }
+
+
+            // Cool system
+            temp *= 1 - coolingRate;
+            if(temp<1)
+            {
+                temp = 1;
+            }
+
+            // Reheat
+            // let enableReheat = false;
+            if(temp <= 1 && bestSolution.getDistance() > thresholdDistance ) {
+                temp = initTemp/10;
+                reheatCtr++;
+
+                if(reheatCtr==1)
+                {
+                    reheatCtr = 0;
+                    threshold += 0.0005;
+                    if(threshold > 1)
+                        threshold = 1;
+                    thresholdDistance = avgDistance * threshold;
+                }
+            }
+        }
+
+
+        // console.log('Distance threshold:' + thresholdDistance);
+        console.log('Distance: ' + bestSolution.getDistance().toFixed(2));
+        console.timeEnd('SAR time');
+
+    }
+
+    function GenAlgo(TM)
+    {
+        console.log('Genetic Algorithm');
+        console.time('GA time');
+
+        let mutationRate = 0.015;
+        let eliteSize = 1;
+        let populationSize = 300;
+        let genNumber = 3000;
+
+        let pop = new Population(populationSize, TM, true);
+        let ga = new GA(pop, TM, mutationRate, eliteSize);
+        pop = ga.evolvePopulation2(pop, TM);
+
+        for (let i = 1; i <= genNumber; i++) {
+            pop = ga.evolvePopulation2(pop, TM);
+        }
+
+
+        console.log('Distance: ' + pop.getFittest().getDistance().toFixed(2));
+        console.timeEnd('GA time');
+    }
+
+    function GASA(TM)
+    {
+        console.log('Hybrid Genetic Algorithm and Simulated Annealing');
+        console.time('GASA time');
+
+        let mutationRate = 0.015;
+        let eliteSize = 1;
+        let populationSize = 300;
+        let genNumber = 1500;
+
+        let pop = new Population(populationSize, TM, true);
+        let ga = new GA(pop, TM, mutationRate, eliteSize);
+        pop = ga.evolvePopulation2(pop, TM);
+
+        for (let i = 1; i <= genNumber; i++) {
+            pop.sort();
+
+            let parents = ga.tournamentSelection2(pop);
+
+            let children = new Array(2);
+            children = ga.crossover2(parents[0],parents[1])
+
+            for(let i=0;i<children.length;i++)
+                ga.mutate(children[i]);
+
+            children[0] = sa(children[0]);
+            children[1] = sa(children[1]);
+
+            pop.saveTour(pop.populationSize()-1, children[0]);
+            pop.saveTour(pop.populationSize()-2, children[1]);
+
+        }
+
+        console.log('Distance: ' + pop.getFittest().getDistance().toFixed(2));
+        console.timeEnd('GASA time');
+    }
+
+    function sa(tour)
+    {
+        // Set initial temp and cooling rate, etc
+        let currentSolution = new Tour();
+        let newSolution = new Tour();
+        let bestSolution = new Tour();
+        let temp = 500;
+        let coolingRate = 0.003;
+        let tourPos1, tourPos2, currentEnergy, neighbourEnergy;
+
+        currentSolution.clone(tour);
+        bestSolution.clone(currentSolution)
+
+        for (let i=0; i<1000; i++) {
+
+            // Create new neighbour tour
+            newSolution.clone(currentSolution);
+
+            // Get a random positions in the tour
+            tourPos1 = Math.floor(newSolution.size() * Math.random());
+            tourPos2 = Math.floor(newSolution.size() * Math.random());
+
+            // Skip start node
+            if(tourPos1 == 0)
+                tourPos1++;
+            if(tourPos2 == 0)
+                tourPos2++;
+
+            // ensure no index are different
+            if(tourPos1 == tourPos2)
+            {
+                if(tourPos1 == tour.size()-1)
+                {
+                    tourPos1--;
+                }
+                else
+                {
+                    tourPos1++;
+                }
+            }
+
+            // Swap them
+            newSolution.swapCities(tourPos1, tourPos2);
+
+            // Get energy of solutions
+            currentEnergy = currentSolution.getDistance();
+            neighbourEnergy = newSolution.getDistance();
+
+            // Decide if we should accept the neighbour
+            if (acceptanceProbability(currentEnergy, neighbourEnergy, temp) > Math.random()) {
+                currentSolution = new Tour(newSolution.getTour());
+            }
+
+            // Keep track of the best solution found
+            if (currentSolution.getDistance() < bestSolution.getDistance()) {
+                bestSolution = new Tour(currentSolution.getTour());
+            }
+
+            // Cool system
+            temp *= 1 - coolingRate;
+            if(temp<1)
+            {
+                temp = 1;
+            }
+        }
+
+        return bestSolution;
+    }
+
+    function ACS(TM)
+    {
+        console.log('Ant Colony System');
+        console.time('ACS time');
+
+        let ac = new AntColony();
+        let matrixGraph = new Graph();
+        let params = {
+            'colonySize': 30,
+            'alpha': 1,
+            'beta': 3,
+            'rho': 0.1,
+            'iterations': 150,
+            'initPheromone': 1,
+            'q': 1,
+        };
+
+        for(let i=0;i<TM.size();i++)
+        {
+            matrixGraph.addCity(TM.getCity(i));
+        }
+
+        ac.setParams(params);
+        ac.setGraph(matrixGraph);
+        ac.getGraph().createEdges();
+        ac.createAnts();
+        ac.run()
+
+        // console.log(ac)
+
+        // for(let i=0; i<100; i++)
+        // {
+        //     ac.step();
+        // }
+
+        // console.log(ac.getGlobalBest().getDistance())
+        // console.log('Distance:' + bestSolution.getDistance());
+
+        console.log('Distance: ' + ac.getGlobalBest().getTour().getDistance().toFixed(2));
+        console.timeEnd('ACS time');
+    }
+
+
+    function loadFile(filePath) {
+        var result = null;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, false);
+        xmlhttp.send();
+        if (xmlhttp.status==200) {
+            result = xmlhttp.responseText;
+        }
+        return result;
+    }
+</script>

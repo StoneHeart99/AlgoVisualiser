@@ -10,17 +10,42 @@
 </head>
 <body>
 <!--<input type="file" id="file-selector" multiple>-->
+<input type="file" id="file-input" value="./dataset/"/>
+<button id="read-button">Read File</button>
+<br><br>
+<button onclick="NN(compareTM)">NN</button>
 </body>
 </html>
 <script>
 
     let compareTM = new TourManager();
 
-    function readFile(fileName) {
+    document.querySelector("#read-button").addEventListener('click', function() {
+        if(document.querySelector("#file-input").files.length == 0) {
+            alert('Error : No file selected');
+            return;
+        }
 
-        $.get('./dataset/' + fileName, function(txt) {
-            // console.log(txt)
-            let nodes = txt.split("\n");
+        // first file selected by user
+        let file = document.querySelector("#file-input").files[0];
+
+        // perform validation on file type & size if required
+
+        // read the file
+        let reader = new FileReader();
+
+        // file reading started
+        reader.addEventListener('loadstart', function() {
+            console.log('File reading started');
+        });
+
+        // file reading finished successfully
+        reader.addEventListener('load', function(e) {
+            // contents of file in variable
+            text = e.target.result;
+            // console.log(text);
+
+            let nodes = text.split("\n");
             for(let i=0; i<6; i++)
             {
                 nodes.shift();
@@ -33,16 +58,87 @@
             {
                 let info = nodes[i].split(" ");
                 let city = new City( 'c' + info[0], info[1], info[2]);
+                // compareTM.addCity(city);
                 compareTM.addCity(city)
                 // console.log(city)
             }
 
-            // console.log(nodes)
-        })
-    }
+        });
 
-    // compareTM = readFile('pr76.tsp.txt');
+        // file reading failed
+        reader.addEventListener('error', function() {
+            alert('Error : Failed to read file');
+        });
+
+        // file read progress
+        reader.addEventListener('progress', function(e) {
+            if(e.lengthComputable == true) {
+                var percent_read = Math.floor((e.loaded/e.total)*100);
+                console.log(percent_read + '% read');
+            }
+        });
+
+        // read as text file
+        reader.readAsText(file);
+    });
+
+    // console.log(compareTM)
+
+    let test = loadFile('./Dataset/pr76.tsp.txt');
+    // console.log(test)
+    let nodes = test.split("\n");
+    for(let i=0; i<6; i++)
+    {
+        nodes.shift();
+    }
+    for(let i=0; i<2; i++)
+    {
+        nodes.pop();
+    }
+    for(let i=0; i<nodes.length; i++)
+    {
+        let info = nodes[i].split(" ");
+        let city = new City( 'c' + info[0], info[1], info[2]);
+        // compareTM.addCity(city);
+        compareTM.addCity(city)
+        // console.log(city)
+    }
     console.log(compareTM)
+    NN(compareTM)
+
+    // function readFile(fileName) {
+    //     let TM = new TourManager();
+    //     let nodes;
+    //     $.get('./dataset/' + fileName, function(txt) {
+    //         // console.log(txt)
+    //         nodes = txt.split("\n");
+    //         for(let i=0; i<6; i++)
+    //         {
+    //             nodes.shift();
+    //         }
+    //         for(let i=0; i<2; i++)
+    //         {
+    //             nodes.pop();
+    //         }
+    //         for(let i=0; i<nodes.length; i++)
+    //         {
+    //             let info = nodes[i].split(" ");
+    //             let city = new City( 'c' + info[0], info[1], info[2]);
+    //             // compareTM.addCity(city);
+    //             TM.addCity(city)
+    //             // console.log(city)
+    //         }
+    //
+    //         // console.log(nodes)
+    //     })
+    //
+    //     // return TM;
+    //     return nodes;
+    // }
+
+
+    // let test = readFile('pr76.tsp.txt');
+    // console.log(compareTM)
     // console.log(TM)
     // compareTM.clone(TM);
 
@@ -52,26 +148,24 @@
     // let tour = new Tour(compareTM.getTour())
 
     // nearestNeighbour(tour, compareTM);
+    // nearestNeighbour(TM);
 
 
-    function nearestNeighbour(tour, TM)
+    function NN(TM)
     {
+        console.time('Nearest Neighbour')
         let unvisited = new Tour(TM.getTour());
         let startIndex = 0;
         let nextIndex = -1;
         let currentCity = TM.getTour()[startIndex];
         let nextCity;
-        // let tour = new Tour(TM.getTour());
+        let tour = new Tour(TM.getTour());
         tour.clear();
         tour.addCity(currentCity);
         unvisited.cities.splice(unvisited.cities.findIndex(city => city.name == currentCity.getName()), 1);
 
-        console.log(TM)
-        console.log({unvisited})
-
         for(let i=0;i<TM.size()-1;i++)
         {
-
             nextIndex = currentCity.nearestCity(unvisited.cities);
             nextCity = unvisited.cities[nextIndex];
             currentCity = nextCity;
@@ -80,7 +174,19 @@
         }
 
         console.log('NN');
-        console.log(tour.printTour());
+        // console.log(tour.printTour());
         console.log(tour.getDistance());
+        console.timeEnd('Nearest Neighbour')
+    }
+
+    function loadFile(filePath) {
+        var result = null;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, false);
+        xmlhttp.send();
+        if (xmlhttp.status==200) {
+            result = xmlhttp.responseText;
+        }
+        return result;
     }
 </script>

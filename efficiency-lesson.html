@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algorithm Efficiency Lesson</title>
+
+    <link rel="icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="generalCss.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script src="js/functions.js"></script>
+    <script src="js/tour.js"></script>
+    <script src="js/default-data.js"></script>
+    <style>
+
+        .matrix {
+            text-align: right;
+            height: 250px;
+            width: 800px;
+            margin: auto;
+        }
+
+        .matrix td {
+            height: 30px;
+            width: 70px;
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        .matrix .noBorder {
+            border: none;
+            font-weight: 500;
+        }
+
+        .textCenter {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div id="nav-placeholder" ></div>
+        <div id="currentAlgo" class="nav-item" style="float: right; padding-right: 50px;">
+            Algorithm Efficiency
+        </div>
+    </nav>
+
+    <div class="lesson-content-container">
+        <div class="lesson-container">
+            <h2>Algorithm Efficiency</h2>
+
+            <div class="section">
+                <p class="article">
+                    Each algorithms have their own strength and weakness. Metaheuristic algorithms such as
+                    <a href="HC-lesson.html" class="reference">hill climbing</a>,
+                    <a href="SA-lesson.html" class="reference">simulated annealing</a>,
+                    <a href="SAR-lesson.html" class="reference">simulated annealing with reheat</a>,
+                    <a href="GA-lesson.html" class="reference">genetic algorithm</a>,
+                    <a href="hybrid-GA-SA-lesson.html" class="reference">hybridised genetic algorithm and simulated annealing</a> and
+                    <a href="ACO-lesson.html" class="reference">ant colony optimisation</a>
+                    are tested on the datasets from
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html" target="_blank" class="reference">TSPLIB</a>.
+                    <a href="NN-lesson.html" class="reference">Nearest neighbour algorithm</a>
+                    is excluded from the testing because it is a pure greedy algorithm instead of metaheristic algorithm.
+                </p>
+                <p>
+                    The testing are conducted with the following  conditions:
+                    <ol>
+                        <li>the parameters and settings of algorithms are same for every dataset</li>
+                        <li>each algorithms would have 30 trials for every dataset</li>
+                    </ol>
+                </p>
+            </div>
+
+            <div class="section">
+                <h3>
+                    Dataset 1 -
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/pr76.tsp" target="_blank" class="reference">pr76</a>
+                </h3>
+                <br>
+                <table class="matrix">
+                    <tr class="light-bold">
+                        <td class="textCenter">Algorithm</td>
+                        <td class="textCenter">Min Distance</td>
+                        <td class="textCenter">Max Distance</td>
+                        <td class="textCenter">Avg Distance</td>
+                        <td class="textCenter">Std Dev Distance</td>
+                        <td class="textCenter">Avg Time (ms)</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">HC</td>
+                        <td>149122.54</td>
+                        <td>204710.20</td>
+                        <td>172549.43</td>
+                        <td>12198.06</td>
+                        <td>472.24</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SA</td>
+                        <td>148994.55</td>
+                        <td>191868.71</td>
+                        <td>170931.37</td>
+                        <td>10505.45</td>
+                        <td>595.57</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SAR</td>
+                        <td>151276.69</td>
+                        <td>187669.22</td>
+                        <td>170214.63</td>
+                        <td>9880.78</td>
+                        <td>1001.34</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GA</td>
+                        <td>265305.20</td>
+                        <td>313760.96</td>
+                        <td>289515.42</td>
+                        <td>13150.74</td>
+                        <td>334.15</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GASA</td>
+                        <td>110049.67</td>
+                        <td>136721.80</td>
+                        <td>125528.64</td>
+                        <td>6366.42</td>
+                        <td>12867.75</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">ACS</td>
+                        <td>117154.28</td>
+                        <td>127762.93</td>
+                        <td>123780.97</td>
+                        <td>2288.38</td>
+                        <td>10062.92</td>
+                    </tr>
+                </table>
+                <br><br>
+                <div style="width: 80%; margin: auto">
+                    <canvas id="pr76Chart"></canvas>
+                </div>
+
+            </div>
+
+            <div class="section">
+                <h3>
+                    Dataset 2 -
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/pr107.tsp" target="_blank" class="reference">pr107</a>
+                </h3>
+                <br>
+                <table class="matrix">
+                    <tr class="light-bold">
+                        <td class="textCenter">Algorithm</td>
+                        <td class="textCenter">Min Distance</td>
+                        <td class="textCenter">Max Distance</td>
+                        <td class="textCenter">Avg Distance</td>
+                        <td class="textCenter">Std Dev Distance</td>
+                        <td class="textCenter">Avg Time (ms)</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">HC</td>
+                        <td>108843.19</td>
+                        <td>172597.04</td>
+                        <td>142596.06</td>
+                        <td>16594.25</td>
+                        <td>627.52</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SA</td>
+                        <td>105619.81</td>
+                        <td>167150.45</td>
+                        <td>135423.32</td>
+                        <td>14605.8</td>
+                        <td>756.56</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SAR</td>
+                        <td>115058.22</td>
+                        <td>175240.65</td>
+                        <td>140790.43</td>
+                        <td>12939.23</td>
+                        <td>650.44</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GA</td>
+                        <td>213168.34</td>
+                        <td>293990.22</td>
+                        <td>257891.05</td>
+                        <td>19645.96</td>
+                        <td>296.76</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GASA</td>
+                        <td>55602.81</td>
+                        <td>83543.12</td>
+                        <td>67305.36</td>
+                        <td>7525.29</td>
+                        <td>18768.34</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">ACS</td>
+                        <td>47365.77</td>
+                        <td>50584.43</td>
+                        <td>48967.53</td>
+                        <td>747.25</td>
+                        <td>17668.96</td>
+                    </tr>
+                </table>
+                <br><br>
+                <div style="width: 80%; margin: auto">
+                    <canvas id="pr107Chart"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>
+                    Dataset 3 -
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/pr136.tsp" target="_blank" class="reference">pr136</a>
+                </h3>
+                <br>
+                <table class="matrix">
+                    <tr class="light-bold">
+                        <td class="textCenter">Algorithm</td>
+                        <td class="textCenter">Min Distance</td>
+                        <td class="textCenter">Max Distance</td>
+                        <td class="textCenter">Avg Distance</td>
+                        <td class="textCenter">Std Dev Distance</td>
+                        <td class="textCenter">Avg Time (ms)</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">HC</td>
+                        <td>167454.70</td>
+                        <td>206816.64</td>
+                        <td>192499.46</td>
+                        <td>10225.13</td>
+                        <td>806.96</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SA</td>
+                        <td>159436.86</td>
+                        <td>217200.38</td>
+                        <td>189225.68</td>
+                        <td>13689.90</td>
+                        <td>968.38</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SAR</td>
+                        <td>172999.80</td>
+                        <td>227558.63</td>
+                        <td>190656.46</td>
+                        <td>11102.70</td>
+                        <td>576.57</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GA</td>
+                        <td>460640.40</td>
+                        <td>520773.71</td>
+                        <td>480563.68</td>
+                        <td>14234.17</td>
+                        <td>346.58</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GASA</td>
+                        <td>158756.46</td>
+                        <td>207140.17</td>
+                        <td>182316.07</td>
+                        <td>13733.43</td>
+                        <td>21724.96</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">ACS</td>
+                        <td>111834.33</td>
+                        <td>122265.59</td>
+                        <td>117458.63</td>
+                        <td>2187.09</td>
+                        <td>32448.54</td>
+                    </tr>
+                </table>
+                <br><br>
+                <div style="width: 80%; margin: auto">
+                    <canvas id="pr136Chart"></canvas>
+                </div>
+            </div>
+
+            <div class="section" class="textCenter">
+                <h3>
+                    Dataset 4 -
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/pr226.tsp" target="_blank" class="reference">pr226</a>
+                </h3>
+                <br>
+                <table class="matrix">
+                    <tr class="light-bold">
+                        <td class="textCenter">Algorithm</td>
+                        <td class="textCenter">Min Distance</td>
+                        <td class="textCenter">Max Distance</td>
+                        <td class="textCenter">Avg Distance</td>
+                        <td class="textCenter">Std Dev Distance</td>
+                        <td class="textCenter">Avg Time (ms)</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">HC</td>
+                        <td>291290.00</td>
+                        <td>404201.21</td>
+                        <td>351835.80</td>
+                        <td>30887.74</td>
+                        <td>1372.25</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SA</td>
+                        <td>282080.00</td>
+                        <td>439142.14</td>
+                        <td>338497.07</td>
+                        <td>31023.85</td>
+                        <td>1624.42</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SAR</td>
+                        <td>351672.69</td>
+                        <td>400629.28</td>
+                        <td>374936.89</td>
+                        <td>11930.27</td>
+                        <td>596.74</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GA</td>
+                        <td>1083933.53</td>
+                        <td>1183248.07</td>
+                        <td>1141809.79</td>
+                        <td>27906.20</td>
+                        <td>604.33</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GASA</td>
+                        <td>380586.77</td>
+                        <td>455885.71</td>
+                        <td>418279.28</td>
+                        <td>20132.98</td>
+                        <td>44975.87</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">ACS</td>
+                        <td>87535.91</td>
+                        <td>93459.75</td>
+                        <td>90646.43</td>
+                        <td>1681.97</td>
+                        <td>93468.02</td>
+                    </tr>
+                </table>
+                <br><br>
+                <div style="width: 80%; margin: auto">
+                    <canvas id="pr226Chart"></canvas>
+                </div>
+            </div>
+
+            <div class="section" class="textCenter">
+                <h3>
+                    Dataset 5 -
+                    <a href="http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/pr439.tsp" target="_blank" class="reference">pr439</a>
+                </h3>
+                <br>
+                <table class="matrix">
+                    <tr class="light-bold">
+                        <td class="textCenter">Algorithm</td>
+                        <td class="textCenter">Min Distance</td>
+                        <td class="textCenter">Max Distance</td>
+                        <td class="textCenter">Avg Distance</td>
+                        <td class="textCenter">Std Dev Distance</td>
+                        <td class="textCenter">Avg Time (ms)</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">HC</td>
+                        <td>378712.32</td>
+                        <td>447335.81</td>
+                        <td>411850.21</td>
+                        <td>16110.24</td>
+                        <td>2698.19</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SA</td>
+                        <td>383641.31</td>
+                        <td>458452.12</td>
+                        <td>410964.48</td>
+                        <td>17983.56</td>
+                        <td>16236.72</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">SAR</td>
+                        <td>391001.53</td>
+                        <td>473958.02</td>
+                        <td>432630.41</td>
+                        <td>22565.65</td>
+                        <td>2143.65</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GA</td>
+                        <td>1354022.45</td>
+                        <td>1486601.11</td>
+                        <td>1451839.80</td>
+                        <td>25396.33</td>
+                        <td>2230.85</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">GASA</td>
+                        <td>677506.50</td>
+                        <td>734629.65</td>
+                        <td>704998.37</td>
+                        <td>14540.55</td>
+                        <td>97543.26</td>
+                    </tr>
+                    <tr>
+                        <td class="textCenter">ACS</td>
+                        <td>128194.01</td>
+                        <td>137629.10</td>
+                        <td>133904.77</td>
+                        <td>2253.82</td>
+                        <td>515207.98</td>
+                    </tr>
+                </table>
+                <br><br>
+                <div style="width: 80%; margin: auto">
+                    <canvas id="pr439Chart"></canvas>
+                </div>
+            </div>
+
+            <div class="button-container" style="justify-content: flex-start">
+                <a href="hybrid-GA-SA-lesson.html"><button class="button lesson-button">Previous</button></a>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+<script>
+    let ctx = document.getElementById("pr76Chart");
+    let pr76 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["HC", "SA", "SAR", "GA", "GASA", "ACS"],
+            datasets: [{
+                data: [149122.54, 148994.55, 151276.69, 265305.20, 110049.67, 117154.28],
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Algorithms',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Min Distance',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    let ctx2 = document.getElementById("pr107Chart");
+    let pr107 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ["HC", "SA", "SAR", "GA", "GASA", "ACS"],
+            datasets: [{
+                data: [108843.19, 105619.81, 115058.22, 213168.34, 55602.81, 47365.77],
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Algorithms',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Min Distance',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    let ctx3 = document.getElementById("pr136Chart");
+    let pr136 = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ["HC", "SA", "SAR", "GA", "GASA", "ACS"],
+            datasets: [{
+                data: [167454.70, 159436.86, 172999.80, 450640.40, 158756.46, 111834.33],
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Algorithms',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Min Distance',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    let ctx4 = document.getElementById("pr226Chart");
+    let pr226 = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: ["HC", "SA", "SAR", "GA", "GASA", "ACS"],
+            datasets: [{
+                data: [291290.00, 282080.00, 351672.69, 1083933.53, 380586.77, 87535.91],
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Algorithms',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Min Distance',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }]
+            }
+        }
+    });
+
+    let ctx5 = document.getElementById("pr439Chart");
+    let pr439 = new Chart(ctx5, {
+        type: 'bar',
+        data: {
+            labels: ["HC", "SA", "SAR", "GA", "GASA", "ACS"],
+            datasets: [{
+                data: [378712.32, 383641.31, 391001.53, 1354022.45, 677506.50, 128194.01],
+                backgroundColor: 'rgba(33, 150, 243, 0.35)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: 'black',
+                        min: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Algorithms',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: 'black',
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Min Distance',
+                        fontStyle: 'bold',
+                        fontColor: 'black',
+                    },
+                }]
+            }
+        }
+    });
+</script>
