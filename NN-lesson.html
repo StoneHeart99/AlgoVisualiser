@@ -363,13 +363,15 @@
     }
 
     function disableDemo() {
-        $("#startBtn").attr("disabled", true);
+        document.getElementById( "startBtn" ).setAttribute( "onClick", "javascript: nothing();" );
         document.getElementById("startBtn"). className += " disabled";
     }
 
     function enableDemo() {
-        $("#startBtn").attr("disabled", false);
+        document.getElementById( "startBtn" ).setAttribute( "onClick", "javascript: start();" );
         document.getElementById("startBtn"). className =
             document.getElementById("startBtn"). className.replace(" disabled", "");
     }
+
+
 </script>

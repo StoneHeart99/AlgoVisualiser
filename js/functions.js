@@ -273,4 +273,6 @@ function scroll(id, height, option = 'fast')
     $(id).animate({scrollTop:height}, option);
 }
 
+function nothing() {}
+
 console.log("%c Welcome to Algorithm Visualier", "color: #2196F3; font-size:1.5em;")
