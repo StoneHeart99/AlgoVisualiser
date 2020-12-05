@@ -9,8 +9,7 @@
     <script src="js/default-data.js"></script>
 </head>
 <body>
-<!--<input type="file" id="file-selector" multiple>-->
-<input type="file" id="file-input" value="./dataset/"/>
+<input type="file" id="file-input" value="./datasets/"/>
 <button id="read-button">Read File</button>
 <br><br>
 <button onclick="NN(compareTM)">NN</button>
@@ -43,7 +42,6 @@
         reader.addEventListener('load', function(e) {
             // contents of file in variable
             text = e.target.result;
-            // console.log(text);
 
             let nodes = text.split("\n");
             for(let i=0; i<6; i++)
@@ -58,9 +56,7 @@
             {
                 let info = nodes[i].split(" ");
                 let city = new City( 'c' + info[0], info[1], info[2]);
-                // compareTM.addCity(city);
                 compareTM.addCity(city)
-                // console.log(city)
             }
 
         });
@@ -82,10 +78,8 @@
         reader.readAsText(file);
     });
 
-    // console.log(compareTM)
 
-    let test = loadFile('./Dataset/pr76.tsp.txt');
-    // console.log(test)
+    let test = loadFile('./datasets/pr76.tsp.txt');
     let nodes = test.split("\n");
     for(let i=0; i<6; i++)
     {
@@ -99,57 +93,10 @@
     {
         let info = nodes[i].split(" ");
         let city = new City( 'c' + info[0], info[1], info[2]);
-        // compareTM.addCity(city);
         compareTM.addCity(city)
-        // console.log(city)
     }
     console.log(compareTM)
     NN(compareTM)
-
-    // function readFile(fileName) {
-    //     let TM = new TourManager();
-    //     let nodes;
-    //     $.get('./dataset/' + fileName, function(txt) {
-    //         // console.log(txt)
-    //         nodes = txt.split("\n");
-    //         for(let i=0; i<6; i++)
-    //         {
-    //             nodes.shift();
-    //         }
-    //         for(let i=0; i<2; i++)
-    //         {
-    //             nodes.pop();
-    //         }
-    //         for(let i=0; i<nodes.length; i++)
-    //         {
-    //             let info = nodes[i].split(" ");
-    //             let city = new City( 'c' + info[0], info[1], info[2]);
-    //             // compareTM.addCity(city);
-    //             TM.addCity(city)
-    //             // console.log(city)
-    //         }
-    //
-    //         // console.log(nodes)
-    //     })
-    //
-    //     // return TM;
-    //     return nodes;
-    // }
-
-
-    // let test = readFile('pr76.tsp.txt');
-    // console.log(compareTM)
-    // console.log(TM)
-    // compareTM.clone(TM);
-
-    // console.log(compareTM)
-
-
-    // let tour = new Tour(compareTM.getTour())
-
-    // nearestNeighbour(tour, compareTM);
-    // nearestNeighbour(TM);
-
 
     function NN(TM)
     {
@@ -174,7 +121,6 @@
         }
 
         console.log('NN');
-        // console.log(tour.printTour());
         console.log(tour.getDistance());
         console.timeEnd('Nearest Neighbour')
     }

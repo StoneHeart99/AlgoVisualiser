@@ -288,9 +288,6 @@
     ac.setParams(params);
     ac.setGraph(matrixGraph);
     ac.getGraph().createEdges();
-    // DivElmnt = document.getElementById('pseudocode');
-    // scrollId = '#pseudocode'
-    // scrollHeight = $(scrollId).height() / 8;
 
     $(".antDisplay").hide();
     $("#sigma-container").hide();
@@ -315,7 +312,6 @@
         else
             stepIndex = 8;
 
-        // DivElmnt.scrollTop = 0;
     }
 
     function step2()
@@ -504,15 +500,12 @@
             let alpha = 0.2;
             let width = 0;
             if (ac.currentIteration() > 0) {
-                // width = Math.ceil((edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) * 6);
                 width = ((edges[edgeIndex].getPheromone() / totalPheromone) * 15 );
                 alpha = (edges[edgeIndex].getPheromone() / totalPheromone) * (ac.getGraph().size()) + 0.03;
                 if (alpha > 1) {
                     alpha = 1;
                 }
             }
-
-            // console.log("width: " + width)
 
             graph.edges.push(
                 {
@@ -555,7 +548,6 @@
                 index = graph.edges.findIndex(edge => edge.id == id);
             }
 
-            // graph.edges[index].color = '#a95aec';
             graph.edges[index].color = 'black';
             graph.edges[index].size = '3';
 

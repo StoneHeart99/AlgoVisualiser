@@ -11,23 +11,7 @@
     <script src="js/default-data.js"></script>
 </head>
 <body>
-<!--<button onclick="test()">test</button>-->
-<!--<br><br>-->
-<!--<button onclick="NN(TM)">NN</button>-->
-<!--<br><br>-->
-<!--<button onclick="HC(TM)">HC</button>-->
-<!--<br><br>-->
-<!--<button onclick="SA(TM)">SA</button>-->
-<!--<br><br>-->
-<!--<button onclick="SAR(TM)">SAR</button>-->
-<!--<br><br>-->
-<!--<button onclick="GenAlgo(TM)">GA</button>-->
-<!--<br><br>-->
-<!--<button onclick="GASA(TM)">GASA</button>-->
-<!--<br><br>-->
-<!--<button onclick="ACS(TM)">ACS</button>-->
 
-<!--<br><br><br><br>-->
 <button onclick="NN(compareTM)">NN</button>
 <br><br>
 <button onclick="HC(compareTM)">HC</button>
@@ -48,7 +32,7 @@
 
     let compareTM = new TourManager();
     let dataset = ['pr76.tsp.txt', 'pr107.tsp.txt', 'pr136.tsp.txt', 'pr226.tsp.txt', 'pr439.tsp.txt', 'pr1002.tsp.txt']
-    let file = loadFile('./Dataset/' + dataset[4]);
+    let file = loadFile('./datasets/' + dataset[4]);
     let nodes = file.split("\n");
 
     for(let i=0; i<6; i++)
@@ -67,14 +51,6 @@
     }
 
     console.log(compareTM);
-    // NN(compareTM);
-    // HC(compareTM);
-    // SA(compareTM);
-
-
-    // NN(TM);
-    // HC(TM);
-    // SA(TM);
 
     function test()
     {
@@ -131,7 +107,6 @@
         // Loop until system has cooled
         for (let i=0; i<150000; i++) {
             newSolution.clone(currentSolution);
-            // newSolution = new Tour(currentSolution.getTour());
 
             // Get a random positions in the tour
             tourPos1 = Math.floor(newSolution.size() * Math.random());
@@ -158,9 +133,6 @@
 
             // Swap them
             newSolution.swapCities(tourPos1, tourPos2);
-
-            // console.log(currentSolution.getDistance())
-            // console.log(newSolution.getDistance())
 
             // Decide if we should accept the neighbour
             if (newSolution.getDistance() < currentSolution.getDistance()) {
@@ -349,8 +321,6 @@
             }
         }
 
-
-        // console.log('Distance threshold:' + thresholdDistance);
         console.log('Distance: ' + bestSolution.getDistance().toFixed(2));
         console.timeEnd('SAR time');
 
@@ -512,16 +482,6 @@
         ac.getGraph().createEdges();
         ac.createAnts();
         ac.run()
-
-        // console.log(ac)
-
-        // for(let i=0; i<100; i++)
-        // {
-        //     ac.step();
-        // }
-
-        // console.log(ac.getGlobalBest().getDistance())
-        // console.log('Distance:' + bestSolution.getDistance());
 
         console.log('Distance: ' + ac.getGlobalBest().getTour().getDistance().toFixed(2));
         console.timeEnd('ACS time');

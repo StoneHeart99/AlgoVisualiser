@@ -260,7 +260,7 @@
             <a href="SA-lesson.html"><button class="button lesson-button">Previous</button></a>
             <a href="SA-program.html"><button class="button lesson-button purple">SA Program</button></a>
             <a href="GA-lesson.html"><button class="button lesson-button">Next</button></a>
-        </div>`
+        </div>
     </div>
 
 
@@ -385,10 +385,8 @@
         $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         $("#d3").text("Distance: " + currentSolution.getDistance().toFixed(2));
         $("#pseudoTemp").text(pseudoTemp + "℃");
-        // $("#pseudoProb").text("Acceptance Probability: " + 0.00);
 
         stepIndex = 2;
-        // DivElmnt.scrollTop = 16;
         scroll(scrollId, (0 * scrollHeight));
     }
     
@@ -408,7 +406,6 @@
         $("#threshold").text(threshold);
         $("#maxThreshold").text(thresholdDistance.toFixed(2));
 
-        // DivElmnt.scrollTop = 32;
         scroll(scrollId, (0 * scrollHeight));
     }
 
@@ -418,7 +415,6 @@
         if(bestSolution.getDistance()< thresholdDistance)
             stepIndex = 14;
 
-        // DivElmnt.scrollTop = 48;
         scroll(scrollId, (4 * scrollHeight));
     }
 
@@ -460,14 +456,6 @@
 
         $("#d2").text("Distance: " + newSolution.getDistance().toFixed(2));
 
-        // if(newSolution.getDistance() < currentSolution.getDistance())
-        // {
-        //     stepIndex = 4;
-        //     currentSolution = new Tour(newSolution.getTour());
-        // }
-        // else
-        //     stepIndex = 5;
-        // DivElmnt.scrollTop = 64;
         scroll(scrollId, (6 * scrollHeight));
     }
 
@@ -483,14 +471,11 @@
         else
             stepIndex = 6;
 
-        // DivElmnt.scrollTop = 80;
         scroll(scrollId, (6 * scrollHeight));
     }
 
     function step6() {
         updateStep();
-        // stepIndex++;
-        // DivElmnt.scrollTop = 96;
         scroll(scrollId, (6 * scrollHeight));
     }
 
@@ -500,7 +485,6 @@
         $("#pseudoRand").text(random.toFixed(2));
         probability = acceptanceProbability(currentSolution.getDistance(), newSolution.getDistance(), demoTemp);
         $("#pseudoProb").text(probability.toFixed(2));
-        // DivElmnt.scrollTop = 112;
         scroll(scrollId, (9 * scrollHeight));
     }
 
@@ -515,7 +499,6 @@
             $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
 
-        // DivElmnt.scrollTop = 128;
         scroll(scrollId, (9 * scrollHeight));
     }
 
@@ -528,7 +511,6 @@
             updateSigma(s3, graph);
             $("#d3").text("Distance: " + bestSolution.getDistance().toFixed(2));
         }
-        // DivElmnt.scrollTop = 144;
         scroll(scrollId, (13 * scrollHeight));
     }
     
@@ -536,8 +518,7 @@
         updateStep();
         pseudoTemp -= 10;
         $("#pseudoTemp").text(pseudoTemp + "℃");
-        // stepIndex = 2;
-        // DivElmnt.scrollTop = 160;
+
         scroll(scrollId, (13 * scrollHeight));
     }
 
@@ -547,7 +528,6 @@
             stepIndex = 12;
         else
             stepIndex = 3;
-        // DivElmnt.scrollTop = 208;
         scroll(scrollId, (14 * scrollHeight));
     }
 
@@ -555,7 +535,6 @@
         updateStep();
         pseudoTemp = 20;
         $("#pseudoTemp").text(pseudoTemp);
-        // DivElmnt.scrollTop = 208;
         scroll(scrollId, (14 * scrollHeight));
     }
     
@@ -571,7 +550,6 @@
 
         stepIndex = 3;
 
-        // DivElmnt.scrollTop = 208;
         scroll(scrollId, (14 * scrollHeight));
     }
 
@@ -579,7 +557,6 @@
     function step14() {
         updateStep();
         stepIndex++;
-        // DivElmnt.scrollTop = 224;
         scroll(scrollId, (13 * scrollHeight));
     }
 

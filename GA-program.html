@@ -51,7 +51,6 @@
             width: 100%;
             height: auto;
             margin: auto;
-            /*background-color:#f1f1f1;*/
         }
 
         .setting-container {
@@ -706,9 +705,6 @@
                         convertCityToNodes(tempTM, graph);
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
-
-                        // console.log(selectedTours[graphIndex].getDistance());
-                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
             },
@@ -774,7 +770,6 @@
                     let point = this.getElementAtEvent(e);
                     if (point.length) e.target.style.cursor = 'pointer';
                     else e.target.style.cursor = 'default';
-                    // $("#distanceChart").css("cursor", e[0] ? "pointer" : "default");
                 }
             },
             title: {
@@ -844,9 +839,6 @@
                         convertCityToNodes(tempTM, graph);
                         convertTourToEdges(selectedTours[graphIndex], graph);
                         updateSigma(s, graph);
-                        //
-                        // console.log(selectedTours[graphIndex].getDistance());
-                        // console.log(selectedTours[graphIndex].printTour())
                     }
                 }
 
@@ -1057,7 +1049,6 @@
 
     function disableAll()
     {
-        // $("#editIcon").off("click");
         $("#runBtn").attr("disabled", true);
         $("#randomBtn").attr("disabled", true);
         $("#resetBtn").attr("disabled", true);
@@ -1070,8 +1061,6 @@
         $('.disableAble').each(function() {
             this.className = this.className.replace(" disableAble", " disabled");
         });
-
-        // document.getElementById("editIcon").className += " disabled"
 
         $('.slider').each(function() {
             this.className = this.className.replace(" slider", " slider2");
@@ -1101,9 +1090,6 @@
         $('.slider2').each(function() {
             this.className = this.className.replace(" slider2", " slider");
         });
-
-        // $("#editIcon").on("click", edit);
-        // document.getElementById("editIcon").className += "circle icon";
 
         dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
         dragListener.bind('dragend', function(event) {

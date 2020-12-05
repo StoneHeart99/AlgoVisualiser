@@ -260,7 +260,7 @@
                 <a href="GA-lesson.html"><button class="button lesson-button">Previous</button></a>
                 <a href="hybrid-GA-SA-program.html"><button class="button lesson-button purple">Hybrid GA-SA Program</button></a>
                 <a href="ACO-lesson.html"><button class="button lesson-button">Next</button></a>
-            </div>`
+            </div>
         </div>
 
     </div>
@@ -425,7 +425,7 @@
     geneticTM.addCity(city7);
     geneticTM.addCity(city8);
     geneticTM.addCity(city9);
-    // geneticTM.clone(TM);
+
     displayTM = new TourManager();
     displayTM.addCity(c1);
     displayTM.addCity(c2);
@@ -460,7 +460,6 @@
     $("#mutateChart").hide();
     $("#display2").hide();
     $("#display3").hide();
-    // $("#display4").hide();
     $("#s3-details").hide();
     $("#s4-details").hide();
     $("#s5-details").hide();
@@ -482,7 +481,6 @@
         step = "s" + stepIndex.toString();
         document.getElementById(step).className += " highlight";
         $("#mutateChart").show();
-        // $("#display").show();
         pop = new Population(populationSize, geneticTM, true);
         for(let i=0;i<pop.populationSize();i++){
             addData(mutateChart, i+1, 0);

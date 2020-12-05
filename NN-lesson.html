@@ -177,7 +177,7 @@
     }
 
 
-    // Nearest neigbour program
+    // Nearest neighbour program
     let visited = [];
     let unvisited = ["c1", "c2", "c3", "c4"];
     let stepIndex = 1;
@@ -203,8 +203,6 @@
     function step1()
     {
         $("#unvisited").text(printArray(unvisited));
-        // let x = document.getElementsByClassName("highlight");
-        // x[0].className = "";
         step = "s" + stepIndex.toString();
         document.getElementById(step).className += " highlight";
 

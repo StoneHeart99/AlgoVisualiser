@@ -258,9 +258,8 @@
                 <a href="HC-lesson.html"><button class="button lesson-button">Previous</button></a>
                 <a href="SA-program.html"><button class="button lesson-button purple">SA Program</button></a>
                 <a href="SAR-lesson.html"><button class="button lesson-button">Next</button></a>
-            </div>`
+            </div>
         </div>
-
     </div>
 </body>
 </html>
@@ -375,17 +374,14 @@
         $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         $("#d3").text("Distance: " + currentSolution.getDistance().toFixed(2));
         $("#pseudoTemp").text(pseudoTemp + "℃");
-        // $("#pseudoProb").text("Acceptance Probability: " + 0.00);
 
         stepIndex = 2;
-        // DivElmnt.scrollTop = 5;
         scroll(scrollId, 0);
     }
 
     function step2(){
         counter++;
         updateStep();
-        // DivElmnt.scrollTop = 20;
         scroll(scrollId, (0 * scrollHeight));
     }
 
@@ -427,15 +423,6 @@
 
         $("#d2").text("Distance: " + newSolution.getDistance().toFixed(2));
 
-        // if(newSolution.getDistance() < currentSolution.getDistance())
-        // {
-        //     stepIndex = 4;
-        //     currentSolution = new Tour(newSolution.getTour());
-        // }
-        // else
-        //     stepIndex = 5;
-        // DivElmnt.scrollTop = 30;
-
         scroll(scrollId, (2 * scrollHeight));
     }
 
@@ -451,14 +438,11 @@
         else
             stepIndex = 5;
 
-        // DivElmnt.scrollTop = 40;
         scroll(scrollId, (2 * scrollHeight));
     }
 
     function step5() {
         updateStep();
-        // stepIndex++;
-        // DivElmnt.scrollTop = 50;
         scroll(scrollId, (4 * scrollHeight));
     }
 
@@ -468,8 +452,6 @@
         $("#pseudoRand").text(random.toFixed(2));
         probability = acceptanceProbability(currentSolution.getDistance(), newSolution.getDistance(), demoTemp);
         $("#pseudoProb").text(probability.toFixed(2));
-        // DivElmnt.scrollTop = 60;
-        // scroll(scrollId, (5 * scrollHeight));
     }
 
 
@@ -483,7 +465,6 @@
             $("#d1").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
 
-        // DivElmnt.scrollTop = 70;
         scroll(scrollId, (10 * scrollHeight));
     }
 
@@ -496,7 +477,6 @@
             updateSigma(s3, graph);
             $("#d3").text("Distance: " + currentSolution.getDistance().toFixed(2));
         }
-        // DivElmnt.scrollTop = 80;
         scroll(scrollId, (10 * scrollHeight));
     }
     
@@ -505,14 +485,12 @@
         pseudoTemp -= 5;
         $("#pseudoTemp").text(pseudoTemp + "℃");
         stepIndex = 2;
-        // DivElmnt.scrollTop = 90;
         scroll(scrollId, (10 * scrollHeight));
     }
 
     function step10() {
         updateStep();
         stepIndex++;
-        // DivElmnt.scrollTop = 100;
         scroll(scrollId, (8 * scrollHeight));
     }
 

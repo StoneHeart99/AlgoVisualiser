@@ -432,7 +432,7 @@
 
     $("#tut1").modal("show");
 
-    //Initialise sigma:
+    // Initialise sigma:
     let s = new sigma(
         {
             renderer: {
@@ -514,11 +514,6 @@
         initialSolution.clone(currentSolution);
         bestSolution.clone(initialSolution); // Set best as initial
 
-        // console.log("Initial solution distance: " + initialSolution.getDistance());
-        // console.log("cooling rate: " + coolingRate);
-        // console.log("Initial solution distance: " + currentSolution.getDistance());
-        // console.log("Tour: " + currentSolution.printTour());
-
         $("#initTour").text(initialSolution.printTour());
         $("#initDistance").text(initialSolution.getDistance().toFixed(2));
         $("#bestTour").text(bestSolution.printTour());
@@ -535,7 +530,6 @@
 
             // Create new neighbour tour
             newSolution.clone(currentSolution);
-            // newSolution = new Tour(currentSolution.getTour());
 
             // Get a random positions in the tour
             tourPos1 = Math.floor(newSolution.size() * Math.random());
@@ -601,7 +595,6 @@
             }
 
             // Reheat
-            // let enableReheat = false;
             if(temp <= 1 && bestSolution.getDistance() > thresholdDistance && enableReheat==true) {
                 temp = initTemp/4;
                 reheatCtr++;
@@ -613,8 +606,7 @@
                     if(threshold > 1)
                         threshold = 1;
                     thresholdDistance = avgDistance * threshold;
-                    // console.log("thresholdDistance:" + thresholdDistance);
-                    $("#threshold").text("Max Threhold: " + thresholdDistance.toFixed(2));
+                    $("#threshold").text("Max Threshold: " + thresholdDistance.toFixed(2));
                     toast("Reheated");
                 }
             }
@@ -622,16 +614,12 @@
             await sleep(algoSpeed[algoSpeedIndex]);
         }
 
-        // console.log("count: " + count);
-
         convertCityToNodes(simulatedTM, graph);
         convertTourToEdges(bestSolution, graph);
         updateSigma(s, graph);
         $("#temperature").text("Temperature: " + temp.toFixed(2) + "℃");
         $("#bestTour").text(bestSolution.printTour());
         $("#bestDistance").text(bestSolution.getDistance().toFixed(2));
-        // console.log("Final solution distance: " + bestSolution.getDistance());
-        // console.log("Tour: " + bestSolution.printTour());
 
         enableAll();
         toast("The algorithm has completed!");
@@ -653,8 +641,6 @@
     function run(){
         currentSolution.generateIndividual();
         bestSolution = new Tour(currentSolution);
-        // console.log(currentSolution.getDistance());
-        // console.log("outside: " + bestSolution.getDistance());
         resetInfo();
         SA_TSP();
     }
